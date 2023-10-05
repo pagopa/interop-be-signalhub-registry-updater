@@ -20,6 +20,7 @@
         <io.springfox.version>2.8.0</io.springfox.version>
         <org.openapitools.version>0.2.1</org.openapitools.version>
         <javax.xml.bind.version>2.3.1</javax.xml.bind.version>
+        <jacoco.min.line.cover.ratio>0.00</jacoco.min.line.cover.ratio>
     </properties>
     <dependencies>
         <dependency>
@@ -135,10 +136,7 @@
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -205,7 +203,32 @@
                         </configuration>
                     </execution>
                 </executions>
-
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>it/pagopa/interop/signalhub/push/service/rest/v1/dto/*</exclude>
+                        <exclude>it/pagopa/interop/signalhub/push/service/rest/v1/dto/**</exclude>
+                        <exclude>it/pagopa/interop/signalhub/push/service/generated/*</exclude>
+                        <exclude>it/pagopa/interop/signalhub/push/service/generated/**</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 
