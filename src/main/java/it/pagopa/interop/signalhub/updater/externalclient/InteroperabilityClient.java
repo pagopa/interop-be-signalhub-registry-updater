@@ -1,4 +1,4 @@
-package it.pagopa.interop.signalhub.updater.externalClient;
+package it.pagopa.interop.signalhub.updater.externalclient;
 
 import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.*;
 import reactor.core.publisher.Mono;

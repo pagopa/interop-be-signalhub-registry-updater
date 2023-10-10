@@ -1,7 +1,7 @@
 package it.pagopa.interop.signalhub.updater.mapper;
 
 import it.pagopa.interop.signalhub.updater.entity.ConsumerEService;
-import it.pagopa.interop.signalhub.updater.externalClient.model.ConsumerEServiceDto;
+import it.pagopa.interop.signalhub.updater.externalclient.model.ConsumerEServiceDto;
 import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.Agreement;
 import org.mapstruct.Mapper;
 

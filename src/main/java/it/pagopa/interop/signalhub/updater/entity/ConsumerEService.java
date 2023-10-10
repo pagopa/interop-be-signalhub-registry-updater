@@ -23,8 +23,8 @@ public class ConsumerEService {
     @Column("state")
     private String state;
     @Column("tmst_insert")
-    private Instant dataInsert;
+    private Instant dateInsert;
     @Column("tmst_last_edit")
-    private Instant tmst_last_edit;
+    private Instant dateLastEdit;
 
 }

@@ -1,4 +1,4 @@
-package it.pagopa.interop.signalhub.updater.externalClient.model;
+package it.pagopa.interop.signalhub.updater.externalclient.model;
 
 import lombok.Getter;
 import lombok.Setter;
