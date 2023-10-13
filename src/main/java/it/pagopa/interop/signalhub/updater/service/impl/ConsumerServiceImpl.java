@@ -36,8 +36,7 @@ public class ConsumerServiceImpl implements ConsumerService {
                 .flatMap(this::checkAndUpdateEservice)
                 .map(this::getInitialConsumerEService)
                 .flatMap(this::save)
-                .map(mapper::toDtoFromEntity)
-                .onErrorResume(WebClientException.class, Functions.catchWebClientException());
+                .map(mapper::toDtoFromEntity);
     }
 
     private Mono<ConsumerEServiceDto> checkAndUpdateEservice(ConsumerEServiceDto dto){

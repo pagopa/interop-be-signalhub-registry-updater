@@ -35,8 +35,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         return this.interopService.getEservice(eServiceEventDTO.getEServiceId(),eServiceEventDTO.getEventId())
                 .map(this::getInitialEService)
                 .flatMap(this::save)
-                .map(mapper::toDtoFromEntity)
-                .onErrorResume(WebClientException.class, Functions.catchWebClientException());
+                .map(mapper::toDtoFromEntity);
     }
 
     @Override
