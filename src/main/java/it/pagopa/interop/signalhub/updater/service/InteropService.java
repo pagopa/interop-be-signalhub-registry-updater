@@ -1,20 +1,15 @@
 package it.pagopa.interop.signalhub.updater.service;
 
 import it.pagopa.interop.signalhub.updater.model.ConsumerEServiceDto;
-import it.pagopa.interop.signalhub.updater.model.EventDto;
 import it.pagopa.interop.signalhub.updater.model.EventsDto;
 import it.pagopa.interop.signalhub.updater.model.OrganizationEServiceDto;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
 public interface InteropService {
 
+    EventsDto getAgreementsAndEServices(Long lastEventId);
 
-    Mono<EventsDto> getAgreementsAndEservices(Long lastEventId);
+    ConsumerEServiceDto getConsumerEService(String agreementId, Long eventId);
 
-    Mono<ConsumerEServiceDto> getConsumerEservice(String agreementId, Long eventId);
-
-    Mono<OrganizationEServiceDto> getEservice(String eserviceId, Long eventId);
+    OrganizationEServiceDto getEService(String eserviceId, Long eventId);
 
 
 }

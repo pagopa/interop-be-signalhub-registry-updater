@@ -1,24 +1,16 @@
 package it.pagopa.interop.signalhub.updater.service.impl;
 
-import it.pagopa.interop.signalhub.updater.entity.ConsumerEService;
 import it.pagopa.interop.signalhub.updater.entity.OrganizationEService;
 import it.pagopa.interop.signalhub.updater.mapper.OrganizationEServiceMapper;
-import it.pagopa.interop.signalhub.updater.model.ConsumerEServiceDto;
 import it.pagopa.interop.signalhub.updater.model.EServiceEventDTO;
 import it.pagopa.interop.signalhub.updater.model.OrganizationEServiceDto;
 import it.pagopa.interop.signalhub.updater.repository.OrganizationEserviceRepository;
 import it.pagopa.interop.signalhub.updater.service.InteropService;
 import it.pagopa.interop.signalhub.updater.service.OrganizationService;
-import it.pagopa.interop.signalhub.updater.utility.Functions;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClientException;
-import reactor.core.publisher.Mono;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 
 
 @Slf4j
@@ -31,51 +23,48 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 
     @Override
-    public Mono<OrganizationEServiceDto> updateOrganizationEService(EServiceEventDTO eServiceEventDTO) {
-        return this.interopService.getEservice(eServiceEventDTO.getEServiceId(),eServiceEventDTO.getEventId())
-                .map(this::getInitialEService)
-                .flatMap(this::save)
-                .map(mapper::toDtoFromEntity);
+    public OrganizationEServiceDto updateOrganizationEService(EServiceEventDTO eServiceEventDTO) {
+        log.info("[{} - {}] Retrieving detail eservice...", eServiceEventDTO.getEventId(), eServiceEventDTO.getEServiceId());
+        OrganizationEServiceDto detailEservice = this.interopService.getEService(eServiceEventDTO.getEServiceId(), eServiceEventDTO.getEventId());
+        log.info("[{} - {}] Detail eservice retrieved with state {}", eServiceEventDTO.getEventId(), eServiceEventDTO.getEServiceId(), detailEservice.getState());
+
+        OrganizationEService entity = this.repository.findByEserviceIdAndProducerId(detailEservice.getEserviceId(), detailEservice.getProducerId())
+                .orElse(getInitialEService(detailEservice));
+
+        log.info("[{} - {}] Entity {} exist into DB",
+                eServiceEventDTO.getEventId(),
+                eServiceEventDTO.getEServiceId(),
+                entity.getTmstInsert() ==  null ? "not" : "");
+
+
+        entity.setState(detailEservice.getState());
+        entity = this.repository.saveAndFlush(entity);
+        log.info("[{} - {}] Entity saved",
+                eServiceEventDTO.getEventId(),
+                eServiceEventDTO.getEServiceId());
+        return mapper.toDtoFromEntity(entity);
     }
 
     @Override
-    public Mono<OrganizationEServiceDto> checkAndUpdate(String eserviceId, String producerId) {
-        return this.repository.findByEserviceIdAndProducerId(eserviceId, producerId)
-                .map(mapper::toDtoFromEntity)
-                .switchIfEmpty(Mono.defer(() -> {
-                    EServiceEventDTO dto = new EServiceEventDTO();
-                    dto.setEServiceId(eserviceId);
-                    dto.setEventId(0L);
-                    return updateOrganizationEService(dto);
-                }));
+    public OrganizationEServiceDto checkAndUpdate(String eserviceId, String producerId, Long eventId) {
+        log.info("[{} - {}] Check and Update organization eservice", eserviceId, producerId);
+        OrganizationEService entity = this.repository.findByEserviceIdAndProducerId(eserviceId, producerId)
+                                        .orElse(null);
+        if (entity != null) {
+            log.info("[{} - {}] Eservice already exist with state {}", eserviceId, producerId, entity.getState());
+            return mapper.toDtoFromEntity(entity);
+        }
+
+        EServiceEventDTO eventDTO = new EServiceEventDTO();
+        eventDTO.setEventId(eventId);
+        eventDTO.setEServiceId(eserviceId);
+        log.info("[{} - {}] Eservice doesn't exist", eserviceId, producerId);
+        return updateOrganizationEService(eventDTO);
     }
 
-    private Mono<OrganizationEService> save(OrganizationEService entity){
-        return this.repository.save(entity)
-                .onErrorResume(DuplicateKeyException.class, ex -> this.update(entity, entity.getState()));
-    }
-
-
-    private Mono<OrganizationEService> update(OrganizationEService entity, String state){
-        return Mono.just(getEditEService(entity, state))
-                .flatMap(toUpdated -> this.repository
-                        .updateByEserviceIdAndProducerIdAndEventId(toUpdated.getEserviceId(),
-                                toUpdated.getProducerId(),
-                                toUpdated.getState(),
-                                toUpdated.getEventId(),
-                                toUpdated.getTmstLastEdit())
-                );
-    }
-
-    private OrganizationEService getEditEService(OrganizationEService entity, String state){
-        entity.setTmstLastEdit(Timestamp.from(Instant.now()));
-        entity.setState(state);
-        return entity;
-    }
 
     private OrganizationEService getInitialEService(OrganizationEServiceDto dto){
         OrganizationEService entity = mapper.toEntityFromProps(dto.getEserviceId(), dto.getProducerId(), dto.getState());
-        entity.setTmstInsert(Timestamp.from(Instant.now()));
         entity.setEventId(dto.getEventId());
         return entity;
     }

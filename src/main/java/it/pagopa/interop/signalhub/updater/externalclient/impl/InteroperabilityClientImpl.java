@@ -19,7 +19,6 @@ import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
-
 @Slf4j
 @Component
 @AllArgsConstructor
@@ -28,35 +27,39 @@ public class InteroperabilityClientImpl implements InteroperabilityClient {
 
     public static final Integer MAX_LIMIT_BLOCK = 100;
 
+
     @Override
-    public Mono<Events> getEventsFromId(Long lastEventId) {
+    public Events getEventsFromId(Long lastEventId) {
         return gatewayApi.getEventsFromId(lastEventId, MAX_LIMIT_BLOCK)
                 .retryWhen(
                         Retry.backoff(4, Duration.ofMillis(1000))
                                 .filter(this.isRetryException())
-                );
+                )
+                .block();
     }
 
     @Override
-    public Mono<Agreement> getAgreement(String agreementId) {
+    public Agreement getAgreement(String agreementId) {
         UUID uuidAgreementId = UUID.fromString(agreementId);
         return Mono.just(uuidAgreementId)
                 .flatMap(item -> gatewayApi.getAgreement(uuidAgreementId)
-                                            .retryWhen(
-                                                    Retry.backoff(4, Duration.ofMillis(1000))
-                                                            .filter(this.isRetryException())
-                                            )
-                );
+                        .retryWhen(
+                                Retry.backoff(4, Duration.ofMillis(1000))
+                                        .filter(this.isRetryException())
+                        )
+                )
+                .block();
     }
 
     @Override
-    public Mono<EService> getEService(String eserviceId) {
+    public EService getEService(String eserviceId) {
         UUID uuidEserviceId = UUID.fromString(eserviceId);
         return gatewayApi.getEService(uuidEserviceId)
                 .retryWhen(
                         Retry.backoff(4, Duration.ofMillis(1000))
                                 .filter(this.isRetryException())
-                );
+                )
+                .block();
     }
 
     private Predicate<Throwable> isRetryException(){

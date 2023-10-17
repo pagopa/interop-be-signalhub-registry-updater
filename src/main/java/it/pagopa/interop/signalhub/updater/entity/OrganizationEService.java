@@ -1,14 +1,9 @@
 package it.pagopa.interop.signalhub.updater.entity;
 
-import jakarta.persistence.IdClass;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Version;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -16,8 +11,9 @@ import java.time.Instant;
 
 @Getter
 @Setter
-@Table("ESERVICE")
 @ToString
+@Entity
+@Table(name = "ESERVICE")
 @IdClass(OrganizationKey.class)
 public class OrganizationEService {
     public static final String COLUMN_ESERVICE_ID = "eservice_id";
@@ -27,23 +23,24 @@ public class OrganizationEService {
     public static final String COLUMN_DATE_INSERT = "tmst_insert";
     public static final String COLUMN_DATE_UPDATE = "tmst_last_edit";
 
-
-    @Column(COLUMN_ESERVICE_ID)
+    @Id
+    @Column(name = COLUMN_ESERVICE_ID)
     private String eserviceId;
 
-    @Column(COLUMN_EVENT_ID)
+    @Column(name = COLUMN_EVENT_ID)
     private Long eventId;
 
-    @Column(COLUMN_PRODUCER_ID)
+    @Id
+    @Column(name = COLUMN_PRODUCER_ID)
     private String producerId;
 
-    @Column(COLUMN_STATE)
+    @Column(name = COLUMN_STATE)
     private String state;
 
-    @Column(COLUMN_DATE_INSERT)
+    @Column(name = COLUMN_DATE_INSERT)
     private Timestamp tmstInsert;
 
-    @Column(COLUMN_DATE_UPDATE)
+    @Column(name = COLUMN_DATE_UPDATE)
     private Timestamp tmstLastEdit;
 
     @PrePersist

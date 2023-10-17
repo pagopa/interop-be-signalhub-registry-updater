@@ -1,18 +1,18 @@
 package it.pagopa.interop.signalhub.updater.entity;
 
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Getter
 @Setter
-@Table("TRACING_BATCH")
+@Table(name = "TRACING_BATCH")
+@Entity
 @ToString
 public class TracingBatchEntity {
     public static final String COLUMN_BATCH_ID = "batch_id";
@@ -22,19 +22,25 @@ public class TracingBatchEntity {
     public static final String COLUMN_DATE_ENDED = "tmst_ended";
 
     @Id
-    @Column(COLUMN_BATCH_ID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = COLUMN_BATCH_ID)
     private Long batchId;
 
-    @Column(COLUMN_LAST_EVENT_ID)
+    @Column(name = COLUMN_LAST_EVENT_ID)
     private Long lastEventId;
 
-    @Column(COLUMN_STATE)
+    @Column(name = COLUMN_STATE)
     private String state;
 
-    @Column(COLUMN_DATE_STARTED)
+    @Column(name = COLUMN_DATE_STARTED)
     private Timestamp tmstInsert;
 
-    @Column(COLUMN_DATE_ENDED)
+    @Column(name = COLUMN_DATE_ENDED)
     private Timestamp tmstEnded;
+
+    @PrePersist
+    public void prePersist(){
+        this.tmstInsert = Timestamp.from(Instant.now());
+    }
 
 }

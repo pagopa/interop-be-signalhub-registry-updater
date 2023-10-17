@@ -1,21 +1,22 @@
 package it.pagopa.interop.signalhub.updater.repository;
 
 import it.pagopa.interop.signalhub.updater.entity.TracingBatchEntity;
-import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.r2dbc.repository.R2dbcRepository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-public interface TracingBatchRepository extends R2dbcRepository<TracingBatchEntity, Long> {
+import java.util.List;
+import java.util.Optional;
+
+public interface TracingBatchRepository extends JpaRepository<TracingBatchEntity, Long> {
 
 
-    @Query("SELECT * FROM TRACING_BATCH WHERE state = :state order by last_event_id desc limit 1")
-    Mono<TracingBatchEntity> findByStateProgressAndLastEventIdMax(String state);
+    @Query("select trace from TracingBatchEntity trace where trace.state = :state order by trace.lastEventId desc limit 1")
+    Optional<TracingBatchEntity> findByStateProgressAndLastEventIdMax(String state);
 
-    @Query("select * from TRACING_BATCH tb where last_event_id =  (select MAX(last_event_id) from TRACING_BATCH) order by tmst_started desc")
-    Flux<TracingBatchEntity> findByStateAndLastEventIdMax();
+    @Query("select trace from TracingBatchEntity trace where trace.lastEventId = (select MAX(t.lastEventId) from TracingBatchEntity t) order by trace.tmstInsert desc" )
+    List<TracingBatchEntity> findByStateAndLastEventIdMax();
 
-    @Query("SELECT * FROM TRACING_BATCH WHERE state = :state AND last_event_id = :lastEventId")
-    Flux<TracingBatchEntity> findAllStateEndedWithErrorAndLastEventId(String state, Long lastEventId);
+    @Query("SELECT trace FROM TracingBatchEntity trace WHERE trace.state = :state AND trace.lastEventId = :lastEventId")
+    List<TracingBatchEntity> findAllStateEndedWithErrorAndLastEventId(String state, Long lastEventId);
 
 }

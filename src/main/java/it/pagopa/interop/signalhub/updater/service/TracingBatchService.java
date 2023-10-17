@@ -2,18 +2,14 @@ package it.pagopa.interop.signalhub.updater.service;
 
 import it.pagopa.interop.signalhub.updater.model.TracingBatchDto;
 import it.pagopa.interop.signalhub.updater.model.TracingBatchStateEnum;
-import reactor.core.publisher.Mono;
 
 public interface TracingBatchService {
 
-    Mono<Boolean> alreadyExistBatchInProgress();
+    TracingBatchDto checkAndCreateTracingBatch();
 
-    Mono<Integer> countBatchInErrorWithLastEventId(Long lastEventId);
+    TracingBatchDto terminateTracingBatch(Long batchId, TracingBatchStateEnum stateEnum, Long lastEventId);
 
-    Mono<Long> getLastEventId();
+    Integer countBatchInErrorWithLastEventId(Long lastEventId);
 
-    Mono<TracingBatchDto> createTracingBatch();
-
-    Mono<TracingBatchDto> terminateTracingBatch(Long batchId, TracingBatchStateEnum stateEnum, Long lastEventId);
 
 }

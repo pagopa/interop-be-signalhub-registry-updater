@@ -70,14 +70,12 @@ public class RSAKeyReader {
         InputStream inputStream = resource.getInputStream();
         String contentData = IOUtils.readInputStreamToString(inputStream);
         inputStream.close();
-        log.info("Letto : {}", contentData);
         contentData = contentData
                 .replace("-----BEGIN PUBLIC KEY-----", "")
                 .replace("-----END PUBLIC KEY-----", "")
                 .replace("-----BEGIN PRIVATE KEY-----", "")
                 .replace("-----END PRIVATE KEY-----", "")
                 .replaceAll("[\\r\\n]", "");
-        log.info(contentData);
         return Base64.getDecoder().decode(contentData);
 
     }

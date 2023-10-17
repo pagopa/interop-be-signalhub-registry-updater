@@ -3,21 +3,19 @@ package it.pagopa.interop.signalhub.updater.repository;
 
 import it.pagopa.interop.signalhub.updater.entity.ConsumerEService;
 import it.pagopa.interop.signalhub.updater.entity.ConsumerKey;
-import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Mono;
 
-import java.sql.Timestamp;
+import java.util.Optional;
 
 
 @Repository
-public interface ConsumerEserviceRepository extends R2dbcRepository<ConsumerEService, ConsumerKey> {
+public interface ConsumerEserviceRepository extends JpaRepository<ConsumerEService, ConsumerKey> {
 
 
-    @Query("UPDATE CONSUMER_ESERVICE SET tmst_last_edit = :lastEdit, state = :state, event_id = :eventId WHERE eservice_id = :eserviceId AND consumer_id = :consumerId AND event_id < :eventId")
-    Mono<ConsumerEService> updateByEserviceIdAndConsumerIdAndEventId(
-            String eserviceId, String consumerId, String state, Long eventId, Timestamp lastEdit
-    );
+    @Query("select consumer from ConsumerEService consumer where consumer.consumerId = :consumerId AND consumer.eserviceId = :eserviceId")
+    Optional<ConsumerEService> findByEserviceIdAndConsumerId(String eserviceId, String consumerId);
+
 
 }
