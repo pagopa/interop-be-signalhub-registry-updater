@@ -47,7 +47,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         log.info("[{} - {}] Entity saved",
                 eServiceEventDTO.getEventId(),
                 eServiceEventDTO.getEServiceId());
-        organizationEServiceCache.updateEService(mapper.toCacheFromEntity(entity));
+        organizationEServiceCache.updateOrganizationEService(mapper.toCacheFromEntity(entity));
         return mapper.toDtoFromEntity(entity);
     }
 
