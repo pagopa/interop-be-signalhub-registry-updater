@@ -6,11 +6,14 @@ import it.pagopa.interop.signalhub.updater.mapper.ConsumerEServiceMapper;
 import it.pagopa.interop.signalhub.updater.model.AgreementEventDto;
 import it.pagopa.interop.signalhub.updater.model.ConsumerEServiceDto;
 import it.pagopa.interop.signalhub.updater.repository.ConsumerEserviceRepository;
+import it.pagopa.interop.signalhub.updater.repository.cache.model.ConsumerEServiceCache;
+import it.pagopa.interop.signalhub.updater.repository.cache.repository.ConsumerEServiceCacheRepository;
 import it.pagopa.interop.signalhub.updater.service.ConsumerService;
 import it.pagopa.interop.signalhub.updater.service.InteropService;
 import it.pagopa.interop.signalhub.updater.service.OrganizationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 
@@ -23,7 +26,9 @@ public class ConsumerServiceImpl implements ConsumerService {
     private final OrganizationService organizationService;
     private final ConsumerEserviceRepository consumerEserviceRepository;
     private final ConsumerEServiceMapper mapper;
+    private final ConsumerEServiceCacheRepository consumerEServiceCacheRepository;
 
+    @CachePut
     @Override
     public ConsumerEServiceDto updateConsumer(AgreementEventDto agreementEventDto) {
         log.info("[{} - {}] Retrieving detail agreement...", agreementEventDto.getEventId(), agreementEventDto.getAgreementId());
@@ -44,6 +49,7 @@ public class ConsumerServiceImpl implements ConsumerService {
         log.info("[{} - {}] Entity saved",
                 agreementEventDto.getEventId(),
                 agreementEventDto.getAgreementId());
+        consumerEServiceCacheRepository.updateConsumerEService(mapper.toCacheFromEntity(entity));
         return mapper.toDtoFromEntity(entity);
     }
 
