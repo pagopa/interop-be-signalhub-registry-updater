@@ -25,7 +25,7 @@ import java.util.function.Predicate;
 public class InteroperabilityClientImpl implements InteroperabilityClient {
     private GatewayApi gatewayApi;
 
-    public static final Integer MAX_LIMIT_BLOCK = 100;
+    public static final Integer MAX_LIMIT_BLOCK = 500;
 
 
     @Override
