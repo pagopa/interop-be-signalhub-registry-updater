@@ -10,6 +10,7 @@ import it.pagopa.interop.signalhub.updater.service.InteropService;
 import it.pagopa.interop.signalhub.updater.service.OrganizationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 
@@ -39,12 +40,15 @@ public class OrganizationServiceImpl implements OrganizationService {
                 entity.getTmstInsert() ==  null ? "not" : "");
 
 
+        String entityState= entity.getState();
         entity.setState(detailEservice.getState());
         entity = this.repository.saveAndFlush(entity);
         log.info("[{} - {}] Entity saved",
                 eServiceEventDTO.getEventId(),
                 eServiceEventDTO.getEServiceId());
-        organizationEServiceCache.updateOrganizationEService(mapper.toCacheFromEntity(entity));
+        if(!StringUtils.equalsIgnoreCase(entityState, detailEservice.getState())) {
+            organizationEServiceCache.updateOrganizationEService(mapper.toCacheFromEntity(entity));
+        }
         return mapper.toDtoFromEntity(entity);
     }
 
