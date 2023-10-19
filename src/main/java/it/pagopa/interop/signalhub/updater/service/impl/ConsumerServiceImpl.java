@@ -28,7 +28,7 @@ public class ConsumerServiceImpl implements ConsumerService {
     private final ConsumerEServiceMapper mapper;
     private final ConsumerEServiceCacheRepository consumerEServiceCacheRepository;
 
-    @CachePut
+
     @Override
     public ConsumerEServiceDto updateConsumer(AgreementEventDto agreementEventDto) {
         log.info("[{} - {}] Retrieving detail agreement...", agreementEventDto.getEventId(), agreementEventDto.getAgreementId());

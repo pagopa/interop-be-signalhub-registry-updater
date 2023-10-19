@@ -4,6 +4,7 @@ package it.pagopa.interop.signalhub.updater.repository.cache.model;
 import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 
@@ -13,7 +14,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @RedisHash("eservices")
-public class OrganizationEServiceCache {
+public class OrganizationEServiceCache implements Serializable {
     private String eserviceId;
     private String producerId;
     private String state;

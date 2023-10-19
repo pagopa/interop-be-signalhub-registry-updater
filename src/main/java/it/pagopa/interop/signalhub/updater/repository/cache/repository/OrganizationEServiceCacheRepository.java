@@ -1,12 +1,11 @@
 package it.pagopa.interop.signalhub.updater.repository.cache.repository;
 
 
-import it.pagopa.interop.signalhub.updater.repository.cache.model.ConsumerEServiceCache;
 import it.pagopa.interop.signalhub.updater.repository.cache.model.OrganizationEServiceCache;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.HashOperations;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -14,8 +13,9 @@ import org.springframework.stereotype.Repository;
 @Slf4j
 @Repository
 public class OrganizationEServiceCacheRepository {
+    @Qualifier("RedisTemplateOrganization")
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, OrganizationEServiceCache>  redisTemplate;
 
 
 

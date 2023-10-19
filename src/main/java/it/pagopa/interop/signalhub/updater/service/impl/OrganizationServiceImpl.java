@@ -5,13 +5,11 @@ import it.pagopa.interop.signalhub.updater.mapper.OrganizationEServiceMapper;
 import it.pagopa.interop.signalhub.updater.model.EServiceEventDto;
 import it.pagopa.interop.signalhub.updater.model.OrganizationEServiceDto;
 import it.pagopa.interop.signalhub.updater.repository.OrganizationEserviceRepository;
-import it.pagopa.interop.signalhub.updater.repository.cache.model.OrganizationEServiceCache;
 import it.pagopa.interop.signalhub.updater.repository.cache.repository.OrganizationEServiceCacheRepository;
 import it.pagopa.interop.signalhub.updater.service.InteropService;
 import it.pagopa.interop.signalhub.updater.service.OrganizationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 
@@ -26,7 +24,6 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationEServiceCacheRepository organizationEServiceCache;
 
 
-    @CachePut
     @Override
     public OrganizationEServiceDto updateOrganizationEService(EServiceEventDto eServiceEventDTO) {
         log.info("[{} - {}] Retrieving detail eservice...", eServiceEventDTO.getEventId(), eServiceEventDTO.getEServiceId());
