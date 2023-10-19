@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 
 @EnableReactiveMethodSecurity
 @SpringBootApplication
-@EnableScheduling
 public class UpdaterApplication {
 
     public static void main(String[] args) {

@@ -29,8 +29,7 @@ public class AutoUpdaterController {
     private final DeadEventService deadEventService;
 
 
-    @Scheduled(fixedRate = 10000)
-    private void scheduleUpdater() {
+    public void scheduleUpdater() {
         log.info("ScheduleUpdater Started: {}", dateTimeFormatter.format(LocalDateTime.now()));
         try {
             TracingBatchDto instanceTracingBatch = this.tracingBatchService.checkAndCreateTracingBatch();
