@@ -211,10 +211,8 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>it/pagopa/interop/signalhub/push/service/rest/v1/dto/*</exclude>
-                        <exclude>it/pagopa/interop/signalhub/push/service/rest/v1/dto/**</exclude>
-                        <exclude>it/pagopa/interop/signalhub/push/service/generated/*</exclude>
-                        <exclude>it/pagopa/interop/signalhub/push/service/generated/**</exclude>
+                        <exclude>it/pagopa/interop/signalhub/updater/config</exclude>
+                        <exclude>**/UpdaterApplication.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>
