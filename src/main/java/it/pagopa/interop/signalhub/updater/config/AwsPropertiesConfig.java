@@ -8,11 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 @Configuration
-@ConfigurationProperties(prefix = "security.pago-pa-provider")
-public class SecurityProps {
-    private String clientId;
-    private String clientSecret;
-    private String tokenUri;
-    private String kmsKeyId;
-    private String kid;
+@ConfigurationProperties(prefix = "aws")
+public class AwsPropertiesConfig {
+    private String profile;
+    private String region;
 }
