@@ -8,6 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+
 @Mapper(componentModel = "spring")
 public interface OrganizationEServiceMapper {
     @Mappings ({
@@ -30,5 +31,4 @@ public interface OrganizationEServiceMapper {
             @Mapping(target = "state", source = "state" ),
     })
     OrganizationEService toEntityFromProps(String eserviceId, String producerId, String state);
-
 }

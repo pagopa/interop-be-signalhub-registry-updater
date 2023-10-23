@@ -7,8 +7,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface TracingBatchMapper {
-
     TracingBatchDto toDto(TracingBatchEntity entity);
-
-
 }

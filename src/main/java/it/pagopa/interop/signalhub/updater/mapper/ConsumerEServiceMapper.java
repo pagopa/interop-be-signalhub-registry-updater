@@ -22,5 +22,4 @@ public interface ConsumerEServiceMapper {
     ConsumerEService toEntityFromProps(String eserviceId, String consumerId, String state);
 
     ConsumerEServiceCache toCacheFromEntity(ConsumerEService eService);
-
 }
