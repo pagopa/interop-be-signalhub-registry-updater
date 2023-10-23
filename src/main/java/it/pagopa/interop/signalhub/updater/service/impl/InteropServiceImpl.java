@@ -105,14 +105,14 @@ public class InteropServiceImpl implements InteropService {
             EServiceEventDto dto = new EServiceEventDto();
             dto.setEventId(event.getEventId());
             dto.setEServiceId(event.getObjectId().get(ESERVICE_KEY_ID));
-            dto.setEventType(ESERVICE_EVENT);
+            dto.setEventType(event.getEventType());
             dto.setObjectType(event.getObjectType());
             return dto;
         }
         AgreementEventDto dto = new AgreementEventDto();
         dto.setEventId(event.getEventId());
         dto.setAgreementId(event.getObjectId().get(AGREEMENT_KEY_ID));
-        dto.setEventType(AGREEMENT_EVENT);
+        dto.setEventType(event.getEventType());
         dto.setObjectType(event.getObjectType());
         return dto;
     }
