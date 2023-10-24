@@ -27,6 +27,10 @@ public class PublicKeyFactory {
     }
 
     public RSAKey obtainPublicKey(){
+        GetPublicKeyResponse responseKms = getPublicKeyFromKMS();
+        if (responseKms == null || responseKms.publicKey() == null)
+            throw new PDNDKeyFactoryException("Response from KMS is null or public key is null");
+
         byte[] contentPublicKey = getPublicKeyFromKMS().publicKey().asByteArray();
         RSAPublicKey publicKey = createPublicKey(contentPublicKey);
         return buildRSAKeyWithThumbprint(publicKey);
