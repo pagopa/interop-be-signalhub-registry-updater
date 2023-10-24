@@ -1,7 +1,9 @@
 package it.pagopa.interop.signalhub.updater.config;
 
 
+import com.nimbusds.jose.jwk.RSAKey;
 import it.pagopa.interop.signalhub.updater.security.AwsKmsJwtClientAuthenticationParametersConverter;
+import it.pagopa.interop.signalhub.updater.security.PublicKeyFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
@@ -41,17 +43,15 @@ public class BeanBuilder {
         return new InMemoryReactiveClientRegistrationRepository(registration);
     }
 
+    @Bean
+    RSAKey getRsaKey(KmsClient kmsClient, SecurityProps props){
+        return new PublicKeyFactory(kmsClient, props.getKmsKeyId())
+                .obtainPublicKey();
+    }
+
 
     @Bean(name = "interop-webclient")
-    WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations, SecurityProps props, KmsClient kmsClient) {
-
-//        Function<ClientRegistration, JWK> jwkResolver = clientRegistration -> {
-//            if (clientRegistration.getClientAuthenticationMethod().equals(ClientAuthenticationMethod.CLIENT_SECRET_JWT)) {
-//                return RSAKeyReader.getRSAKey(props);
-//            }
-//            return null;
-//        };
-
+    WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations, SecurityProps props, KmsClient kmsClient, RSAKey rsaKey) {
         InMemoryReactiveOAuth2AuthorizedClientService clientService = new InMemoryReactiveOAuth2AuthorizedClientService(clientRegistrations);
         AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager authorizedClientManager =
                 new AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager(clientRegistrations, clientService);
@@ -60,12 +60,11 @@ public class BeanBuilder {
         WebClientReactiveClientCredentialsTokenResponseClient tokenResponseClient =
                 new WebClientReactiveClientCredentialsTokenResponseClient();
 
-        //NimbusJwtClientAuthenticationParametersConverter<OAuth2ClientCredentialsGrantRequest> converter = new NimbusJwtClientAuthenticationParametersConverter<>(jwkResolver);
         AwsKmsJwtClientAuthenticationParametersConverter<OAuth2ClientCredentialsGrantRequest> converter = new AwsKmsJwtClientAuthenticationParametersConverter<>(kmsClient, props);
 
-        converter.setJwtClientAssertionCustomizer((context) -> {
+        converter.setJwtClientAssertionCustomizer(context -> {
             context.getHeaders().header("typ", "JWT");
-            context.getHeaders().header("kid", props.getKid());
+            context.getHeaders().header("kid", rsaKey.getKeyID());
             context.getClaims().claim("aud", "auth.uat.interop.pagopa.it/client-assertion");
         });
 

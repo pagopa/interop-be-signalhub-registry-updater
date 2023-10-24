@@ -8,7 +8,9 @@ import com.nimbusds.jose.util.Base64;
 import com.nimbusds.jose.util.Base64URL;
 import com.nimbusds.jwt.JWTClaimsSet;
 import it.pagopa.interop.signalhub.updater.config.SecurityProps;
+import lombok.Getter;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 import org.springframework.security.oauth2.client.endpoint.AbstractOAuth2AuthorizationGrantRequest;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -32,19 +34,18 @@ import java.util.function.Consumer;
 
 public final class AwsKmsJwtClientAuthenticationParametersConverter<T extends AbstractOAuth2AuthorizationGrantRequest> implements Converter<T, MultiValueMap<String, String>> {
 
-    private KmsClient kmsClient;
-    private SecurityProps securityProps;
+    private final KmsClient kmsClient;
+    private final SecurityProps securityProps;
 
     public AwsKmsJwtClientAuthenticationParametersConverter(KmsClient kmsClient, SecurityProps securityProps) {
         this.kmsClient = kmsClient;
         this.securityProps = securityProps;
     }
 
-    private Consumer<AwsKmsJwtClientAuthenticationParametersConverter.JwtClientAuthenticationContext<T>> jwtClientAssertionCustomizer = (context) -> {
-    };
+    private Consumer<AwsKmsJwtClientAuthenticationParametersConverter.JwtClientAuthenticationContext<T>> jwtClientAssertionCustomizer = context -> {};
 
     @Override
-    public MultiValueMap<String, String> convert(T authorizationGrantRequest) {
+    public MultiValueMap<String, String> convert(@NonNull T authorizationGrantRequest) {
         Assert.notNull(authorizationGrantRequest, "authorizationGrantRequest cannot be null");
         ClientRegistration clientRegistration = authorizationGrantRequest.getClientRegistration();
         if (!ClientAuthenticationMethod.PRIVATE_KEY_JWT.equals(clientRegistration.getClientAuthenticationMethod()) && !ClientAuthenticationMethod.CLIENT_SECRET_JWT.equals(clientRegistration.getClientAuthenticationMethod())) {
@@ -54,7 +55,8 @@ public final class AwsKmsJwtClientAuthenticationParametersConverter<T extends Ab
             Instant issuedAt = Instant.now();
             Instant expiresAt = issuedAt.plus(Duration.ofSeconds(60L));
             org.springframework.security.oauth2.jwt.JwtClaimsSet.Builder claimsBuilder = JwtClaimsSet.builder().issuer(clientRegistration.getClientId()).subject(clientRegistration.getClientId()).audience(Collections.singletonList(clientRegistration.getProviderDetails().getTokenUri())).id(UUID.randomUUID().toString()).issuedAt(issuedAt).expiresAt(expiresAt);
-            AwsKmsJwtClientAuthenticationParametersConverter.JwtClientAuthenticationContext<T> jwtClientAssertionContext = new AwsKmsJwtClientAuthenticationParametersConverter.JwtClientAuthenticationContext(authorizationGrantRequest, headersBuilder, claimsBuilder);
+            AwsKmsJwtClientAuthenticationParametersConverter.JwtClientAuthenticationContext<T> jwtClientAssertionContext =
+                    new AwsKmsJwtClientAuthenticationParametersConverter.JwtClientAuthenticationContext<>(authorizationGrantRequest, headersBuilder, claimsBuilder);
             this.jwtClientAssertionCustomizer.accept(jwtClientAssertionContext);
             JwsHeader jwsHeader = headersBuilder.build();
             JwtClaimsSet jwtClaimsSet = claimsBuilder.build();
@@ -69,7 +71,7 @@ public final class AwsKmsJwtClientAuthenticationParametersConverter<T extends Ab
             String signature = signWithKms(signingInputString);
 
             String token = signingInputString + '.' + signature;
-            MultiValueMap<String, String> parameters = new LinkedMultiValueMap();
+            MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
             parameters.set("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
             parameters.set("client_assertion", token);
             return parameters;
@@ -85,8 +87,7 @@ public final class AwsKmsJwtClientAuthenticationParametersConverter<T extends Ab
                 .build();
 
         SignResponse response = kmsClient.sign(signRequest);
-        String signature = Base64.encode(response.signature().asByteArray()).toString();
-        return signature;
+        return Base64.encode(response.signature().asByteArray()).toString();
     }
 
     public void setJwtClientAssertionCustomizer(Consumer<AwsKmsJwtClientAuthenticationParametersConverter.JwtClientAuthenticationContext<T>> jwtClientAssertionCustomizer) {
@@ -94,6 +95,7 @@ public final class AwsKmsJwtClientAuthenticationParametersConverter<T extends Ab
         this.jwtClientAssertionCustomizer = jwtClientAssertionCustomizer;
     }
 
+    @Getter
     public static final class JwtClientAuthenticationContext<T extends AbstractOAuth2AuthorizationGrantRequest> {
         private final T authorizationGrantRequest;
         private final JwsHeader.Builder headers;
@@ -105,17 +107,6 @@ public final class AwsKmsJwtClientAuthenticationParametersConverter<T extends Ab
             this.claims = claims;
         }
 
-        public T getAuthorizationGrantRequest() {
-            return this.authorizationGrantRequest;
-        }
-
-        public JwsHeader.Builder getHeaders() {
-            return this.headers;
-        }
-
-        public org.springframework.security.oauth2.jwt.JwtClaimsSet.Builder getClaims() {
-            return this.claims;
-        }
     }
 
     private static JWSHeader convert(JwsHeader headers) {
@@ -144,10 +135,8 @@ public final class AwsKmsJwtClientAuthenticationParametersConverter<T extends Ab
 
         List<String> x509CertificateChain = headers.getX509CertificateChain();
         if (!CollectionUtils.isEmpty(x509CertificateChain)) {
-            List<Base64> x5cList = new ArrayList();
-            x509CertificateChain.forEach((x5c) -> {
-                x5cList.add(new Base64(x5c));
-            });
+            List<Base64> x5cList = new ArrayList<>();
+            x509CertificateChain.forEach(x5c -> x5cList.add(new Base64(x5c)));
             if (!x5cList.isEmpty()) {
                 builder.x509CertChain(x5cList);
             }
@@ -178,7 +167,7 @@ public final class AwsKmsJwtClientAuthenticationParametersConverter<T extends Ab
             builder.criticalParams(critical);
         }
 
-        Map<String, Object> customHeaders = new HashMap();
+        Map<String, Object> customHeaders = new HashMap<>();
         headers.getHeaders().forEach((name, value) -> {
             if (!JWSHeader.getRegisteredParameterNames().contains(name)) {
                 customHeaders.put(name, value);
@@ -229,7 +218,7 @@ public final class AwsKmsJwtClientAuthenticationParametersConverter<T extends Ab
             builder.jwtID(jwtId);
         }
 
-        Map<String, Object> customClaims = new HashMap();
+        Map<String, Object> customClaims = new HashMap<>();
         claims.getClaims().forEach((name, value) -> {
             if (!JWTClaimsSet.getRegisteredNames().contains(name)) {
                 customClaims.put(name, value);
@@ -251,4 +240,8 @@ public final class AwsKmsJwtClientAuthenticationParametersConverter<T extends Ab
             throw new JwtEncodingException(String.format("An error occurred while attempting to encode the Jwt: %s", "Unable to convert '" + header + "' JOSE header to a URI"), var3);
         }
     }
+
+
+
+
 }

@@ -8,19 +8,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cache.annotation.EnableCaching;
 
+
 @Slf4j
 @SpringBootApplication
 @EnableCaching
 public class UpdaterApplication implements CommandLineRunner {
 
-    private AutoUpdaterController autoUpdaterController;
+    private final AutoUpdaterController autoUpdaterController;
 
     public UpdaterApplication(AutoUpdaterController autoUpdaterController) {
         this.autoUpdaterController = autoUpdaterController;
     }
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args){
         SpringApplicationBuilder app = new SpringApplicationBuilder(UpdaterApplication.class);
         app.web(WebApplicationType.NONE);
         app.run(args);
@@ -28,8 +28,8 @@ public class UpdaterApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-
         log.info("Running batch");
         autoUpdaterController.scheduleUpdater();
     }
+
 }
