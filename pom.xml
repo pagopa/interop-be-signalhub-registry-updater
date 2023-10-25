@@ -151,6 +151,18 @@
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>secretsmanager</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-junit-jupiter</artifactId>
+            <version>5.15.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-netty</artifactId>
+            <version>5.15.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -233,9 +245,11 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.10</version>
                 <configuration>
                     <excludes>
                         <exclude>it/pagopa/interop/signalhub/updater/config</exclude>
+                        <exclude>it/pagopa/interop/signalhub/updater/generated/**</exclude>
                         <exclude>**/UpdaterApplication.class</exclude>
                     </excludes>
                 </configuration>

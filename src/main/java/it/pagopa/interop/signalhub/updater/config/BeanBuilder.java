@@ -8,6 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.oauth2.client.*;
+import org.springframework.security.oauth2.client.endpoint.NimbusJwtClientAuthenticationParametersConverter;
 import org.springframework.security.oauth2.client.AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.ClientCredentialsReactiveOAuth2AuthorizedClientProvider;
 import org.springframework.security.oauth2.client.InMemoryReactiveOAuth2AuthorizedClientService;
@@ -49,7 +52,7 @@ public class BeanBuilder {
                 .obtainPublicKey();
     }
 
-
+    @Profile("!test")
     @Bean(name = "interop-webclient")
     WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations, SecurityProps props, KmsClient kmsClient, RSAKey rsaKey) {
         InMemoryReactiveOAuth2AuthorizedClientService clientService = new InMemoryReactiveOAuth2AuthorizedClientService(clientRegistrations);
