@@ -244,7 +244,7 @@
                 <version>0.8.10</version>
                 <configuration>
                     <excludes>
-                        <exclude>it/pagopa/interop/signalhub/updater/config</exclude>
+                        <exclude>it/pagopa/interop/signalhub/updater/config/**</exclude>
                         <exclude>it/pagopa/interop/signalhub/updater/generated/**</exclude>
                         <exclude>**/UpdaterApplication.class</exclude>
                     </excludes>
