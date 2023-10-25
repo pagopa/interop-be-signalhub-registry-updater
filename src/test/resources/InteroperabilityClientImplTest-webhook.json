@@ -1,0 +1,224 @@
+[
+     {
+        "httpRequest": {
+            "path": "/1.0/events/?lastEventId=0&limit=100",
+            "method": "GET"
+        },
+        "httpResponse": {
+            "statusCode": 200,
+            "headers": {
+                "content-type": [
+                    "application/json"
+                ]
+            },
+            "body": 
+            {
+                "events": [
+                    {
+                        "eventId": 1,
+                        "eventType": "ADDED",
+                        "objectId": {
+                            "agreementId": "640d9d82-1193-4404-8317-8759fa7e4845"
+                        },
+                        "objectType": "AGREEMENT"
+                    },
+                    {
+                        "eventId": 2,
+                        "eventType": "ADDED",
+                        "objectId": {
+                            "agreementId": "640d9d82-1193-4404-8317-8759fa7e4845"
+                        },
+                        "objectType": "AGREEMENT"
+                    },
+                    {
+                        "eventId": 3,
+                        "eventType": "UPDATED",
+                        "objectId": {
+                            "eServiceId": "515cbcd9-831d-45ca-85e4-802fb2c80112",
+                            "descriptorId": "8a631cab-797b-482d-bf7d-615bf1004368"
+                        },
+                        "objectType": "ESERVICE"
+                    },
+                    {
+                        "eventId": 4,
+                        "eventType": "UPDATED",
+                        "objectId": {
+                            "eServiceId": "515cbcd9-831d-45ca-85e4-802fb2c80112",
+                            "descriptorId": "8a631cab-797b-482d-bf7d-615bf1004368"
+                        },
+                        "objectType": "ESERVICE"
+                    },
+                    {
+                        "eventId": 5,
+                        "eventType": "CREATED",
+                        "objectId": {
+                            "purposeId": "4164d23c-2526-47cf-a680-103df9ddf394"
+                        },
+                        "objectType": "PURPOSE"
+                    },
+                    {
+                        "eventId": 6,
+                        "eventType": "CREATED",
+                        "objectId": {
+                            "purposeId": "4164d23c-2526-47cf-a680-103df9ddf394"
+                        },
+                        "objectType": "PURPOSE"
+                    },
+                    {
+                        "eventId": 7,
+                        "eventType": "UPDATED",
+                        "objectId": {
+                            "purposeId": "4164d23c-2526-47cf-a680-103df9ddf394"
+                        },
+                        "objectType": "PURPOSE"
+                    },
+                    {
+                        "eventId": 8,
+                        "eventType": "UPDATED",
+                        "objectId": {
+                            "purposeId": "4164d23c-2526-47cf-a680-103df9ddf394"
+                        },
+                        "objectType": "PURPOSE"
+                    },
+                    {
+                        "eventId": 9,
+                        "eventType": "UPDATED",
+                        "objectId": {
+                            "purposeId": "f84c2715-af96-4353-8d8d-f17423f1ed15"
+                        },
+                        "objectType": "PURPOSE"
+                    },
+                    {
+                        "eventId": 10,
+                        "eventType": "UPDATED",
+                        "objectId": {
+                            "purposeId": "f84c2715-af96-4353-8d8d-f17423f1ed15"
+                        },
+                        "objectType": "PURPOSE"
+                    }
+                ],
+                "lastEventId": 10
+            }
+
+        }           
+    },
+    {
+        "httpRequest": {
+            "path": "/1.0/events/?lastEventId=10&limit=100",
+            "method": "GET"
+        },
+        "httpResponse": {
+            "statusCode": 200,
+            "headers": {
+                "content-type": [
+                    "application/json"
+                ]
+            },
+            "body": 
+            {
+                "events": [],
+                "lastEventId": 10
+            }
+        }           
+    },
+    {
+        "httpRequest": {
+            "path": "/1.0/eservices/.*",
+            "method": "GET"
+        },
+        "httpResponse": {
+            "statusCode": 200,
+            "headers": {
+                "content-type": [
+                    "application/json"
+                ]
+            },
+            "body": 
+            {
+                "attributes": {
+                    "certified": [
+                        {
+                            "single": {
+                                "code": "L4",
+                                "explicitAttributeVerification": false,
+                                "id": "70d0cded-ddbe-45eb-8a0a-50bfa944acb2",
+                                "origin": "IPA"
+                            }
+                        }
+                    ],
+                    "declared": [],
+                    "verified": []
+                },
+                "description": "DB Geotopografico National Core sc.1:5000 (NC5) - III Edizione 3D - dal 2017",
+                "id": "8ea8c5ca-b464-4040-b56f-925294e01008",
+                "name": "RL-DB Geotopografico National Core-M2052",
+                "producer": {
+                    "category": "Pubbliche Amministrazioni",
+                    "externalId": {
+                        "id": "r_liguri",
+                        "origin": "IPA"
+                    },
+                    "id": "b50eb24c-bd08-44fd-ba6c-b8c003f29df6",
+                    "name": "Regione Liguria"
+                },
+                "serverUrls": [
+                    "https://pdnd-cartografia-test.regione.liguria.it/api/M2052"
+                ],
+                "state": "PUBLISHED",
+                "technology": "REST",
+                "version": "2"
+            }
+        }           
+    },
+    {
+        "httpRequest": {
+            "path": "/1.0/agreements/.*",
+            "method": "GET"
+        },
+        "httpResponse": {
+            "statusCode": 200,
+            "headers": {
+                "content-type": [
+                    "application/json"
+                ]
+            },
+            "body": 
+            {
+                "consumerId": "9a7e5371-0832-4301-9d97-d762f703dd78",
+                "descriptorId": "4d1eb3ed-ab17-4f51-a8ab-314c003276af",
+                "eserviceId": "c9f46158-c3ab-4642-9614-bf97fef6bcfd",
+                "id": "498457c9-f4de-40d2-ad84-aed23c3584fd",
+                "producerId": "84871fd4-2fd7-46ab-9d22-f6b452f4b3c5",
+                "state": "ARCHIVED"
+            }
+        }           
+    },
+    {
+        "httpRequest": {
+            "path": "/1.0/agreements/498457c9-f4de-40d2-ad84-aed23c3584fd",
+            "method": "GET"
+        },
+        "httpResponse": {
+            "statusCode": 404,
+            "headers": {
+                "content-type": [
+                    "application/json"
+                ]
+            },
+            "body":
+            {
+                "type": "string",
+                "status": 400,
+                "title": "Service Unavailable",
+                "correlationId": "53af4f2d-0c87-41ef-a645-b726a821852b",
+                "detail": "Request took too long to complete.",
+                "errors": [
+                    {
+                        "code": "123-4567",
+                        "detail": "Parameter not valid"
+                    }
+                ]
+            }
+        }
+    }
+]
