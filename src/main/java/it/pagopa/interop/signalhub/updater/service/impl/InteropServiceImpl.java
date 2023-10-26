@@ -5,11 +5,9 @@ import it.pagopa.interop.signalhub.updater.exception.PDNDClientException;
 import it.pagopa.interop.signalhub.updater.exception.PDNDConnectionResetException;
 import it.pagopa.interop.signalhub.updater.exception.PDNDNoEventsException;
 import it.pagopa.interop.signalhub.updater.externalclient.InteroperabilityClient;
-import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.Agreement;
-import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.EService;
-import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.Event;
-import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.Events;
+import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.*;
 import it.pagopa.interop.signalhub.updater.mapper.ConsumerEServiceMapper;
+import it.pagopa.interop.signalhub.updater.mapper.EServiceDescriptorMapper;
 import it.pagopa.interop.signalhub.updater.mapper.OrganizationEServiceMapper;
 import it.pagopa.interop.signalhub.updater.model.*;
 import it.pagopa.interop.signalhub.updater.service.InteropService;
@@ -34,6 +32,7 @@ public class InteropServiceImpl implements InteropService {
     private final InteroperabilityClient client;
     private final ConsumerEServiceMapper mapperConsumer;
     private final OrganizationEServiceMapper mapperOrganization;
+    private final EServiceDescriptorMapper eServiceDescriptorMapper;
 
 
     @Override
@@ -99,6 +98,19 @@ public class InteropServiceImpl implements InteropService {
         }
     }
 
+    @Override
+    public EServiceDescriptorDto getEServiceDescriptor(String eserviceId, Long eventId, String descriptorId) {
+        try {
+            EServiceDescriptor eServiceDescriptor = client.getEServiceDescriptor(eserviceId, descriptorId);
+            log.info("[{} - {}] Retrieving detail eservice descriptor", eventId, eserviceId);
+            return eServiceDescriptorMapper.fromEServiceDescriptorToEServiceDescriptorDto(eServiceDescriptor);
+        }  catch (WebClientRequestException ex) {
+            throw new PDNDConnectionResetException("Connection token was expired", eventId);
+        } catch (WebClientResponseException ex) {
+            log.error("[{} - {}] Error with retrieving Eservice detail", eventId, eserviceId);
+            throw new PDNDClientException("Error with retrieve eservice descriptor details", eventId);
+        }
+    }
 
     private EventDto toEventDto(Event event){
         if (event.getObjectType().equals(ESERVICE_EVENT)){
@@ -107,6 +119,7 @@ public class InteropServiceImpl implements InteropService {
             dto.setEServiceId(event.getObjectId().get(ESERVICE_KEY_ID));
             dto.setEventType(event.getEventType());
             dto.setObjectType(event.getObjectType());
+            dto.setDescriptorId(event.getObjectId().get(DESCRIPTOR_ID));
             return dto;
         }
         AgreementEventDto dto = new AgreementEventDto();

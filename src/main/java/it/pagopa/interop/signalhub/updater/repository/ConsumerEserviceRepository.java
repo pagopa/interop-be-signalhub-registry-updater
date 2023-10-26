@@ -12,10 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface ConsumerEserviceRepository extends JpaRepository<ConsumerEService, ConsumerKey> {
-
-
-    @Query("select consumer from ConsumerEService consumer where consumer.consumerId = :consumerId AND consumer.eserviceId = :eserviceId")
-    Optional<ConsumerEService> findByEserviceIdAndConsumerId(String eserviceId, String consumerId);
-
-
+    @Query("select consumer from ConsumerEService consumer where consumer.eserviceId = :eserviceId AND consumer.consumerId = :consumerId  AND consumer.descriptorId = :descriptorId")
+    Optional<ConsumerEService> findByEserviceIdAndConsumerIdAndDescriptorId(String eserviceId, String consumerId, String descriptorId);
 }

@@ -27,6 +27,7 @@ public class DeadEventMapperImpl implements DeadEventMapper {
             deadEvent.setEserviceId(eServiceEventDTO.getEServiceId());
             deadEvent.setEventType(eventDto.getEventType());
             deadEvent.setObjectType(eventDto.getObjectType());
+            deadEvent.setDescriptorId(eventDto.getDescriptorId());
         } else {
             AgreementEventDto agreementEventDto = (AgreementEventDto) eventDto;
             deadEvent.setEventId(eventDto.getEventId());
@@ -34,6 +35,7 @@ public class DeadEventMapperImpl implements DeadEventMapper {
             deadEvent.setAgreementId(agreementEventDto.getAgreementId());
             deadEvent.setEventType(eventDto.getEventType());
             deadEvent.setObjectType(eventDto.getObjectType());
+            deadEvent.setDescriptorId(eventDto.getDescriptorId());
         }
         return deadEvent;
     }

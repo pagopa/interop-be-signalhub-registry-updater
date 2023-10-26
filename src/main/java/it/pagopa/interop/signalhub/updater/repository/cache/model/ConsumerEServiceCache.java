@@ -18,6 +18,8 @@ import java.sql.Timestamp;
 public class ConsumerEServiceCache implements Serializable {
     private String eserviceId;
     private String consumerId;
+    private String agreementId;
+    private String descriptorId;
     private String state;
     private Timestamp tmstInsert;
     private Timestamp tmstLastEdit;

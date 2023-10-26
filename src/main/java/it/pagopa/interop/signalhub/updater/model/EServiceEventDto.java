@@ -2,8 +2,8 @@ package it.pagopa.interop.signalhub.updater.model;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.Objects;
+
 
 @Getter
 @Setter
