@@ -19,6 +19,8 @@ class ConsumerEServiceMapperImplTest {
     private Long eventId;
     private String eserviceId;
     private String consumerId;
+    private String agreementId;
+    private String descriptorId;
     private AgreementState agreementState;
     private String consumerState;
     private String producerId;
@@ -35,13 +37,14 @@ class ConsumerEServiceMapperImplTest {
     @Test
     void toConsumerEServiceDtoFromAgreementTest() {
         Agreement agreement = getAgreement();
-        ConsumerEServiceDto consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, this.eventId);
+        ConsumerEServiceDto consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, eventId);
         assertNotNull(consumerEServiceDto);
-        assertEquals(consumerEServiceDto.getEventId(), this.eventId);
-        assertEquals(consumerEServiceDto.getEserviceId(), this.eserviceId);
-        assertEquals(consumerEServiceDto.getConsumerId(), this.consumerId);
-        assertEquals(consumerEServiceDto.getProducerId(), this.producerId);
-        assertEquals(consumerEServiceDto.getState(), this.consumerState);
+        assertEquals(eventId, consumerEServiceDto.getEventId());
+        assertEquals(eserviceId, consumerEServiceDto.getEserviceId());
+        assertEquals(consumerId, consumerEServiceDto.getConsumerId());
+        assertEquals(producerId, consumerEServiceDto.getProducerId());
+        assertEquals(descriptorId, consumerEServiceDto.getDescriptorId());
+        assertEquals(consumerState, consumerEServiceDto.getState());
     }
 
     @Test
@@ -50,7 +53,7 @@ class ConsumerEServiceMapperImplTest {
         ConsumerEServiceDto consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, null);
         assertNull(consumerEServiceDto);
 
-        consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, this.eventId);
+        consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, eventId);
         assertNotNull(consumerEServiceDto);
 
         agreement = getAgreement();
@@ -58,7 +61,7 @@ class ConsumerEServiceMapperImplTest {
         assertNotNull(consumerEServiceDto);
 
         agreement = new Agreement();
-        consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, this.eventId);
+        consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, eventId);
         assertNotNull(consumerEServiceDto);
     }
 
@@ -68,10 +71,12 @@ class ConsumerEServiceMapperImplTest {
         ConsumerEService consumerEService = getConsumerEService();
         ConsumerEServiceDto consumerEServiceDto = consumerEServiceMapper.toDtoFromEntity(consumerEService);
         assertNotNull(consumerEServiceDto);
-        assertEquals(consumerEServiceDto.getEventId(), this.eventId);
-        assertEquals(consumerEServiceDto.getEserviceId(), this.eserviceId);
-        assertEquals(consumerEServiceDto.getConsumerId(), this.consumerId);
-        assertEquals(consumerEServiceDto.getState(), this.consumerState);
+        assertEquals(eventId, consumerEServiceDto.getEventId());
+        assertEquals(eserviceId, consumerEServiceDto.getEserviceId());
+        assertEquals(consumerId, consumerEServiceDto.getConsumerId());
+        assertEquals(agreementId, consumerEServiceDto.getAgreementId());
+        assertEquals(descriptorId, consumerEServiceDto.getDescriptorId());
+        assertEquals(consumerState, consumerEServiceDto.getState());
     }
 
     @Test
@@ -83,31 +88,70 @@ class ConsumerEServiceMapperImplTest {
 
     @Test
     void toEntityFromPropsTest() {
-        ConsumerEService consumerEService = consumerEServiceMapper.toEntityFromProps(this.eserviceId, this.consumerId, this.consumerState);
+        ConsumerEService consumerEService = consumerEServiceMapper.toEntityFromProps(eserviceId,
+                consumerId,
+                agreementId,
+                descriptorId,
+                consumerState);
         assertNotNull(consumerEService);
-        assertEquals(consumerEService.getEserviceId(), this.eserviceId);
-        assertEquals(consumerEService.getConsumerId(), this.consumerId);
-        assertEquals(consumerEService.getState(), this.consumerState);
+        assertEquals(eserviceId, consumerEService.getEserviceId());
+        assertEquals(consumerId, consumerEService.getConsumerId());
+        assertEquals(agreementId, consumerEService.getAgreementId());
+        assertEquals(descriptorId, consumerEService.getDescriptorId());
+        assertEquals(consumerState, consumerEService.getState());
     }
 
     @Test
     void toEntityFromPropsNullCaseTest() {
-        ConsumerEService consumerEService = consumerEServiceMapper.toEntityFromProps(null, null, null);
+        ConsumerEService consumerEService = consumerEServiceMapper.toEntityFromProps(null, null, null, null, null);
         assertNull(consumerEService);
 
-        consumerEService = consumerEServiceMapper.toEntityFromProps(this.eserviceId, null, null);
+        consumerEService = consumerEServiceMapper.toEntityFromProps(eserviceId, null, null, null, null);
         assertNotNull(consumerEService);
 
-        consumerEService = consumerEServiceMapper.toEntityFromProps(this.eserviceId, this.consumerId, null);
+        consumerEService = consumerEServiceMapper.toEntityFromProps(eserviceId, consumerId, null, null, null);
         assertNotNull(consumerEService);
 
-        consumerEService = consumerEServiceMapper.toEntityFromProps(null, this.consumerId, this.consumerState);
+        consumerEService = consumerEServiceMapper.toEntityFromProps(eserviceId, consumerId, agreementId, null, null);
         assertNotNull(consumerEService);
 
-        consumerEService = consumerEServiceMapper.toEntityFromProps(null, null, this.consumerState);
+        consumerEService = consumerEServiceMapper.toEntityFromProps(eserviceId, consumerId, agreementId, descriptorId, null);
         assertNotNull(consumerEService);
 
-        consumerEService = consumerEServiceMapper.toEntityFromProps(null, this.consumerId, null);
+        consumerEService = consumerEServiceMapper.toEntityFromProps(null, consumerId, agreementId, descriptorId, consumerState);
+        assertNotNull(consumerEService);
+
+        consumerEService = consumerEServiceMapper.toEntityFromProps(null, null, agreementId, descriptorId, consumerState);
+        assertNotNull(consumerEService);
+
+        consumerEService = consumerEServiceMapper.toEntityFromProps(null, null, null, descriptorId, consumerState);
+        assertNotNull(consumerEService);
+
+        consumerEService = consumerEServiceMapper.toEntityFromProps(null, null, null, null, consumerState);
+        assertNotNull(consumerEService);
+
+        consumerEService = consumerEServiceMapper.toEntityFromProps(null, consumerId, null, null, null);
+        assertNotNull(consumerEService);
+
+        consumerEService = consumerEServiceMapper.toEntityFromProps(null, consumerId, agreementId, null, null);
+        assertNotNull(consumerEService);
+
+        consumerEService = consumerEServiceMapper.toEntityFromProps(null, consumerId, agreementId, descriptorId, null);
+        assertNotNull(consumerEService);
+
+        consumerEService = consumerEServiceMapper.toEntityFromProps(null, consumerId, agreementId, descriptorId, null);
+        assertNotNull(consumerEService);
+
+        consumerEService = consumerEServiceMapper.toEntityFromProps(null, null, agreementId, null, null);
+        assertNotNull(consumerEService);
+
+        consumerEService = consumerEServiceMapper.toEntityFromProps(null, null, agreementId, descriptorId, null);
+        assertNotNull(consumerEService);
+
+        consumerEService = consumerEServiceMapper.toEntityFromProps(null, null, agreementId, descriptorId, null);
+        assertNotNull(consumerEService);
+
+        consumerEService = consumerEServiceMapper.toEntityFromProps(null, null, null, descriptorId, null);
         assertNotNull(consumerEService);
     }
 
@@ -116,11 +160,13 @@ class ConsumerEServiceMapperImplTest {
         ConsumerEService consumerEService = getConsumerEService();
         ConsumerEServiceCache consumerEServiceCache = consumerEServiceMapper.toCacheFromEntity(consumerEService);
         assertNotNull(consumerEServiceCache);
-        assertEquals(consumerEServiceCache.getEserviceId(), this.eserviceId);
-        assertEquals(consumerEServiceCache.getConsumerId(), this.consumerId);
-        assertEquals(consumerEServiceCache.getState(), this.consumerState);
-        assertEquals(consumerEServiceCache.getTmstInsert(), this.tmstInsert);
-        assertEquals(consumerEServiceCache.getTmstLastEdit(), this.tmstLastEdit);
+        assertEquals(eserviceId, consumerEServiceCache.getEserviceId());
+        assertEquals(consumerId, consumerEServiceCache.getConsumerId());
+        assertEquals(agreementId, consumerEServiceCache.getAgreementId());
+        assertEquals(descriptorId, consumerEServiceCache.getDescriptorId());
+        assertEquals(consumerState, consumerEServiceCache.getState());
+        assertEquals(tmstInsert, consumerEServiceCache.getTmstInsert());
+        assertEquals(tmstLastEdit, consumerEServiceCache.getTmstLastEdit());
     }
 
     @Test
@@ -146,18 +192,26 @@ class ConsumerEServiceMapperImplTest {
         uuid = new UUID(new BigInteger(producerId.substring(0, 16), 16).longValue(),
                 new BigInteger(producerId.substring(16), 16).longValue());
         agreement.setProducerId(uuid);
-        agreement.setState(this.agreementState);
+
+        String descriptorId = "8a631cab-797b-482d-bf7d-615bf1004368".replace("-", "");
+        uuid = new UUID(new BigInteger(descriptorId.substring(0, 16), 16).longValue(),
+                new BigInteger(descriptorId.substring(16), 16).longValue());
+        agreement.setDescriptorId(uuid);
+        agreement.setState(agreementState);
+
         return agreement;
     }
 
     private ConsumerEService getConsumerEService() {
         ConsumerEService consumerEService = new ConsumerEService();
-        consumerEService.setEventId(this.eventId);
-        consumerEService.setEserviceId(this.eserviceId);
-        consumerEService.setConsumerId(this.consumerId);
-        consumerEService.setState(this.consumerState);
-        consumerEService.setTmstInsert(this.tmstInsert);
-        consumerEService.setTmstLastEdit(this.tmstLastEdit);
+        consumerEService.setEventId(eventId);
+        consumerEService.setEserviceId(eserviceId);
+        consumerEService.setConsumerId(consumerId);
+        consumerEService.setAgreementId(agreementId);
+        consumerEService.setDescriptorId(descriptorId);
+        consumerEService.setState(consumerState);
+        consumerEService.setTmstInsert(tmstInsert);
+        consumerEService.setTmstLastEdit(tmstLastEdit);
         return consumerEService;
     }
 
@@ -166,6 +220,8 @@ class ConsumerEServiceMapperImplTest {
         this.eserviceId = "0f14d0ab-9605-4a62-a9e4-5ed26688389b";
         this.consumerId = "4a620f14-d0ab-9605-a9e4-5ed26688389b";
         this.producerId = "5ed26688-389b-4a62-9605-0f14d0ab9605";
+        this.agreementId = "01920f14-d0ab-9605-a9e4-374650192842";
+        this.descriptorId = "8a631cab-797b-482d-bf7d-615bf1004368";
         this.agreementState = AgreementState.ACTIVE;
         this.consumerState = AgreementState.ACTIVE.toString();
         this.tmstInsert = Timestamp.from(Instant.parse("2023-10-20T18:15:00.000Z"));

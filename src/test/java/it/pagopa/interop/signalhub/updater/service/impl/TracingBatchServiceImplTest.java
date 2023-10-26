@@ -26,10 +26,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class TracingBatchServiceImplTest {
-
     @InjectMocks
     private TracingBatchServiceImpl tracingBatchService;
-
     @Mock
     private TracingBatchRepository repository;
     @Mock
@@ -81,7 +79,6 @@ class TracingBatchServiceImplTest {
         //lastEventId==tracingBatchEntity.getLastEventId()
         Mockito.when(props.getAttemptEvent()).thenReturn(3);
         assertEquals(tracingBatchService.checkAndCreateTracingBatch().getLastEventId(), tracingBatchEntity.getLastEventId());
-
     }
 
     @Test
@@ -91,7 +88,6 @@ class TracingBatchServiceImplTest {
 
         Mockito.when(repository.findAllStateEndedWithErrorAndLastEventId(Mockito.any(), Mockito.any())).thenReturn(new ArrayList<>());
         assertEquals(tracingBatchService.countBatchInErrorWithLastEventId(1l), 0);
-
     }
 
     @Test
@@ -114,8 +110,5 @@ class TracingBatchServiceImplTest {
         Mockito.when(repository.saveAndFlush(Mockito.any())).thenReturn(new TracingBatchEntity());
         Mockito.when(mapper.toDto(Mockito.any())).thenReturn(new TracingBatchDto());
         assertNotNull(tracingBatchService.terminateTracingBatch(1l, ENDED, 1L ));
-
     }
-
-
 }

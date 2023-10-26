@@ -24,9 +24,9 @@ class TracingBatchMapperImplTest {
         TracingBatchEntity tracingBatchEntity = getTracingBatchEntity();
         TracingBatchDto tracingBatchDto = tracingBatchMapper.toDto(tracingBatchEntity);
         assertNotNull(tracingBatchDto);
-        assertEquals(this.batchId, tracingBatchDto.getBatchId());
-        assertEquals(this.lastEventId, tracingBatchDto.getLastEventId());
-        assertEquals(this.state, tracingBatchDto.getState().name());
+        assertEquals(batchId, tracingBatchDto.getBatchId());
+        assertEquals(lastEventId, tracingBatchDto.getLastEventId());
+        assertEquals(state, tracingBatchDto.getState().name());
 
         tracingBatchEntity.setState(null);
         tracingBatchDto = tracingBatchMapper.toDto(tracingBatchEntity);
@@ -43,9 +43,9 @@ class TracingBatchMapperImplTest {
 
     private TracingBatchEntity getTracingBatchEntity() {
         TracingBatchEntity tracingBatchEntity = new TracingBatchEntity();
-        tracingBatchEntity.setBatchId(this.batchId);
-        tracingBatchEntity.setLastEventId(this.lastEventId);
-        tracingBatchEntity.setState(this.state);
+        tracingBatchEntity.setBatchId(batchId);
+        tracingBatchEntity.setLastEventId(lastEventId);
+        tracingBatchEntity.setState(state);
         return tracingBatchEntity;
     }
 

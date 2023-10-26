@@ -13,18 +13,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
+
 
 @ExtendWith(MockitoExtension.class)
 class DeadEventServiceImplTest {
-
-
     @InjectMocks
     private DeadEventServiceImpl deadEventService;
-
     @Mock
     private TracingBatchService tracingBatchService;
     @Mock
@@ -33,6 +28,7 @@ class DeadEventServiceImplTest {
     private DeadEventRepository deadEventRepository;
     @Mock
     private DeadEventMapperImpl deadEventMapperImpl;
+
 
     @Test
     void saveDeadEvent() {

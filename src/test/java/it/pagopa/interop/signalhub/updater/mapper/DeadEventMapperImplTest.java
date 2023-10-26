@@ -16,6 +16,7 @@ class DeadEventMapperImplTest {
     private Long eventId;
     private String eserviceId;
     private String agreementId;
+    private String descriptorId;
     private String objectType;
     private String eventType;
     private DeadEventMapperImpl deadEventMapper;
@@ -32,10 +33,11 @@ class DeadEventMapperImplTest {
         EServiceEventDto eServiceEventDto = getEServiceEventDto();
         DeadEvent deadEvent = deadEventMapper.toDeadEvent(eServiceEventDto);
         assertNotNull(deadEvent);
-        assertEquals(this.eventId, deadEvent.getEventId());
-        assertEquals(this.eserviceId, deadEvent.getEserviceId());
-        assertEquals(this.objectType, deadEvent.getObjectType());
-        assertEquals(this.eventType, deadEvent.getEventType());
+        assertEquals(eventId, deadEvent.getEventId());
+        assertEquals(eserviceId, deadEvent.getEserviceId());
+        assertEquals(objectType, deadEvent.getObjectType());
+        assertEquals(eventType, deadEvent.getEventType());
+        assertEquals(descriptorId, deadEvent.getDescriptorId());
     }
 
     @Test
@@ -43,10 +45,11 @@ class DeadEventMapperImplTest {
         AgreementEventDto agreementEventDto = getAgreementEventDto();
         DeadEvent deadEvent = deadEventMapper.toDeadEvent(agreementEventDto);
         assertNotNull(deadEvent);
-        assertEquals(this.eventId, deadEvent.getEventId());
-        assertEquals(this.agreementId, deadEvent.getAgreementId());
-        assertEquals(this.objectType, deadEvent.getObjectType());
-        assertEquals(this.eventType, deadEvent.getEventType());
+        assertEquals(eventId, deadEvent.getEventId());
+        assertEquals(agreementId, deadEvent.getAgreementId());
+        assertEquals(objectType, deadEvent.getObjectType());
+        assertEquals(eventType, deadEvent.getEventType());
+        assertEquals(descriptorId, deadEvent.getDescriptorId());
     }
 
     @Test
@@ -57,22 +60,24 @@ class DeadEventMapperImplTest {
     }
 
     private AgreementEventDto getAgreementEventDto() {
-        this.objectType = AGREEMENT_EVENT;
+        objectType = AGREEMENT_EVENT;
         AgreementEventDto agreementEventDto = new AgreementEventDto();
-        agreementEventDto.setEventId(this.eventId);
-        agreementEventDto.setAgreementId(this.agreementId);
-        agreementEventDto.setObjectType(this.objectType);
-        agreementEventDto.setEventType(this.eventType);
+        agreementEventDto.setEventId(eventId);
+        agreementEventDto.setAgreementId(agreementId);
+        agreementEventDto.setObjectType(objectType);
+        agreementEventDto.setEventType(eventType);
+        agreementEventDto.setDescriptorId(descriptorId);
         return agreementEventDto;
     }
 
     private EServiceEventDto getEServiceEventDto() {
-        this.objectType = ESERVICE_EVENT;
+        objectType = ESERVICE_EVENT;
         EServiceEventDto eServiceEventDto = new EServiceEventDto();
-        eServiceEventDto.setEventId(this.eventId);
-        eServiceEventDto.setEServiceId(this.eserviceId);
-        eServiceEventDto.setObjectType(this.objectType);
-        eServiceEventDto.setEventType(this.eventType);
+        eServiceEventDto.setEventId(eventId);
+        eServiceEventDto.setEServiceId(eserviceId);
+        eServiceEventDto.setObjectType(objectType);
+        eServiceEventDto.setEventType(eventType);
+        eServiceEventDto.setDescriptorId(descriptorId);
         return eServiceEventDto;
     }
 
@@ -80,6 +85,7 @@ class DeadEventMapperImplTest {
         this.eventId = 0L;
         this.eserviceId = "0f14d0ab-9605-4a62-a9e4-5ed26688389b";
         this.agreementId = "4a620f14-d0ab-9605-a9e4-5ed26688389b";
+        this.descriptorId = "01920f14-d0ab-9605-a9e4-374650192842";
         this.eventType = "ADDED";
         this.deadEventMapper = new DeadEventMapperImpl();
     }

@@ -9,6 +9,8 @@ class ConsumerEServiceDtoTest {
     private String eserviceId;
     private String producerId;
     private String consumerId;
+    private String agreementId;
+    private String descriptorId;
     private String state;
 
     @BeforeEach
@@ -33,6 +35,12 @@ class ConsumerEServiceDtoTest {
         consumerEServiceDto.setConsumerId(consumerId);
         Assertions.assertEquals(consumerId, consumerEServiceDto.getConsumerId());
 
+        consumerEServiceDto.setAgreementId(agreementId);
+        Assertions.assertEquals(agreementId, consumerEServiceDto.getAgreementId());
+
+        consumerEServiceDto.setDescriptorId(descriptorId);
+        Assertions.assertEquals(descriptorId, consumerEServiceDto.getDescriptorId());
+
         consumerEServiceDto.setState(state);
         Assertions.assertEquals(state, consumerEServiceDto.getState());
     }
@@ -56,6 +64,12 @@ class ConsumerEServiceDtoTest {
         stringBuilder.append(", ");
         stringBuilder.append("consumerId=");
         stringBuilder.append(consumerEServiceDto.getConsumerId());
+        stringBuilder.append(", ");
+        stringBuilder.append("agreementId=");
+        stringBuilder.append(consumerEServiceDto.getAgreementId());
+        stringBuilder.append(", ");
+        stringBuilder.append("descriptorId=");
+        stringBuilder.append(consumerEServiceDto.getDescriptorId());
         stringBuilder.append(", ");
         stringBuilder.append("state=");
         stringBuilder.append(consumerEServiceDto.getState());
@@ -86,6 +100,8 @@ class ConsumerEServiceDtoTest {
         consumerEServiceDto.setEserviceId(eserviceId);
         consumerEServiceDto.setProducerId(producerId);
         consumerEServiceDto.setConsumerId(consumerId);
+        consumerEServiceDto.setAgreementId(agreementId);
+        consumerEServiceDto.setDescriptorId(descriptorId);
         consumerEServiceDto.setState(state);
         return consumerEServiceDto;
     }
@@ -95,6 +111,8 @@ class ConsumerEServiceDtoTest {
         this.eserviceId = "01928-37465";
         this.producerId = "09876-54321";
         this.consumerId = "12345-67890";
+        this.agreementId = "47942-13451";
+        this.descriptorId = "98214-75100";
         this.state = "AGREEMENT";
     }
 }
