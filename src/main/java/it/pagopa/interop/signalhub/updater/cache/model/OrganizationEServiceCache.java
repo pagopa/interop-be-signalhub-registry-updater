@@ -1,4 +1,4 @@
-package it.pagopa.interop.signalhub.updater.repository.cache.model;
+package it.pagopa.interop.signalhub.updater.cache.model;
 
 
 import lombok.*;
@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 public class OrganizationEServiceCache implements Serializable {
     private String eserviceId;
     private String producerId;
+    private String descriptorId;
     private String state;
     private Timestamp tmstInsert;
     private Timestamp tmstLastEdit;

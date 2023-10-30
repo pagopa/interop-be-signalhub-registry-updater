@@ -9,8 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.oauth2.client.*;
-import org.springframework.security.oauth2.client.endpoint.NimbusJwtClientAuthenticationParametersConverter;
 import org.springframework.security.oauth2.client.AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.ClientCredentialsReactiveOAuth2AuthorizedClientProvider;
 import org.springframework.security.oauth2.client.InMemoryReactiveOAuth2AuthorizedClientService;
@@ -35,7 +33,7 @@ import software.amazon.awssdk.services.kms.KmsClient;
 public class BeanBuilder {
 
     @Bean
-    ReactiveClientRegistrationRepository getRegistration(SecurityProps props) {
+    public ReactiveClientRegistrationRepository getRegistration(SecurityProps props) {
         ClientRegistration registration = ClientRegistration
                 .withRegistrationId("pago-pa-client")
                 .tokenUri(props.getTokenUri())
@@ -47,14 +45,15 @@ public class BeanBuilder {
     }
 
     @Bean
-    RSAKey getRsaKey(KmsClient kmsClient, SecurityProps props){
+    @Profile("!test")
+    public RSAKey getRsaKey(KmsClient kmsClient, SecurityProps props){
         return new PublicKeyFactory(kmsClient, props.getKmsKeyId())
                 .obtainPublicKey();
     }
 
     @Profile("!test")
     @Bean(name = "interop-webclient")
-    WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations, SecurityProps props, KmsClient kmsClient, RSAKey rsaKey) {
+    public WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations, SecurityProps props, KmsClient kmsClient, RSAKey rsaKey) {
         InMemoryReactiveOAuth2AuthorizedClientService clientService = new InMemoryReactiveOAuth2AuthorizedClientService(clientRegistrations);
         AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager authorizedClientManager =
                 new AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager(clientRegistrations, clientService);

@@ -5,7 +5,7 @@ import it.pagopa.interop.signalhub.updater.mapper.OrganizationEServiceMapper;
 import it.pagopa.interop.signalhub.updater.model.EServiceEventDto;
 import it.pagopa.interop.signalhub.updater.model.OrganizationEServiceDto;
 import it.pagopa.interop.signalhub.updater.repository.OrganizationEserviceRepository;
-import it.pagopa.interop.signalhub.updater.repository.cache.repository.OrganizationEServiceCacheRepository;
+import it.pagopa.interop.signalhub.updater.cache.repository.OrganizationEServiceCacheRepository;
 import it.pagopa.interop.signalhub.updater.service.InteropService;
 import it.pagopa.interop.signalhub.updater.service.OrganizationService;
 import lombok.AllArgsConstructor;

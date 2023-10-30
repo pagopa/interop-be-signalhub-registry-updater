@@ -8,7 +8,6 @@ import it.pagopa.interop.signalhub.updater.mapper.TracingBatchMapper;
 import it.pagopa.interop.signalhub.updater.model.TracingBatchDto;
 import it.pagopa.interop.signalhub.updater.model.TracingBatchStateEnum;
 import it.pagopa.interop.signalhub.updater.repository.TracingBatchRepository;
-import it.pagopa.interop.signalhub.updater.service.DeadEventService;
 import it.pagopa.interop.signalhub.updater.service.TracingBatchService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +52,7 @@ public class TracingBatchServiceImpl implements TracingBatchService {
     public Integer countBatchInErrorWithLastEventId(Long lastEventId) {
         log.info("Retrieve a number of batch in error with event Id {}", lastEventId);
         List<TracingBatchEntity> list = repository.findAllStateEndedWithErrorAndLastEventId(TracingBatchStateEnum.ENDED_WITH_ERROR.name(), lastEventId);
-        if (list == null) return  0;
+        if (list == null || list.isEmpty()) return  0;
         log.info("{} batch in error with event id {}", list.size(), lastEventId);
         return list.size();
     }

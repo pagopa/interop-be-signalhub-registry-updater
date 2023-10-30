@@ -5,6 +5,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import it.pagopa.interop.signalhub.updater.exception.PDNDKeyFactoryException;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.services.kms.KmsClient;
+import software.amazon.awssdk.services.kms.model.CreateKeyRequest;
 import software.amazon.awssdk.services.kms.model.GetPublicKeyRequest;
 import software.amazon.awssdk.services.kms.model.GetPublicKeyResponse;
 

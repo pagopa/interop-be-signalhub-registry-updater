@@ -6,15 +6,13 @@ import it.pagopa.interop.signalhub.updater.mapper.ConsumerEServiceMapper;
 import it.pagopa.interop.signalhub.updater.model.AgreementEventDto;
 import it.pagopa.interop.signalhub.updater.model.ConsumerEServiceDto;
 import it.pagopa.interop.signalhub.updater.repository.ConsumerEserviceRepository;
-import it.pagopa.interop.signalhub.updater.repository.cache.model.ConsumerEServiceCache;
-import it.pagopa.interop.signalhub.updater.repository.cache.repository.ConsumerEServiceCacheRepository;
+import it.pagopa.interop.signalhub.updater.cache.repository.ConsumerEServiceCacheRepository;
 import it.pagopa.interop.signalhub.updater.service.ConsumerService;
 import it.pagopa.interop.signalhub.updater.service.InteropService;
 import it.pagopa.interop.signalhub.updater.service.OrganizationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 

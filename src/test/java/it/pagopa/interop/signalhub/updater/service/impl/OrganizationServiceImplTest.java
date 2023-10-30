@@ -5,8 +5,8 @@ import it.pagopa.interop.signalhub.updater.mapper.OrganizationEServiceMapper;
 import it.pagopa.interop.signalhub.updater.model.EServiceEventDto;
 import it.pagopa.interop.signalhub.updater.model.OrganizationEServiceDto;
 import it.pagopa.interop.signalhub.updater.repository.OrganizationEserviceRepository;
-import it.pagopa.interop.signalhub.updater.repository.cache.model.OrganizationEServiceCache;
-import it.pagopa.interop.signalhub.updater.repository.cache.repository.OrganizationEServiceCacheRepository;
+import it.pagopa.interop.signalhub.updater.cache.model.OrganizationEServiceCache;
+import it.pagopa.interop.signalhub.updater.cache.repository.OrganizationEServiceCacheRepository;
 import it.pagopa.interop.signalhub.updater.service.InteropService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+
 @ExtendWith(MockitoExtension.class)
 class OrganizationServiceImplTest {
 

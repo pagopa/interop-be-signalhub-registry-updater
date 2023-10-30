@@ -1,8 +1,7 @@
-package it.pagopa.interop.signalhub.updater.repository.cache.repository;
+package it.pagopa.interop.signalhub.updater.cache.repository;
 
 
-import it.pagopa.interop.signalhub.updater.repository.cache.model.ConsumerEServiceCache;
-import lombok.AllArgsConstructor;
+import it.pagopa.interop.signalhub.updater.cache.model.ConsumerEServiceCache;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Repository;
 public class ConsumerEServiceCacheRepository {
     @Autowired
     @Qualifier("RedisTemplateConsumer")
-    private RedisTemplate<String,ConsumerEServiceCache>  redisTemplate;
+    private RedisTemplate<String, ConsumerEServiceCache>  redisTemplate;
 
     public void updateConsumerEService(ConsumerEServiceCache item){
         if(ObjectUtils.isNotEmpty(findById(item.getConsumerId(), item.getEserviceId()))) {

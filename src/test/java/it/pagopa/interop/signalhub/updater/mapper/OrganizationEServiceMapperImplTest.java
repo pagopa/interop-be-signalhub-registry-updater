@@ -3,7 +3,7 @@ package it.pagopa.interop.signalhub.updater.mapper;
 import it.pagopa.interop.signalhub.updater.entity.OrganizationEService;
 import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.*;
 import it.pagopa.interop.signalhub.updater.model.OrganizationEServiceDto;
-import it.pagopa.interop.signalhub.updater.repository.cache.model.OrganizationEServiceCache;
+import it.pagopa.interop.signalhub.updater.cache.model.OrganizationEServiceCache;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;

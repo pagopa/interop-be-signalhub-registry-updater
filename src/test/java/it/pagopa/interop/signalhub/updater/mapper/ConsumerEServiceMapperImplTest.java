@@ -4,7 +4,7 @@ import it.pagopa.interop.signalhub.updater.entity.ConsumerEService;
 import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.Agreement;
 import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.AgreementState;
 import it.pagopa.interop.signalhub.updater.model.ConsumerEServiceDto;
-import it.pagopa.interop.signalhub.updater.repository.cache.model.ConsumerEServiceCache;
+import it.pagopa.interop.signalhub.updater.cache.model.ConsumerEServiceCache;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
