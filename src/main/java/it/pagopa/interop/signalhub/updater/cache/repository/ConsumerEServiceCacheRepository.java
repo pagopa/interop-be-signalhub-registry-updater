@@ -16,7 +16,7 @@ public class ConsumerEServiceCacheRepository {
     @Qualifier("RedisTemplateConsumer")
     private RedisTemplate<String, ConsumerEServiceCache>  redisTemplate;
 
-    public void updateOrganizationEService(ConsumerEServiceCache item){
+    public void updateConsumerEService(ConsumerEServiceCache item){
         Long index = this.findByEservice(item);
         if(index != null) {
             redisTemplate.opsForList().set(item.getEserviceId().concat("-").concat(item.getConsumerId()), index, item);
