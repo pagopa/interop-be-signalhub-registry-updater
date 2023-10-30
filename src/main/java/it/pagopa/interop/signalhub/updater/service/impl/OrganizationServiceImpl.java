@@ -1,7 +1,9 @@
 package it.pagopa.interop.signalhub.updater.service.impl;
 
 import it.pagopa.interop.signalhub.updater.entity.OrganizationEService;
+import it.pagopa.interop.signalhub.updater.mapper.EServiceDescriptorMapper;
 import it.pagopa.interop.signalhub.updater.mapper.OrganizationEServiceMapper;
+import it.pagopa.interop.signalhub.updater.model.EServiceDescriptorDto;
 import it.pagopa.interop.signalhub.updater.model.EServiceEventDto;
 import it.pagopa.interop.signalhub.updater.model.OrganizationEServiceDto;
 import it.pagopa.interop.signalhub.updater.repository.OrganizationEserviceRepository;
@@ -21,7 +23,8 @@ import org.springframework.stereotype.Service;
 public class OrganizationServiceImpl implements OrganizationService {
     private final InteropService interopService;
     private final OrganizationEserviceRepository repository;
-    private final OrganizationEServiceMapper mapper;
+    private final OrganizationEServiceMapper organizationEServiceMapper;
+    private final EServiceDescriptorMapper eServiceDescriptorMapper;
     private final OrganizationEServiceCacheRepository organizationEServiceCache;
 
 
@@ -31,7 +34,10 @@ public class OrganizationServiceImpl implements OrganizationService {
         OrganizationEServiceDto detailEservice = this.interopService.getEService(eServiceEventDTO.getEServiceId(), eServiceEventDTO.getEventId());
         log.info("[{} - {}] Detail eservice retrieved with state {}", eServiceEventDTO.getEventId(), eServiceEventDTO.getEServiceId(), detailEservice.getState());
 
-        OrganizationEService entity = this.repository.findByEserviceIdAndProducerId(detailEservice.getEserviceId(), detailEservice.getProducerId())
+        EServiceDescriptorDto eServiceDescriptorDto = this.interopService.getEServiceDescriptor(eServiceEventDTO.getEServiceId(), eServiceEventDTO.getEventId(), eServiceEventDTO.getDescriptorId());
+        detailEservice = eServiceDescriptorMapper.fromEServiceDescriptorDtoToOrganizationEServiceDto(eServiceDescriptorDto, detailEservice);
+
+        OrganizationEService entity = this.repository.findByEserviceIdAndProducerIdAndDescriptorId(detailEservice.getEserviceId(), detailEservice.getProducerId(), eServiceEventDTO.getDescriptorId())
                 .orElse(getInitialEService(detailEservice));
 
         log.info("[{} - {}] Entity {} exist into DB",
@@ -47,31 +53,31 @@ public class OrganizationServiceImpl implements OrganizationService {
                 eServiceEventDTO.getEventId(),
                 eServiceEventDTO.getEServiceId());
         if(!StringUtils.equalsIgnoreCase(entityState, detailEservice.getState())) {
-            organizationEServiceCache.updateOrganizationEService(mapper.toCacheFromEntity(entity));
+            organizationEServiceCache.updateOrganizationEService(organizationEServiceMapper.toCacheFromEntity(entity));
         }
-        return mapper.toDtoFromEntity(entity);
+        return organizationEServiceMapper.toDtoFromEntity(entity);
     }
 
     @Override
-    public OrganizationEServiceDto checkAndUpdate(String eserviceId, String producerId, Long eventId) {
-        log.info("[{} - {}] Check and Update organization eservice", eserviceId, producerId);
-        OrganizationEService entity = this.repository.findByEserviceIdAndProducerId(eserviceId, producerId)
+    public OrganizationEServiceDto checkAndUpdate(String eserviceId, String producerId, String descriptorId, Long eventId) {
+        log.info("[{} - {} - {}] Check and Update organization eservice", eserviceId, producerId, descriptorId);
+        OrganizationEService entity = this.repository.findByEserviceIdAndProducerIdAndDescriptorId(eserviceId, producerId, descriptorId)
                 .orElse(null);
         if (entity != null) {
-            log.info("[{} - {}] Eservice already exist with state {}", eserviceId, producerId, entity.getState());
-            return mapper.toDtoFromEntity(entity);
+            log.info("[{} - {} - {}] Eservice already exist with state {}", eserviceId, producerId, descriptorId, entity.getState());
+            return organizationEServiceMapper.toDtoFromEntity(entity);
         }
 
         EServiceEventDto eventDTO = new EServiceEventDto();
         eventDTO.setEventId(eventId);
         eventDTO.setEServiceId(eserviceId);
-        log.info("[{} - {}] Eservice doesn't exist", eserviceId, producerId);
+        log.info("[{} - {} - {}] Eservice doesn't exist", eserviceId, producerId, descriptorId);
         return updateOrganizationEService(eventDTO);
     }
 
 
     private OrganizationEService getInitialEService(OrganizationEServiceDto dto){
-        OrganizationEService entity = mapper.toEntityFromProps(dto.getEserviceId(), dto.getProducerId(), dto.getState());
+        OrganizationEService entity = organizationEServiceMapper.toEntityFromProps(dto.getEserviceId(), dto.getProducerId(), dto.getState());
         entity.setEventId(dto.getEventId());
         return entity;
     }

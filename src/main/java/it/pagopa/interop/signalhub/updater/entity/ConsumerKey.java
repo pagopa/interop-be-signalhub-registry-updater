@@ -1,9 +1,7 @@
 package it.pagopa.interop.signalhub.updater.entity;
 
-
 import lombok.Getter;
 import lombok.Setter;
-
 import java.io.Serializable;
 
 @Getter
@@ -11,5 +9,5 @@ import java.io.Serializable;
 public class ConsumerKey implements Serializable {
     private String eserviceId;
     private String consumerId;
-
+    private String descriptorId;
 }

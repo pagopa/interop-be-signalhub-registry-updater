@@ -65,9 +65,9 @@ class ConsumerServiceImplTest {
     @Test
     void updateConsumer() {
         Mockito.when(interopService.getConsumerEService(Mockito.any(), Mockito.any())).thenReturn(consumerEServiceDto);
-        Mockito.when(consumerEserviceRepository.findByEserviceIdAndConsumerId(Mockito.any(), Mockito.any())).thenReturn(Optional.empty());
-        Mockito.when(mapper.toEntityFromProps(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(consumerEService);
-        Mockito.when(organizationService.checkAndUpdate(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(new OrganizationEServiceDto());
+        Mockito.when(consumerEserviceRepository.findByEserviceIdAndConsumerIdAndDescriptorId(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Optional.empty());
+        Mockito.when(mapper.toEntityFromProps(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(consumerEService);
+        Mockito.when(organizationService.checkAndUpdate(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(new OrganizationEServiceDto());
         Mockito.when(consumerEserviceRepository.saveAndFlush(Mockito.any())).thenReturn(consumerEService);
         Mockito.when(mapper.toCacheFromEntity(Mockito.any())).thenReturn(new ConsumerEServiceCache());
         Mockito.when(mapper.toDtoFromEntity(Mockito.any())).thenReturn(new ConsumerEServiceDto());

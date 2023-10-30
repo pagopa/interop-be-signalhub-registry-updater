@@ -23,6 +23,7 @@ public class DeadEvent {
     public static final String COLUMN_OBJECT_TYPE = "object_type";
     public static final String COLUMN_ESERVICE_ID = "eservice_id";
     public static final String COLUMN_AGREEMENT_ID = "agreement_id";
+    public static final String COLUMN_DESCRIPTOR_ID = "descriptor_id";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +43,9 @@ public class DeadEvent {
     private String eserviceId;
     @Column(name = COLUMN_AGREEMENT_ID)
     private String agreementId;
+    @Column(name = COLUMN_DESCRIPTOR_ID)
+    private String descriptorId;
+
     @PrePersist
     public void prePersist(){
         this.setTmstInsert(Timestamp.from(Instant.now()));

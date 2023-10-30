@@ -24,7 +24,7 @@ public class ConsumerServiceImpl implements ConsumerService {
     private final InteropService interopService;
     private final OrganizationService organizationService;
     private final ConsumerEserviceRepository consumerEserviceRepository;
-    private final ConsumerEServiceMapper mapper;
+    private final ConsumerEServiceMapper consumerEServiceMapper;
     private final ConsumerEServiceCacheRepository consumerEServiceCacheRepository;
 
 
@@ -34,11 +34,12 @@ public class ConsumerServiceImpl implements ConsumerService {
         ConsumerEServiceDto detailAgreement = this.interopService.getConsumerEService(agreementEventDto.getAgreementId(), agreementEventDto.getEventId());
         log.info("[{} - {}] Detail agreement retrieved with state {}", agreementEventDto.getEventId(), agreementEventDto.getAgreementId(), detailAgreement.getState());
 
-        ConsumerEService entity = this.consumerEserviceRepository.findByEserviceIdAndConsumerId(detailAgreement.getEserviceId(), detailAgreement.getConsumerId())
+        ConsumerEService entity = this.consumerEserviceRepository.findByEserviceIdAndConsumerIdAndDescriptorId(detailAgreement.getEserviceId(), detailAgreement.getConsumerId(), detailAgreement.getDescriptorId())
                 .orElse(getInitialConsumerEService(detailAgreement));
-        log.info("[{} - {}] Entity {} exist into DB",
+        log.info("[{} - {} - {}] Entity {} exist into DB",
                 agreementEventDto.getEventId(),
-                agreementEventDto.getAgreementId(),
+                entity.getAgreementId(),
+                entity.getDescriptorId(),
                 entity.getTmstInsert() ==  null ? "not" : "");
 
         if (detailAgreement.getState().equals("ACTIVE")) checkAndCreateOrganization(detailAgreement, agreementEventDto.getEventId());
@@ -46,22 +47,27 @@ public class ConsumerServiceImpl implements ConsumerService {
         String entityState= entity.getState();
         entity.setState(detailAgreement.getState());
         entity = this.consumerEserviceRepository.saveAndFlush(entity);
-        log.info("[{} - {}] Entity saved",
+        log.info("[{} - {} - {}] Entity saved",
                 agreementEventDto.getEventId(),
-                agreementEventDto.getAgreementId());
+                entity.getAgreementId(),
+                entity.getDescriptorId());
         if(!StringUtils.equalsIgnoreCase(entityState, detailAgreement.getState())) {
-            consumerEServiceCacheRepository.updateConsumerEService(mapper.toCacheFromEntity(entity));
+            consumerEServiceCacheRepository.updateConsumerEService(consumerEServiceMapper.toCacheFromEntity(entity));
         }
-        return mapper.toDtoFromEntity(entity);
+        return consumerEServiceMapper.toDtoFromEntity(entity);
     }
 
     private void checkAndCreateOrganization(ConsumerEServiceDto detailConsumer, Long eventId){
-        this.organizationService.checkAndUpdate(detailConsumer.getEserviceId(), detailConsumer.getProducerId(), eventId);
+        this.organizationService.checkAndUpdate(detailConsumer.getEserviceId(), detailConsumer.getProducerId(), detailConsumer.getDescriptorId(), eventId);
     }
 
 
     private ConsumerEService getInitialConsumerEService(ConsumerEServiceDto consumerdto){
-        ConsumerEService entity = mapper.toEntityFromProps(consumerdto.getEserviceId(), consumerdto.getConsumerId(), consumerdto.getState());
+        ConsumerEService entity = consumerEServiceMapper.toEntityFromProps(consumerdto.getEserviceId(),
+                consumerdto.getConsumerId(),
+                consumerdto.getAgreementId(),
+                consumerdto.getDescriptorId(),
+                consumerdto.getState());
         entity.setEventId(consumerdto.getEventId());
         return entity;
     }

@@ -9,13 +9,9 @@ import java.time.Instant;
 
 class TracingBatchDtoTest {
     private Long batchId;
-
     private Long lastEventId;
-
     private TracingBatchStateEnum state;
-
     private Timestamp dateStarted;
-
     private Timestamp dateEnded;
 
 

@@ -17,9 +17,15 @@ public interface ConsumerEServiceMapper {
     @Mappings({
             @Mapping(target = "eserviceId", source = "eserviceId"),
             @Mapping(target = "consumerId", source = "consumerId" ),
+            @Mapping(target = "agreementId", source = "agreementId"),
+            @Mapping(target = "descriptorId", source = "descriptorId" ),
             @Mapping(target = "state", source = "state" ),
     })
-    ConsumerEService toEntityFromProps(String eserviceId, String consumerId, String state);
+    ConsumerEService toEntityFromProps(String eserviceId,
+                                       String consumerId,
+                                       String agreementId,
+                                       String descriptorId,
+                                       String state);
 
     ConsumerEServiceCache toCacheFromEntity(ConsumerEService eService);
 }

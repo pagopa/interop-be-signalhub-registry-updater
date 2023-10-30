@@ -10,6 +10,7 @@ public abstract class EventDto {
     private Long eventId;
     private String objectType;
     private String eventType;
+    private String descriptorId;
 
 
     @Override

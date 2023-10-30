@@ -14,11 +14,12 @@ public class ConsumerEServiceDto {
     private String eserviceId;
     private String producerId;
     private String consumerId;
+    private String agreementId;
+    private String descriptorId;
     private String state;
 
 
     public boolean isNull(){
         return StringUtils.isBlank(eserviceId) ||  StringUtils.isBlank(consumerId) ||  StringUtils.isBlank(state);
     }
-
 }

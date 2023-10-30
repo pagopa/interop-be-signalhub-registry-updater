@@ -2,9 +2,7 @@ package it.pagopa.interop.signalhub.updater.externalclient.impl;
 
 import it.pagopa.interop.signalhub.updater.externalclient.InteroperabilityClient;
 import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.api.v1.GatewayApi;
-import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.Agreement;
-import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.EService;
-import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.Events;
+import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
@@ -55,6 +53,18 @@ public class InteroperabilityClientImpl implements InteroperabilityClient {
     public EService getEService(String eserviceId) {
         UUID uuidEserviceId = UUID.fromString(eserviceId);
         return gatewayApi.getEService(uuidEserviceId)
+                .retryWhen(
+                        Retry.backoff(4, Duration.ofMillis(1000))
+                                .filter(this.isRetryException())
+                )
+                .block();
+    }
+
+    @Override
+    public EServiceDescriptor getEServiceDescriptor(String eserviceId, String descriptorId) {
+        UUID uuidEserviceId = UUID.fromString(eserviceId);
+        UUID uuidDescriptorId = UUID.fromString(descriptorId);
+        return gatewayApi.getEServiceDescriptor(uuidEserviceId, uuidDescriptorId)
                 .retryWhen(
                         Retry.backoff(4, Duration.ofMillis(1000))
                                 .filter(this.isRetryException())

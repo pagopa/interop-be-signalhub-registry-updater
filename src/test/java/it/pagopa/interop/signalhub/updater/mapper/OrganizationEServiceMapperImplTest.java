@@ -34,15 +34,15 @@ class OrganizationEServiceMapperImplTest {
     @Test
     void fromEServiceToOrganizationEServiceDtoTest() {
         EService eService = getEservice();
-        OrganizationEServiceDto organizationEServiceDto = organizationEServiceMapper.fromEServiceToOrganizationEServiceDto(eService, this.eventId);
+        OrganizationEServiceDto organizationEServiceDto = organizationEServiceMapper.fromEServiceToOrganizationEServiceDto(eService, eventId);
         assertNotNull(organizationEServiceDto);
-        assertEquals(this.eserviceId, organizationEServiceDto.getEserviceId());
-        assertEquals(this.producerId, organizationEServiceDto.getProducerId());
-        assertEquals(this.state, organizationEServiceDto.getState());
-        assertEquals(this.eventId, organizationEServiceDto.getEventId());
+        assertEquals(eserviceId, organizationEServiceDto.getEserviceId());
+        assertEquals(producerId, organizationEServiceDto.getProducerId());
+        assertEquals(state, organizationEServiceDto.getState());
+        assertEquals(eventId, organizationEServiceDto.getEventId());
 
         eService.setProducer(null);
-        organizationEServiceDto = organizationEServiceMapper.fromEServiceToOrganizationEServiceDto(eService, this.eventId);
+        organizationEServiceDto = organizationEServiceMapper.fromEServiceToOrganizationEServiceDto(eService, eventId);
         assertNotNull(organizationEServiceDto);
         assertNull(organizationEServiceDto.getProducerId());
 
@@ -50,17 +50,17 @@ class OrganizationEServiceMapperImplTest {
         Organization organization = getOrganization();
         organization.setId(null);
         eService.setProducer(organization);
-        organizationEServiceDto = organizationEServiceMapper.fromEServiceToOrganizationEServiceDto(eService, this.eventId);
+        organizationEServiceDto = organizationEServiceMapper.fromEServiceToOrganizationEServiceDto(eService, eventId);
         assertNotNull(organizationEServiceDto);
         assertNull(organizationEServiceDto.getProducerId());
 
         eService.setState(null);
-        organizationEServiceDto = organizationEServiceMapper.fromEServiceToOrganizationEServiceDto(eService, this.eventId);
+        organizationEServiceDto = organizationEServiceMapper.fromEServiceToOrganizationEServiceDto(eService, eventId);
         assertNotNull(organizationEServiceDto);
         assertNull(organizationEServiceDto.getState());
 
         eService.setId(null);
-        organizationEServiceDto = organizationEServiceMapper.fromEServiceToOrganizationEServiceDto(eService, this.eventId);
+        organizationEServiceDto = organizationEServiceMapper.fromEServiceToOrganizationEServiceDto(eService, eventId);
         assertNotNull(organizationEServiceDto);
         assertNull(organizationEServiceDto.getEserviceId());
     }
@@ -72,7 +72,7 @@ class OrganizationEServiceMapperImplTest {
         assertNull(organizationEServiceDto);
 
         eService = null;
-        organizationEServiceDto = organizationEServiceMapper.fromEServiceToOrganizationEServiceDto(eService, this.eventId);
+        organizationEServiceDto = organizationEServiceMapper.fromEServiceToOrganizationEServiceDto(eService, eventId);
         assertNotNull(organizationEServiceDto);
 
         eService = getEservice();
@@ -86,10 +86,10 @@ class OrganizationEServiceMapperImplTest {
         OrganizationEService organizationEService = getOrganizationEService();
         OrganizationEServiceDto organizationEServiceDto = organizationEServiceMapper.toDtoFromEntity(organizationEService);
         assertNotNull(organizationEServiceDto);
-        assertEquals(this.eventId, organizationEServiceDto.getEventId());
-        assertEquals(this.eserviceId, organizationEServiceDto.getEserviceId());
-        assertEquals(this.producerId, organizationEServiceDto.getProducerId());
-        assertEquals(this.state, organizationEServiceDto.getState());
+        assertEquals(eventId, organizationEServiceDto.getEventId());
+        assertEquals(eserviceId, organizationEServiceDto.getEserviceId());
+        assertEquals(producerId, organizationEServiceDto.getProducerId());
+        assertEquals(state, organizationEServiceDto.getState());
     }
 
     @Test
@@ -105,11 +105,11 @@ class OrganizationEServiceMapperImplTest {
         OrganizationEService organizationEService = getOrganizationEService();
         OrganizationEServiceCache organizationEServiceCache = organizationEServiceMapper.toCacheFromEntity(organizationEService);
         assertNotNull(organizationEServiceCache);
-        assertEquals(this.eserviceId, organizationEServiceCache.getEserviceId());
-        assertEquals(this.producerId, organizationEServiceCache.getProducerId());
-        assertEquals(this.state, organizationEServiceCache.getState());
-        assertEquals(this.tmstInsert, organizationEServiceCache.getTmstInsert());
-        assertEquals(this.tmstLastEdit, organizationEServiceCache.getTmstLastEdit());
+        assertEquals(eserviceId, organizationEServiceCache.getEserviceId());
+        assertEquals(producerId, organizationEServiceCache.getProducerId());
+        assertEquals(state, organizationEServiceCache.getState());
+        assertEquals(tmstInsert, organizationEServiceCache.getTmstInsert());
+        assertEquals(tmstLastEdit, organizationEServiceCache.getTmstLastEdit());
     }
 
     @Test
@@ -121,11 +121,11 @@ class OrganizationEServiceMapperImplTest {
 
     @Test
     void toEntityFromPropsTest() {
-        OrganizationEService organizationEService = organizationEServiceMapper.toEntityFromProps(this.eserviceId, this.producerId, this.state);
+        OrganizationEService organizationEService = organizationEServiceMapper.toEntityFromProps(eserviceId, producerId, state);
         assertNotNull(organizationEService);
-        assertEquals(this.eserviceId, organizationEService.getEserviceId());
-        assertEquals(this.producerId, organizationEService.getProducerId());
-        assertEquals(this.state, organizationEService.getState());
+        assertEquals(eserviceId, organizationEService.getEserviceId());
+        assertEquals(producerId, organizationEService.getProducerId());
+        assertEquals(state, organizationEService.getState());
     }
 
     @Test
@@ -133,13 +133,13 @@ class OrganizationEServiceMapperImplTest {
         OrganizationEService organizationEService = organizationEServiceMapper.toEntityFromProps(null, null, null);
         assertNull(organizationEService);
 
-        organizationEService = organizationEServiceMapper.toEntityFromProps(this.eserviceId, null, null);
+        organizationEService = organizationEServiceMapper.toEntityFromProps(eserviceId, null, null);
         assertNotNull(organizationEService);
 
-        organizationEService = organizationEServiceMapper.toEntityFromProps(null, this.producerId, null);
+        organizationEService = organizationEServiceMapper.toEntityFromProps(null, producerId, null);
         assertNotNull(organizationEService);
 
-        organizationEService = organizationEServiceMapper.toEntityFromProps(null, null, this.state);
+        organizationEService = organizationEServiceMapper.toEntityFromProps(null, null, state);
         assertNotNull(organizationEService);
     }
 
@@ -178,12 +178,12 @@ class OrganizationEServiceMapperImplTest {
 
     private OrganizationEService getOrganizationEService() {
         OrganizationEService organizationEService = new OrganizationEService();
-        organizationEService.setEventId(this.eventId);
-        organizationEService.setEserviceId(this.eserviceId);
-        organizationEService.setProducerId(this.producerId);
-        organizationEService.setState(this.state);
-        organizationEService.setTmstInsert(this.tmstInsert);
-        organizationEService.setTmstLastEdit(this.tmstLastEdit);
+        organizationEService.setEventId(eventId);
+        organizationEService.setEserviceId(eserviceId);
+        organizationEService.setProducerId(producerId);
+        organizationEService.setState(state);
+        organizationEService.setTmstInsert(tmstInsert);
+        organizationEService.setTmstLastEdit(tmstLastEdit);
         return organizationEService;
     }
 

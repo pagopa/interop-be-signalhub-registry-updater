@@ -11,4 +11,5 @@ import java.io.Serializable;
 public class OrganizationKey implements Serializable {
     private String eserviceId;
     private String producerId;
+    private String descriptorId;
 }
