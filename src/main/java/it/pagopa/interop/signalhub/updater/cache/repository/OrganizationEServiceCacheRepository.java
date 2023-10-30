@@ -3,7 +3,6 @@ package it.pagopa.interop.signalhub.updater.cache.repository;
 
 import it.pagopa.interop.signalhub.updater.cache.model.OrganizationEServiceCache;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -29,4 +28,5 @@ public class OrganizationEServiceCacheRepository {
     private Long findByEservice(OrganizationEServiceCache eServiceCache) {
         return redisTemplate.opsForList().indexOf(eServiceCache.getEserviceId(), eServiceCache);
     }
+
 }
