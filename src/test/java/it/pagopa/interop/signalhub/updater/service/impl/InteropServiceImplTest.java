@@ -40,11 +40,11 @@ class InteropServiceImplTest {
     @Test
     void whenCallGetAgreementsAndEServicesAndEventIsNullOrEmpty() {
         Mockito.when(client.getEventsFromId(Mockito.any())).thenReturn(null);
-        Long lastEventId= 1l;
+        Long lastEventId = 1L;
         PDNDNoEventsException thrownIsNull = assertThrows(
                 PDNDNoEventsException.class,
                 () -> {
-                    interopService.getAgreementsAndEServices(1l);
+                    interopService.getAgreementsAndEServices(1L);
                 }
         );
         assertEquals("No events from last event id ".concat(lastEventId.toString()), thrownIsNull.getMessage());
@@ -54,7 +54,7 @@ class InteropServiceImplTest {
         PDNDNoEventsException thrownIsEmpty = assertThrows(
                 PDNDNoEventsException.class,
                 () -> {
-                    interopService.getAgreementsAndEServices(1l);
+                    interopService.getAgreementsAndEServices(1L);
                 }
         );
         assertEquals("No events from last event id ".concat(lastEventId.toString()), thrownIsEmpty.getMessage());
@@ -63,7 +63,7 @@ class InteropServiceImplTest {
     @Test
     void getAgreementsAndEServices() {
         Event event= new Event();
-        event.setEventId(1l);
+        event.setEventId(1L);
         event.setEventType("test");
         event.setObjectId(new HashMap<>());
         event.setObjectType(ESERVICE_EVENT);
@@ -75,33 +75,33 @@ class InteropServiceImplTest {
         events.setEvents(eventList);
 
         Mockito.when(client.getEventsFromId(Mockito.any())).thenReturn(events);
-        assertNotNull(interopService.getAgreementsAndEServices(1l));
+        assertNotNull(interopService.getAgreementsAndEServices(1L));
 
 
         event.setObjectType(AGREEMENT_EVENT);
         Mockito.when(client.getEventsFromId(Mockito.any())).thenReturn(events);
-        assertNotNull(interopService.getAgreementsAndEServices(1l));
+        assertNotNull(interopService.getAgreementsAndEServices(1L));
     }
 
     @Test
     void getConsumerEService() {
         Mockito.when(client.getAgreement(Mockito.any())).thenReturn(new Agreement());
-        Mockito.when(mapperConsumer.toConsumerEServiceDtoFromAgreement(Mockito.any(), Mockito.any())).thenReturn(new ConsumerEServiceDto());
+        Mockito.when(mapperConsumer.toConsumerEServiceDtoFromAgreement(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(new ConsumerEServiceDto());
 
-        assertNotNull(interopService.getConsumerEService("123", 1l));
+        assertNotNull(interopService.getConsumerEService("123", 1L));
     }
 
     @Test
     void getEService() {
         Mockito.when(client.getEService(Mockito.any())).thenReturn(new EService());
         Mockito.when(mapperOrganization.fromEServiceToOrganizationEServiceDto(Mockito.any(), Mockito.any())).thenReturn(new OrganizationEServiceDto());
-        assertNotNull(interopService.getEService("123", 1l));
+        assertNotNull(interopService.getEService("123", 1L));
     }
 
     @Test
     void getEServiceDescriptor() {
         Mockito.when(client.getEServiceDescriptor(Mockito.any(), Mockito.any())).thenReturn(new EServiceDescriptor());
         Mockito.when(eServiceDescriptorMapper.fromEServiceDescriptorToEServiceDescriptorDto(Mockito.any())).thenReturn(new EServiceDescriptorDto());
-        assertNotNull(interopService.getEServiceDescriptor("123", 1l, "ABC"));
+        assertNotNull(interopService.getEServiceDescriptor("123", 1L, "ABC"));
     }
 }

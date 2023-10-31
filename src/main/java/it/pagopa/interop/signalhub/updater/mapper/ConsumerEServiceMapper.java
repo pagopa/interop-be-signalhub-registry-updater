@@ -10,7 +10,7 @@ import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
 public interface ConsumerEServiceMapper {
-    ConsumerEServiceDto toConsumerEServiceDtoFromAgreement(Agreement agreement, Long eventId);
+    ConsumerEServiceDto toConsumerEServiceDtoFromAgreement(Agreement agreement, String agreementId, Long eventId);
 
     ConsumerEServiceDto toDtoFromEntity(ConsumerEService entity);
 

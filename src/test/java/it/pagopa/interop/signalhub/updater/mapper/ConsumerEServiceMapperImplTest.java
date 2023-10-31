@@ -37,11 +37,12 @@ class ConsumerEServiceMapperImplTest {
     @Test
     void toConsumerEServiceDtoFromAgreementTest() {
         Agreement agreement = getAgreement();
-        ConsumerEServiceDto consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, eventId);
+        ConsumerEServiceDto consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, agreementId,  eventId);
         assertNotNull(consumerEServiceDto);
         assertEquals(eventId, consumerEServiceDto.getEventId());
         assertEquals(eserviceId, consumerEServiceDto.getEserviceId());
         assertEquals(consumerId, consumerEServiceDto.getConsumerId());
+        assertEquals(agreementId, consumerEServiceDto.getAgreementId());
         assertEquals(producerId, consumerEServiceDto.getProducerId());
         assertEquals(descriptorId, consumerEServiceDto.getDescriptorId());
         assertEquals(consumerState, consumerEServiceDto.getState());
@@ -50,18 +51,18 @@ class ConsumerEServiceMapperImplTest {
     @Test
     void toConsumerEServiceDtoFromAgreementNullCaseTest() {
         Agreement agreement = null;
-        ConsumerEServiceDto consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, null);
+        ConsumerEServiceDto consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, agreementId, null);
         assertNull(consumerEServiceDto);
 
-        consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, eventId);
+        consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, agreementId, eventId);
         assertNotNull(consumerEServiceDto);
 
         agreement = getAgreement();
-        consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, null);
+        consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, agreementId, null);
         assertNotNull(consumerEServiceDto);
 
         agreement = new Agreement();
-        consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, eventId);
+        consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, agreementId, eventId);
         assertNotNull(consumerEServiceDto);
     }
 

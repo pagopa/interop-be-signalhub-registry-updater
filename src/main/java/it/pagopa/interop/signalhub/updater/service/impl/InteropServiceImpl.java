@@ -75,7 +75,8 @@ public class InteropServiceImpl implements InteropService {
         try {
             Agreement agreement = client.getAgreement(agreementId);
             log.info("[{} - {}] Retrieving detail agreement", eventId, agreementId);
-            return mapperConsumer.toConsumerEServiceDtoFromAgreement(agreement, eventId);
+            ConsumerEServiceDto dto = mapperConsumer.toConsumerEServiceDtoFromAgreement(agreement, agreementId, eventId);
+            return dto;
         } catch (WebClientRequestException ex) {
             throw new PDNDConnectionResetException("Connection token was expired", eventId);
         } catch (WebClientResponseException ex) {

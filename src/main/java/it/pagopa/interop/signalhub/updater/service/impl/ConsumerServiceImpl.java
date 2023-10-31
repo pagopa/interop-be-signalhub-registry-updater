@@ -32,6 +32,7 @@ public class ConsumerServiceImpl implements ConsumerService {
     public ConsumerEServiceDto updateConsumer(AgreementEventDto agreementEventDto) {
         log.info("[{} - {}] Retrieving detail agreement...", agreementEventDto.getEventId(), agreementEventDto.getAgreementId());
         ConsumerEServiceDto detailAgreement = this.interopService.getConsumerEService(agreementEventDto.getAgreementId(), agreementEventDto.getEventId());
+
         log.info("[{} - {}] Detail agreement retrieved with state {}", agreementEventDto.getEventId(), agreementEventDto.getAgreementId(), detailAgreement.getState());
 
         ConsumerEService entity = this.consumerEserviceRepository.findByEserviceIdAndConsumerIdAndDescriptorId(detailAgreement.getEserviceId(), detailAgreement.getConsumerId(), detailAgreement.getDescriptorId())

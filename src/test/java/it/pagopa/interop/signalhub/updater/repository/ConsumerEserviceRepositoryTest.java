@@ -14,6 +14,8 @@ import java.util.Optional;
 class ConsumerEserviceRepositoryTest extends BaseTest.WithJpa {
     private static final String correctEservice = "1234-eservice-correct";
     private static final String correctConsumer = "1234-consumer-correct";
+    private static final String correctDescriptor = "1234-descriptor-correct";
+
     @Autowired
     private ConsumerEserviceRepository repository;
 
@@ -25,7 +27,7 @@ class ConsumerEserviceRepositoryTest extends BaseTest.WithJpa {
     @Test
     void whenFindConsumerWithBadlyParamThenReturnNull(){
         Optional<ConsumerEService> entity =
-                repository.findByEserviceIdAndConsumerId("123", "123");
+                repository.findByEserviceIdAndConsumerIdAndDescriptorId("123", "123", "1234");
 
         Assertions.assertNotNull(entity);
         Assertions.assertFalse(entity.isPresent());
@@ -35,7 +37,7 @@ class ConsumerEserviceRepositoryTest extends BaseTest.WithJpa {
     @Test
     void whenFindConsumerWithCorrectParamThenReturnEntity(){
         Optional<ConsumerEService> entity =
-                repository.findByEserviceIdAndConsumerId(correctEservice, correctConsumer);
+                repository.findByEserviceIdAndConsumerIdAndDescriptorId(correctEservice, correctConsumer, correctDescriptor);
 
         Assertions.assertNotNull(entity);
         Assertions.assertTrue(entity.isPresent());
@@ -47,6 +49,7 @@ class ConsumerEserviceRepositoryTest extends BaseTest.WithJpa {
         ConsumerEService entity = new ConsumerEService();
         entity.setEserviceId(correctEservice);
         entity.setConsumerId(correctConsumer);
+        entity.setDescriptorId(correctDescriptor);
         entity.setState("ACTIVE");
         entity.setTmstInsert(Timestamp.from(Instant.now()));
         return entity;

@@ -1,6 +1,7 @@
 package it.pagopa.interop.signalhub.updater.repository.cache.repository;
 
-import it.pagopa.interop.signalhub.updater.repository.cache.model.ConsumerEServiceCache;
+import it.pagopa.interop.signalhub.updater.cache.model.ConsumerEServiceCache;
+import it.pagopa.interop.signalhub.updater.cache.repository.ConsumerEServiceCacheRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

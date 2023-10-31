@@ -11,7 +11,7 @@ import static it.pagopa.interop.signalhub.updater.utility.Const.ESERVICE_EVENT;
 
 @Component
 public class DeadEventMapperImpl implements DeadEventMapper {
-    public DeadEventMapperImpl() {}
+
 
 
     public DeadEvent toDeadEvent(EventDto eventDto) {
