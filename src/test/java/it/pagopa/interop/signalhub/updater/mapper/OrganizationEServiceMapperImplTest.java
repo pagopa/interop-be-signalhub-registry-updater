@@ -120,8 +120,10 @@ class OrganizationEServiceMapperImplTest {
     }
 
     @Test
-    void toEntityFromPropsTest() {
-        OrganizationEService organizationEService = organizationEServiceMapper.toEntityFromProps(eserviceId, producerId, state);
+    void toEntityFromDtoTest() {
+        OrganizationEService organizationEService = getOrganizationEService();
+        OrganizationEServiceDto organizationEServiceDto = organizationEServiceMapper.toDtoFromEntity(organizationEService);
+        organizationEService = organizationEServiceMapper.toEntityFromDto(organizationEServiceDto);
         assertNotNull(organizationEService);
         assertEquals(eserviceId, organizationEService.getEserviceId());
         assertEquals(producerId, organizationEService.getProducerId());
@@ -129,18 +131,9 @@ class OrganizationEServiceMapperImplTest {
     }
 
     @Test
-    void toEntityFromPropsNullCaseTest() {
-        OrganizationEService organizationEService = organizationEServiceMapper.toEntityFromProps(null, null, null);
+    void toEntityFromDtoNullCaseTest() {
+        OrganizationEService organizationEService = organizationEServiceMapper.toEntityFromDto(null);
         assertNull(organizationEService);
-
-        organizationEService = organizationEServiceMapper.toEntityFromProps(eserviceId, null, null);
-        assertNotNull(organizationEService);
-
-        organizationEService = organizationEServiceMapper.toEntityFromProps(null, producerId, null);
-        assertNotNull(organizationEService);
-
-        organizationEService = organizationEServiceMapper.toEntityFromProps(null, null, state);
-        assertNotNull(organizationEService);
     }
 
     private Organization getOrganization() {

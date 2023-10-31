@@ -77,7 +77,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 
     private OrganizationEService getInitialEService(OrganizationEServiceDto dto){
-        OrganizationEService entity = organizationEServiceMapper.toEntityFromProps(dto.getEserviceId(), dto.getProducerId(), dto.getState());
+        OrganizationEService entity = organizationEServiceMapper.toEntityFromDto(dto);
         entity.setEventId(dto.getEventId());
         return entity;
     }

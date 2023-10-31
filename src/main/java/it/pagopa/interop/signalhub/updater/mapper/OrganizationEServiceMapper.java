@@ -17,21 +17,13 @@ public interface OrganizationEServiceMapper {
     @Mappings ({
             @Mapping(target = "eserviceId", source = "eService.id"),
             @Mapping(target = "producerId", source = "eService.producer.id" ),
-//            @Mapping(target = "state", source = "eService.state" ),
             @Mapping(target = "eventId", source = "eventId" ),
     })
     OrganizationEServiceDto fromEServiceToOrganizationEServiceDto(EService eService, Long eventId);
-
 
     OrganizationEServiceDto toDtoFromEntity(OrganizationEService entity);
 
     OrganizationEServiceCache toCacheFromEntity(OrganizationEService entity);
 
-
-    @Mappings ({
-            @Mapping(target = "eserviceId", source = "eserviceId"),
-            @Mapping(target = "producerId", source = "producerId" ),
-            @Mapping(target = "state", source = "state" ),
-    })
-    OrganizationEService toEntityFromProps(String eserviceId, String producerId, String state);
+    OrganizationEService toEntityFromDto(OrganizationEServiceDto organizationEServiceDto);
 }
