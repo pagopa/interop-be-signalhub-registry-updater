@@ -12,6 +12,7 @@ public class OrganizationEServiceDto {
     private Long eventId;
     private String eserviceId;
     private String producerId;
+    private String descriptorId;
     private String state;
 
     public boolean isNull(){

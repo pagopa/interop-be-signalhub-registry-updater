@@ -9,5 +9,5 @@ public interface InteropService {
     EventsDto getAgreementsAndEServices(Long lastEventId);
     ConsumerEServiceDto getConsumerEService(String agreementId, Long eventId);
     OrganizationEServiceDto getEService(String eserviceId, Long eventId);
-    EServiceDescriptorDto getEServiceDescriptor(String eserviceId, Long eventId, String descriptorId);
+    OrganizationEServiceDto getEServiceDescriptor(OrganizationEServiceDto organizationEServiceDto);
 }

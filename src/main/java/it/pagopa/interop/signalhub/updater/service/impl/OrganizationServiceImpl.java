@@ -1,9 +1,7 @@
 package it.pagopa.interop.signalhub.updater.service.impl;
 
 import it.pagopa.interop.signalhub.updater.entity.OrganizationEService;
-import it.pagopa.interop.signalhub.updater.mapper.EServiceDescriptorMapper;
 import it.pagopa.interop.signalhub.updater.mapper.OrganizationEServiceMapper;
-import it.pagopa.interop.signalhub.updater.model.EServiceDescriptorDto;
 import it.pagopa.interop.signalhub.updater.model.EServiceEventDto;
 import it.pagopa.interop.signalhub.updater.model.OrganizationEServiceDto;
 import it.pagopa.interop.signalhub.updater.repository.OrganizationEserviceRepository;
@@ -24,34 +22,37 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final InteropService interopService;
     private final OrganizationEserviceRepository repository;
     private final OrganizationEServiceMapper organizationEServiceMapper;
-    private final EServiceDescriptorMapper eServiceDescriptorMapper;
     private final OrganizationEServiceCacheRepository organizationEServiceCache;
 
 
     @Override
     public OrganizationEServiceDto updateOrganizationEService(EServiceEventDto eServiceEventDTO) {
-        log.info("[{} - {}] Retrieving detail eservice...", eServiceEventDTO.getEventId(), eServiceEventDTO.getEServiceId());
+        log.info("[{} - {} - {}] Retrieving detail eservice...", eServiceEventDTO.getEventId(), eServiceEventDTO.getEServiceId(), eServiceEventDTO.getDescriptorId());
+        //Only for retrieving Producer ID
         OrganizationEServiceDto detailEservice = this.interopService.getEService(eServiceEventDTO.getEServiceId(), eServiceEventDTO.getEventId());
-        log.info("[{} - {}] Detail eservice retrieved with state {}", eServiceEventDTO.getEventId(), eServiceEventDTO.getEServiceId(), detailEservice.getState());
+        detailEservice.setDescriptorId(eServiceEventDTO.getDescriptorId());
 
-        EServiceDescriptorDto eServiceDescriptorDto = this.interopService.getEServiceDescriptor(eServiceEventDTO.getEServiceId(), eServiceEventDTO.getEventId(), eServiceEventDTO.getDescriptorId());
-        detailEservice = eServiceDescriptorMapper.fromEServiceDescriptorDtoToOrganizationEServiceDto(eServiceDescriptorDto, detailEservice);
+        log.info("[{} - {} - {}] Detail eservice retrieved with state {}", detailEservice.getEventId(), detailEservice.getEserviceId(), detailEservice.getDescriptorId(), detailEservice.getState());
 
-        OrganizationEService entity = this.repository.findByEserviceIdAndProducerIdAndDescriptorId(detailEservice.getEserviceId(), detailEservice.getProducerId(), eServiceEventDTO.getDescriptorId())
+        //Only setting eservices state
+        detailEservice = this.interopService.getEServiceDescriptor(detailEservice);
+
+        OrganizationEService entity = this.repository.findByEserviceIdAndProducerIdAndDescriptorId(detailEservice.getEserviceId(), detailEservice.getProducerId(), detailEservice.getDescriptorId())
                 .orElse(getInitialEService(detailEservice));
 
-        log.info("[{} - {}] Entity {} exist into DB",
-                eServiceEventDTO.getEventId(),
-                eServiceEventDTO.getEServiceId(),
+        log.info("[{} - {} - {}] Entity {} exist into DB",
+                detailEservice.getEventId(),
+                detailEservice.getEserviceId(),
+                detailEservice.getDescriptorId(),
                 entity.getTmstInsert() ==  null ? "not" : "");
 
 
         String entityState= entity.getState();
         entity.setState(detailEservice.getState());
         entity = this.repository.saveAndFlush(entity);
-        log.info("[{} - {}] Entity saved",
+        log.info("[{} - {} - {}] Entity saved",
                 eServiceEventDTO.getEventId(),
-                eServiceEventDTO.getEServiceId());
+                eServiceEventDTO.getEServiceId(), eServiceEventDTO.getDescriptorId());
         if(!StringUtils.equalsIgnoreCase(entityState, detailEservice.getState())) {
             organizationEServiceCache.updateOrganizationEService(organizationEServiceMapper.toCacheFromEntity(entity));
         }

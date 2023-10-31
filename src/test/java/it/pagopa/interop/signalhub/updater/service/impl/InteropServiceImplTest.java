@@ -4,10 +4,8 @@ import it.pagopa.interop.signalhub.updater.exception.PDNDNoEventsException;
 import it.pagopa.interop.signalhub.updater.externalclient.InteroperabilityClient;
 import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.*;
 import it.pagopa.interop.signalhub.updater.mapper.ConsumerEServiceMapper;
-import it.pagopa.interop.signalhub.updater.mapper.EServiceDescriptorMapper;
 import it.pagopa.interop.signalhub.updater.mapper.OrganizationEServiceMapper;
 import it.pagopa.interop.signalhub.updater.model.ConsumerEServiceDto;
-import it.pagopa.interop.signalhub.updater.model.EServiceDescriptorDto;
 import it.pagopa.interop.signalhub.updater.model.OrganizationEServiceDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,8 +31,6 @@ class InteropServiceImplTest {
     private ConsumerEServiceMapper mapperConsumer;
     @Mock
     private OrganizationEServiceMapper mapperOrganization;
-    @Mock
-    private EServiceDescriptorMapper eServiceDescriptorMapper;
 
 
     @Test
@@ -101,7 +97,6 @@ class InteropServiceImplTest {
     @Test
     void getEServiceDescriptor() {
         Mockito.when(client.getEServiceDescriptor(Mockito.any(), Mockito.any())).thenReturn(new EServiceDescriptor());
-        Mockito.when(eServiceDescriptorMapper.fromEServiceDescriptorToEServiceDescriptorDto(Mockito.any())).thenReturn(new EServiceDescriptorDto());
-        assertNotNull(interopService.getEServiceDescriptor("123", 1L, "ABC"));
+        assertNotNull(interopService.getEServiceDescriptor(new OrganizationEServiceDto()));
     }
 }

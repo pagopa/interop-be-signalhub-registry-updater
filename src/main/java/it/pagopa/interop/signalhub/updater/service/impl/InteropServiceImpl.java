@@ -7,7 +7,6 @@ import it.pagopa.interop.signalhub.updater.exception.PDNDNoEventsException;
 import it.pagopa.interop.signalhub.updater.externalclient.InteroperabilityClient;
 import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.*;
 import it.pagopa.interop.signalhub.updater.mapper.ConsumerEServiceMapper;
-import it.pagopa.interop.signalhub.updater.mapper.EServiceDescriptorMapper;
 import it.pagopa.interop.signalhub.updater.mapper.OrganizationEServiceMapper;
 import it.pagopa.interop.signalhub.updater.model.*;
 import it.pagopa.interop.signalhub.updater.service.InteropService;
@@ -32,7 +31,6 @@ public class InteropServiceImpl implements InteropService {
     private final InteroperabilityClient client;
     private final ConsumerEServiceMapper mapperConsumer;
     private final OrganizationEServiceMapper mapperOrganization;
-    private final EServiceDescriptorMapper eServiceDescriptorMapper;
 
 
     @Override
@@ -75,8 +73,7 @@ public class InteropServiceImpl implements InteropService {
         try {
             Agreement agreement = client.getAgreement(agreementId);
             log.info("[{} - {}] Retrieving detail agreement", eventId, agreementId);
-            ConsumerEServiceDto dto = mapperConsumer.toConsumerEServiceDtoFromAgreement(agreement, agreementId, eventId);
-            return dto;
+            return mapperConsumer.toConsumerEServiceDtoFromAgreement(agreement, agreementId, eventId);
         } catch (WebClientRequestException ex) {
             throw new PDNDConnectionResetException("Connection token was expired", eventId);
         } catch (WebClientResponseException ex) {
@@ -100,16 +97,17 @@ public class InteropServiceImpl implements InteropService {
     }
 
     @Override
-    public EServiceDescriptorDto getEServiceDescriptor(String eserviceId, Long eventId, String descriptorId) {
+    public OrganizationEServiceDto getEServiceDescriptor(OrganizationEServiceDto eServiceDto) {
         try {
-            EServiceDescriptor eServiceDescriptor = client.getEServiceDescriptor(eserviceId, descriptorId);
-            log.info("[{} - {}] Retrieving detail eservice descriptor", eventId, eserviceId);
-            return eServiceDescriptorMapper.fromEServiceDescriptorToEServiceDescriptorDto(eServiceDescriptor);
+            EServiceDescriptor eServiceDescriptor = client.getEServiceDescriptor(eServiceDto.getEserviceId(), eServiceDto.getDescriptorId());
+            log.info("[{} - {} - {}] Retrieved detail eservice descriptor with state = {}", eServiceDto.getEventId(), eServiceDto.getEserviceId(), eServiceDto.getDescriptorId(), eServiceDescriptor.getState());
+            eServiceDto.setState(eServiceDescriptor.getState().getValue());
+            return eServiceDto;
         }  catch (WebClientRequestException ex) {
-            throw new PDNDConnectionResetException("Connection token was expired", eventId);
+            throw new PDNDConnectionResetException("Connection token was expired", eServiceDto.getEventId());
         } catch (WebClientResponseException ex) {
-            log.error("[{} - {}] Error with retrieving Eservice detail", eventId, eserviceId);
-            throw new PDNDClientException("Error with retrieve eservice descriptor details", eventId);
+            log.error("[{} - {} - {}] Error with retrieving Eservice detail", eServiceDto.getEventId(), eServiceDto.getEserviceId(), eServiceDto.getDescriptorId());
+            throw new PDNDClientException("Error with retrieve eservice descriptor details", eServiceDto.getEventId());
         }
     }
 
