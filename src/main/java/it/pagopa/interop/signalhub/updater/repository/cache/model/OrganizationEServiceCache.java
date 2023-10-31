@@ -19,6 +19,7 @@ public class OrganizationEServiceCache implements Serializable {
     private String eserviceId;
     private String producerId;
     private String state;
+    private Long eventId;
     private String descriptorId;
     private Timestamp tmstInsert;
     private Timestamp tmstLastEdit;
