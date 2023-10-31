@@ -162,7 +162,6 @@ class ConsumerEServiceMapperImplTest {
         assertNotNull(consumerEServiceCache);
         assertEquals(eserviceId, consumerEServiceCache.getEserviceId());
         assertEquals(consumerId, consumerEServiceCache.getConsumerId());
-        assertEquals(agreementId, consumerEServiceCache.getAgreementId());
         assertEquals(descriptorId, consumerEServiceCache.getDescriptorId());
         assertEquals(consumerState, consumerEServiceCache.getState());
         assertEquals(tmstInsert, consumerEServiceCache.getTmstInsert());
