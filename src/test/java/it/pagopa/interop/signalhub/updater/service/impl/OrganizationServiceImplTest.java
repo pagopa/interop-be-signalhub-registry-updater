@@ -66,7 +66,7 @@ class OrganizationServiceImplTest {
         Mockito.when(interopService.getEService(Mockito.any(), Mockito.any())).thenReturn(organizationEServiceDto);
         Mockito.when(interopService.getEService(Mockito.any(), Mockito.any())).thenReturn(organizationEServiceDto);
         Mockito.when(repository.findByEserviceIdAndProducerIdAndDescriptorId(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Optional.empty());
-        Mockito.when(mapper.toEntityFromProps(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(organizationEService);
+        Mockito.when(mapper.toEntityFromDto(Mockito.any())).thenReturn(organizationEService);
         Mockito.when(repository.saveAndFlush(Mockito.any())).thenReturn(organizationEService);
         Mockito.when(mapper.toCacheFromEntity(Mockito.any())).thenReturn(new OrganizationEServiceCache());
         Mockito.when(mapper.toDtoFromEntity(Mockito.any())).thenReturn(new OrganizationEServiceDto());
@@ -88,7 +88,7 @@ class OrganizationServiceImplTest {
         Mockito.when(mapper.toDtoFromEntity(Mockito.any())).thenReturn(new OrganizationEServiceDto());
         Mockito.when(interopService.getEService(Mockito.any(), Mockito.any())).thenReturn(organizationEServiceDto);
         Mockito.when(repository.findByEserviceIdAndProducerIdAndDescriptorId(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Optional.empty());
-        Mockito.when(mapper.toEntityFromProps(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(organizationEService);
+        Mockito.when(mapper.toEntityFromDto(Mockito.any())).thenReturn(organizationEService);
         Mockito.when(repository.saveAndFlush(Mockito.any())).thenReturn(organizationEService);
         Mockito.when(mapper.toCacheFromEntity(Mockito.any())).thenReturn(new OrganizationEServiceCache());
         Mockito.when(mapper.toDtoFromEntity(Mockito.any())).thenReturn(new OrganizationEServiceDto());

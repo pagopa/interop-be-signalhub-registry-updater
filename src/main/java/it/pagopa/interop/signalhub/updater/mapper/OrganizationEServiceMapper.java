@@ -19,16 +19,9 @@ public interface OrganizationEServiceMapper {
     })
     OrganizationEServiceDto fromEServiceToOrganizationEServiceDto(EService eService, Long eventId);
 
-
     OrganizationEServiceDto toDtoFromEntity(OrganizationEService entity);
 
     OrganizationEServiceCache toCacheFromEntity(OrganizationEService entity);
 
-
-    @Mappings ({
-            @Mapping(target = "eserviceId", source = "eserviceId"),
-            @Mapping(target = "producerId", source = "producerId" ),
-            @Mapping(target = "state", source = "state" ),
-    })
-    OrganizationEService toEntityFromProps(String eserviceId, String producerId, String state);
+    OrganizationEService toEntityFromDto(OrganizationEServiceDto organizationEServiceDto);
 }
