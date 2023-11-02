@@ -126,6 +126,7 @@ public class InteropServiceImpl implements InteropService {
         dto.setAgreementId(event.getObjectId().get(AGREEMENT_KEY_ID));
         dto.setEventType(event.getEventType());
         dto.setObjectType(event.getObjectType());
+        dto.setDescriptorId(event.getObjectId().get(DESCRIPTOR_ID));
         return dto;
     }
 }
