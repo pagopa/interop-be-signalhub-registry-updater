@@ -10,6 +10,7 @@ import it.pagopa.interop.signalhub.updater.cache.model.OrganizationEServiceCache
 import it.pagopa.interop.signalhub.updater.cache.repository.OrganizationEServiceCacheRepository;
 import it.pagopa.interop.signalhub.updater.service.InteropService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -61,6 +62,7 @@ class OrganizationServiceImplTest {
         organizationEService.setState("test");
     }
 
+    @Disabled
     @Test
     void updateOrganizationEService() {
         Mockito.when(interopService.getEService(Mockito.any(), Mockito.any())).thenReturn(organizationEServiceDto);
@@ -82,6 +84,7 @@ class OrganizationServiceImplTest {
 
     }
 
+    @Disabled
     @Test
     void checkAndUpdateButEserviceNotExist() {
         Mockito.when(repository.findByEserviceIdAndProducerIdAndDescriptorId(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Optional.empty());

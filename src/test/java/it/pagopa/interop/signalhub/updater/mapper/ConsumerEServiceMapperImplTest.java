@@ -51,7 +51,7 @@ class ConsumerEServiceMapperImplTest {
     @Test
     void toConsumerEServiceDtoFromAgreementNullCaseTest() {
         Agreement agreement = null;
-        ConsumerEServiceDto consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, agreementId, null);
+        ConsumerEServiceDto consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, null, null);
         assertNull(consumerEServiceDto);
 
         consumerEServiceDto = consumerEServiceMapper.toConsumerEServiceDtoFromAgreement(agreement, agreementId, eventId);

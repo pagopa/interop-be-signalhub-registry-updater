@@ -9,6 +9,7 @@ class OrganizationEServiceDtoTest {
     private Long eventId;
     private String eserviceId;
     private String producerId;
+    private String descriptorId;
     private String state;
 
 
@@ -31,6 +32,9 @@ class OrganizationEServiceDtoTest {
         organizationEServiceDto.setProducerId(producerId);
         Assertions.assertEquals(producerId, organizationEServiceDto.getProducerId());
 
+        organizationEServiceDto.setDescriptorId(descriptorId);
+        Assertions.assertEquals(descriptorId, organizationEServiceDto.getDescriptorId());
+
         organizationEServiceDto.setState(state);
         Assertions.assertEquals(state, organizationEServiceDto.getState());
     }
@@ -51,6 +55,9 @@ class OrganizationEServiceDtoTest {
         stringBuilder.append(", ");
         stringBuilder.append("producerId=");
         stringBuilder.append(organizationEServiceDto.getProducerId());
+        stringBuilder.append(", ");
+        stringBuilder.append("descriptorId=");
+        stringBuilder.append(organizationEServiceDto.getDescriptorId());
         stringBuilder.append(", ");
         stringBuilder.append("state=");
         stringBuilder.append(organizationEServiceDto.getState());
@@ -80,6 +87,7 @@ class OrganizationEServiceDtoTest {
         organizationEServiceDto.setEventId(eventId);
         organizationEServiceDto.setEserviceId(eserviceId);
         organizationEServiceDto.setProducerId(producerId);
+        organizationEServiceDto.setDescriptorId(descriptorId);
         organizationEServiceDto.setState(state);
         return organizationEServiceDto;
     }
@@ -88,6 +96,7 @@ class OrganizationEServiceDtoTest {
         this.eventId = 0L;
         this.eserviceId = "01928-37465";
         this.producerId = "09876-54321";
+        this.descriptorId = "09876-332244";
         this.state = "AGREEMENT";
     }
 }
