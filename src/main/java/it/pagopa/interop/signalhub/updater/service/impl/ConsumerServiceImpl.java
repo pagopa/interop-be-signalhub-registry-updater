@@ -52,7 +52,7 @@ public class ConsumerServiceImpl implements ConsumerService {
                 agreementEventDto.getEventId(),
                 agreementEventDto.getAgreementId());
         if(!StringUtils.equalsIgnoreCase(entityState, detailAgreement.getState())) {
-            consumerEServiceCacheRepository.updateConsumerEService(mapper.toCacheFromEntity(entity));
+            consumerEServiceCacheRepository.updateOrganizationEService(mapper.toCacheFromEntity(entity));
         }
         return mapper.toDtoFromEntity(entity);
     }
