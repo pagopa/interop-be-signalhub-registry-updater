@@ -13,8 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 public abstract class BaseTest {
 
     @DataJpaTest
-    public static class WithJpa {
-    }
+    public static class WithJpa { }
 
     @Slf4j
     @SpringBootTest

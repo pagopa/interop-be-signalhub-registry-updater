@@ -123,7 +123,7 @@
     },
     {
         "httpRequest": {
-            "path": "/1.0/eservices/.*",
+            "path": "/1.0/eservices/0f14d0ab-9605-4a62-a9e4-5ed26688389b",
             "method": "GET"
         },
         "httpResponse": {
@@ -195,11 +195,65 @@
     },
     {
         "httpRequest": {
+            "path": "/1.0/eservices/498457c9-f4de-40d2-ad84-aed23c3584fd",
+            "method": "GET"
+        },
+        "httpResponse": {
+            "statusCode": 400,
+            "headers": {
+                "content-type": [
+                    "application/json"
+                ]
+            },
+            "body": {
+                "type": "string",
+                "status": 400,
+                "title": "Service Unavailable",
+                "correlationId": "53af4f2d-0c87-41ef-a645-b726a821852b",
+                "detail": "Request took too long to complete.",
+                "errors": [
+                    {
+                        "code": "123-4567",
+                        "detail": "Parameter not valid"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "httpRequest": {
+            "path": "/1.0/eservices/1925cc0d-b65c-4a78-beca-b990b933ecf3",
+            "method": "GET"
+        },
+        "httpResponse": {
+            "statusCode": 429,
+            "headers": {
+                "content-type": [
+                    "application/json"
+                ]
+            },
+            "body": {
+                "type": "string",
+                "status": 429,
+                "title": "Service Unavailable",
+                "correlationId": "53af4f2d-0c87-41ef-a645-b726a821852b",
+                "detail": "Request took too long to complete.",
+                "errors": [
+                    {
+                        "code": "123-4567",
+                        "detail": "Parameter not valid"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "httpRequest": {
             "path": "/1.0/agreements/498457c9-f4de-40d2-ad84-aed23c3584fd",
             "method": "GET"
         },
         "httpResponse": {
-            "statusCode": 404,
+            "statusCode": 400,
             "headers": {
                 "content-type": [
                     "application/json"

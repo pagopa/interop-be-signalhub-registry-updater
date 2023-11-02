@@ -30,6 +30,7 @@ import software.amazon.awssdk.services.kms.KmsClient;
 
 @Slf4j
 @Configuration
+@Profile("!test")
 public class BeanBuilder {
 
     @Bean
@@ -45,13 +46,12 @@ public class BeanBuilder {
     }
 
     @Bean
-    @Profile("!test")
     public RSAKey getRsaKey(KmsClient kmsClient, SecurityProps props){
         return new PublicKeyFactory(kmsClient, props.getKmsKeyId())
                 .obtainPublicKey();
     }
 
-    @Profile("!test")
+
     @Bean(name = "interop-webclient")
     public WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations, SecurityProps props, KmsClient kmsClient, RSAKey rsaKey) {
         InMemoryReactiveOAuth2AuthorizedClientService clientService = new InMemoryReactiveOAuth2AuthorizedClientService(clientRegistrations);
