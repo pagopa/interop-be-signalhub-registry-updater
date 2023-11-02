@@ -35,7 +35,7 @@ public class ConsumerServiceImpl implements ConsumerService {
 
         log.info("[{} - {}] Detail agreement retrieved with state {}", agreementEventDto.getEventId(), agreementEventDto.getAgreementId(), detailAgreement.getState());
 
-        ConsumerEService entity = this.consumerEserviceRepository.findByEserviceIdAndConsumerIdAndDescriptorId(detailAgreement.getEserviceId(), detailAgreement.getConsumerId(), detailAgreement.getDescriptorId())
+        ConsumerEService entity = this.consumerEserviceRepository.findByEserviceIdAndConsumerIdAndDescriptorId(detailAgreement.getAgreementId())
                 .orElse(getInitialConsumerEService(detailAgreement));
         log.info("[{} - {} - {}] Entity {} exist into DB",
                 agreementEventDto.getEventId(),

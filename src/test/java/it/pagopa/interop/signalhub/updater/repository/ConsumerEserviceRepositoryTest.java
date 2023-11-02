@@ -12,9 +12,7 @@ import java.time.Instant;
 import java.util.Optional;
 
 class ConsumerEserviceRepositoryTest extends BaseTest.WithJpa {
-    private static final String correctEservice = "1234-eservice-correct";
-    private static final String correctConsumer = "1234-consumer-correct";
-    private static final String correctDescriptor = "1234-descriptor-correct";
+    private static final String correctAgreement = "1234-agreement-correct";
 
     @Autowired
     private ConsumerEserviceRepository repository;
@@ -27,7 +25,7 @@ class ConsumerEserviceRepositoryTest extends BaseTest.WithJpa {
     @Test
     void whenFindConsumerWithBadlyParamThenReturnNull(){
         Optional<ConsumerEService> entity =
-                repository.findByEserviceIdAndConsumerIdAndDescriptorId("123", "123", "1234");
+                repository.findByEserviceIdAndConsumerIdAndDescriptorId("123");
 
         Assertions.assertNotNull(entity);
         Assertions.assertFalse(entity.isPresent());
@@ -37,7 +35,7 @@ class ConsumerEserviceRepositoryTest extends BaseTest.WithJpa {
     @Test
     void whenFindConsumerWithCorrectParamThenReturnEntity(){
         Optional<ConsumerEService> entity =
-                repository.findByEserviceIdAndConsumerIdAndDescriptorId(correctEservice, correctConsumer, correctDescriptor);
+                repository.findByEserviceIdAndConsumerIdAndDescriptorId(correctAgreement);
 
         Assertions.assertNotNull(entity);
         Assertions.assertTrue(entity.isPresent());
@@ -47,9 +45,10 @@ class ConsumerEserviceRepositoryTest extends BaseTest.WithJpa {
 
     private ConsumerEService getEntity(){
         ConsumerEService entity = new ConsumerEService();
-        entity.setEserviceId(correctEservice);
-        entity.setConsumerId(correctConsumer);
-        entity.setDescriptorId(correctDescriptor);
+        entity.setAgreementId(correctAgreement);
+        entity.setEserviceId("correctEservice");
+        entity.setConsumerId("correctConsumer");
+        entity.setDescriptorId("correctDescriptor");
         entity.setState("ACTIVE");
         entity.setTmstInsert(Timestamp.from(Instant.now()));
         return entity;

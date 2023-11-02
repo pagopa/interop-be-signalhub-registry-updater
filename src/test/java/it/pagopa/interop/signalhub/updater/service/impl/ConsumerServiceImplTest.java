@@ -46,7 +46,7 @@ class ConsumerServiceImplTest {
     void inizialize(){
         agreementEventDto= new AgreementEventDto();
         agreementEventDto.setAgreementId("123");
-        agreementEventDto.setEventId(1l);
+        agreementEventDto.setEventId(1L);
         agreementEventDto.setEventType("test");
         agreementEventDto.setObjectType("test");
 
@@ -54,7 +54,7 @@ class ConsumerServiceImplTest {
         consumerEServiceDto.setConsumerId("123");
         consumerEServiceDto.setEserviceId("123");
         consumerEServiceDto.setState("ACTIVE");
-        consumerEServiceDto.setEventId(1l);
+        consumerEServiceDto.setEventId(1L);
 
         consumerEService= new ConsumerEService();
         consumerEService.setConsumerId("123");
@@ -65,7 +65,7 @@ class ConsumerServiceImplTest {
     @Test
     void updateConsumer() {
         Mockito.when(interopService.getConsumerEService(Mockito.any(), Mockito.any())).thenReturn(consumerEServiceDto);
-        Mockito.when(consumerEserviceRepository.findByEserviceIdAndConsumerIdAndDescriptorId(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Optional.empty());
+        Mockito.when(consumerEserviceRepository.findByEserviceIdAndConsumerIdAndDescriptorId(Mockito.any())).thenReturn(Optional.empty());
         Mockito.when(mapper.toEntityFromProps(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(consumerEService);
         Mockito.when(organizationService.checkAndUpdate(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(new OrganizationEServiceDto());
         Mockito.when(consumerEserviceRepository.saveAndFlush(Mockito.any())).thenReturn(consumerEService);
