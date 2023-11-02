@@ -72,7 +72,8 @@ public class OrganizationServiceImpl implements OrganizationService {
         EServiceEventDto eventDTO = new EServiceEventDto();
         eventDTO.setEventId(eventId);
         eventDTO.setEServiceId(eserviceId);
-        log.info("[{} - {} - {}] Eservice doesn't exist", eserviceId, producerId, descriptorId);
+        eventDTO.setDescriptorId(descriptorId);
+        log.info("[{} - {} - {}] Eservice doesn't exist", eventDTO.getEServiceId(), producerId, eventDTO.getDescriptorId());
         return updateOrganizationEService(eventDTO);
     }
 
