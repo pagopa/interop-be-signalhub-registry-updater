@@ -113,24 +113,30 @@ public class DataBuilder {
 
         events.setEvents(
                 List.of(
-                        getEventDto("63362ead-f496-4a00-8d1e-1073d744a13f"),
-                        getEventDto("3627f106-00c5-4ddc-8c0b-9ba68cd4446b"),
-                        getEventDto("63362ead-f496-4a00-8d1e-1073d744a13f"),
-                        getEventDto("1925cc0d-b65c-4a78-beca-b990b933ecf3"),
-                        getEventDto("09662b6b-5cbf-4bb8-b353-e23d7af6cb5e")
+                        getEventDto("63362ead-f496-4a00-8d1e-1073d744a13f", AGREEMENT_EVENT),
+                        getEventDto("3627f106-00c5-4ddc-8c0b-9ba68cd4446b", AGREEMENT_EVENT),
+                        getEventDto("63362ead-f496-4a00-8d1e-1073d744a13f", AGREEMENT_EVENT),
+                        getEventDto("1925cc0d-b65c-4a78-beca-b990b933ecf3", AGREEMENT_EVENT),
+                        getEventDto("09662b6b-5cbf-4bb8-b353-e23d7af6cb5e", AGREEMENT_EVENT),
+                        getEventDto("09662b6b-5cbf-4bb8-b353-e23d7af6cb5e", ESERVICE_EVENT)
                 )
         );
         return events;
     }
 
-    public static Event getEventDto(String agreementId){
+    public static Event getEventDto(String id, String objectType){
         Event event= new Event();
         event.setEventId(2L);
         event.setEventType("test");
-        event.setObjectType(AGREEMENT_EVENT);
+        event.setObjectType(objectType);
         Map<String, String> objectId = new HashMap<>();
-        objectId.put(AGREEMENT_KEY_ID, agreementId);
-        objectId.put(DESCRIPTOR_ID, "3627f106-00c5-4ddc-8c0b-9ba68cd4446b");
+        if (objectType.equals(AGREEMENT_EVENT)){
+            objectId.put(AGREEMENT_KEY_ID, id);
+            objectId.put(DESCRIPTOR_ID, "3627f106-00c5-4ddc-8c0b-9ba68cd4446b");
+        } else {
+            objectId.put(ESERVICE_KEY_ID, id);
+        }
+
         event.setObjectId(objectId);
         return event;
     }
