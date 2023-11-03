@@ -45,16 +45,17 @@ public class ConsumerServiceImpl implements ConsumerService {
 
         if (detailAgreement.getState().equals("ACTIVE")) checkAndCreateOrganization(detailAgreement, agreementEventDto.getEventId());
 
-        String entityState= entity.getState();
+        if(!StringUtils.equalsIgnoreCase(entity.getState(), detailAgreement.getState())) {
+            consumerEServiceCacheRepository.updateConsumerEService(consumerEServiceMapper.toCacheFromEntity(entity));
+        }
+
         entity.setState(detailAgreement.getState());
         entity = this.consumerEserviceRepository.saveAndFlush(entity);
         log.info("[{} - {} - {}] Entity saved",
                 agreementEventDto.getEventId(),
                 entity.getAgreementId(),
                 entity.getDescriptorId());
-        if(!StringUtils.equalsIgnoreCase(entityState, detailAgreement.getState())) {
-            consumerEServiceCacheRepository.updateConsumerEService(consumerEServiceMapper.toCacheFromEntity(entity));
-        }
+
         return consumerEServiceMapper.toDtoFromEntity(entity);
     }
 
