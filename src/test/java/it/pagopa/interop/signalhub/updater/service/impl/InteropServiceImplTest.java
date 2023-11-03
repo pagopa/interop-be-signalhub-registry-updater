@@ -1,5 +1,6 @@
 package it.pagopa.interop.signalhub.updater.service.impl;
 
+import it.pagopa.interop.signalhub.updater.config.DataBuilder;
 import it.pagopa.interop.signalhub.updater.exception.PDNDClientException;
 import it.pagopa.interop.signalhub.updater.exception.PDNDConnectionResetException;
 import it.pagopa.interop.signalhub.updater.exception.PDNDNoEventsException;
@@ -8,6 +9,7 @@ import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.mode
 import it.pagopa.interop.signalhub.updater.mapper.ConsumerEServiceMapper;
 import it.pagopa.interop.signalhub.updater.mapper.OrganizationEServiceMapper;
 import it.pagopa.interop.signalhub.updater.model.ConsumerEServiceDto;
+import it.pagopa.interop.signalhub.updater.model.EventsDto;
 import it.pagopa.interop.signalhub.updater.model.OrganizationEServiceDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,13 +24,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
-import static it.pagopa.interop.signalhub.updater.utility.Const.AGREEMENT_EVENT;
-import static it.pagopa.interop.signalhub.updater.utility.Const.ESERVICE_EVENT;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -45,86 +40,135 @@ class InteropServiceImplTest {
     @Mock
     private OrganizationEServiceMapper mapperOrganization;
 
-
-    @Test
-    void whenCallGetAgreementsAndEServicesAndEventIsNullOrEmpty() {
-        Mockito.when(client.getEventsFromId(Mockito.any())).thenReturn(null);
-        Long lastEventId = 1L;
-        PDNDNoEventsException thrownIsNull = assertThrows(
-                PDNDNoEventsException.class,
-                () -> {
-                    interopService.getAgreementsAndEServices(1L);
-                }
-        );
-        assertEquals("No events from last event id ".concat(lastEventId.toString()), thrownIsNull.getMessage());
-
-        Mockito.when(client.getEventsFromId(Mockito.any())).thenReturn(new Events());
-
-        PDNDNoEventsException thrownIsEmpty = assertThrows(
-                PDNDNoEventsException.class,
-                () -> {
-                    interopService.getAgreementsAndEServices(1L);
-                }
-        );
-        assertEquals("No events from last event id ".concat(lastEventId.toString()), thrownIsEmpty.getMessage());
-    }
+    /** TEST GET EVENTS DETAIL **/
 
     @Test
     void getAgreementsAndEServices() {
-        Event event= new Event();
-        event.setEventId(1L);
-        event.setEventType("test");
-        event.setObjectId(new HashMap<>());
-        event.setObjectType(ESERVICE_EVENT);
+        Events responseMock = DataBuilder.getEventsWithDuplicate();
+        Mockito.when(client.getEventsFromId(Mockito.any()))
+                .thenReturn(responseMock);
 
-        List<Event> eventList= new ArrayList<>();
-        eventList.add(event);
-
-        Events events= new Events();
-        events.setEvents(eventList);
-
-        Mockito.when(client.getEventsFromId(Mockito.any())).thenReturn(events);
-        assertNotNull(interopService.getAgreementsAndEServices(1L));
-
-
-        event.setObjectType(AGREEMENT_EVENT);
-        Mockito.when(client.getEventsFromId(Mockito.any())).thenReturn(events);
-        assertNotNull(interopService.getAgreementsAndEServices(1L));
+        EventsDto eventsDto = interopService.getAgreementsAndEServices(1L);
+        assertNotNull(eventsDto);
+        assertEquals(responseMock.getLastEventId(), eventsDto.getLastEventId());
+        assertEquals(responseMock.getEvents().size()-1, eventsDto.getEvents().size());
     }
 
     @Test
-    void getConsumerEService() {
-        Mockito.when(client.getAgreement(Mockito.any())).thenReturn(new Agreement());
-        Mockito.when(mapperConsumer.toConsumerEServiceDtoFromAgreement(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(new ConsumerEServiceDto());
+    void whenEventsClientReturnNullOrEmptyThenThrowException(){
+        Mockito.when(client.getEventsFromId(Mockito.any())).thenReturn(null);
+        PDNDNoEventsException thrownIsNull = assertThrows(PDNDNoEventsException.class,() -> interopService.getAgreementsAndEServices(20L));
+        assertEquals("No events from last event id 20", thrownIsNull.getMessage());
 
-        assertNotNull(interopService.getConsumerEService("123", 1L));
+        Mockito.when(client.getEventsFromId(Mockito.any())).thenReturn(new Events());
+        PDNDNoEventsException thrownIsEmpty = assertThrows(PDNDNoEventsException.class,() -> interopService.getAgreementsAndEServices(20L));
+        assertEquals("No events from last event id 20", thrownIsEmpty.getMessage());
+
     }
+
+    @Test
+    void whenTokenWasExpiredEventsThenThrowConnectionResetException() {
+        Mockito.when(client.getEventsFromId(Mockito.any()))
+                .thenThrow(EXCEPTION_TOKEN_EXPIRED);
+
+        assertThrows(PDNDConnectionResetException.class,
+                () -> interopService.getAgreementsAndEServices(2L));
+    }
+
+    @Test
+    void whenRetrieveEventsNotFoundThenThrowConnectionResetException() {
+        Mockito.when(client.getEventsFromId(Mockito.any()))
+                .thenThrow(EXCEPTION_NOT_FOUND);
+
+        assertThrows(PDNDClientException.class,
+                () -> interopService.getAgreementsAndEServices(2L));
+    }
+
+    /** TEST GET ESERVICE DETAIL **/
 
     @Test
     void whenRetrieveDetailEserviceThenReturnEserviceWithProducerId() {
-        Mockito.when(client.getEService(Mockito.any())).thenReturn(getEserviceResponse());
+        Mockito.when(client.getEService(Mockito.any())).thenReturn(DataBuilder.getDetailEservice());
 
         Mockito.when(mapperOrganization.fromEServiceToOrganizationEServiceDto(Mockito.any(), Mockito.any()))
-                .thenReturn(getEservice());
+                .thenReturn(DataBuilder.getEservice());
 
         OrganizationEServiceDto response = interopService.getEService("123", 1L);
         assertNotNull(response);
-        assertEquals(getEservice().getEserviceId(), response.getEserviceId());
-        assertEquals(getEservice().getDescriptorId(), response.getDescriptorId());
-        assertEquals(getEservice().getEventId(), response.getEventId());
+        assertEquals(DataBuilder.getEservice().getEserviceId(), response.getEserviceId());
+        assertEquals(DataBuilder.getEservice().getDescriptorId(), response.getDescriptorId());
+        assertEquals(DataBuilder.getEservice().getEventId(), response.getEventId());
     }
 
     @Test
-    void whenRetrievedDetailEserviceThenReturnNewState() {
-        Mockito.when(client.getEServiceDescriptor(Mockito.any(), Mockito.any())).thenReturn(getEserviceDescriptor());
+    void whenTokenWasExpiredEserviceThenThrowConnectionResetException() {
+        Mockito.when(client.getEService(Mockito.any()))
+                .thenThrow(EXCEPTION_TOKEN_EXPIRED);
 
-        OrganizationEServiceDto response = interopService.getEServiceDescriptor(getEservice());
+        assertThrows(PDNDConnectionResetException.class,
+                () -> interopService.getEService(DataBuilder.getEservice().getEserviceId(), 2L));
+    }
+
+    @Test
+    void whenDetailEserviceNotFoundThenThrowConnectionResetException() {
+        Mockito.when(client.getEService(Mockito.any()))
+                .thenThrow(EXCEPTION_NOT_FOUND);
+
+        assertThrows(PDNDClientException.class,
+                () -> interopService.getEService(DataBuilder.getEservice().getEserviceId(), 2L));
+    }
+
+    /** TEST GET AGREEMENT DETAIL **/
+
+    @Test
+    void whenRetrieveDetailAgreementThenReturnConsumer() {
+        Mockito.when(client.getAgreement(Mockito.any()))
+                .thenReturn(DataBuilder.getDetailAgreement());
+
+        Mockito.when(mapperConsumer.toConsumerEServiceDtoFromAgreement(Mockito.any(), Mockito.any(), Mockito.any()))
+                .thenReturn(DataBuilder.getConsumerDto());
+
+        ConsumerEServiceDto response = interopService.getConsumerEService(DataBuilder.getConsumerDto().getAgreementId(), 2L);
+        assertNotNull(response);
+        assertEquals(DataBuilder.getConsumerDto().getEserviceId(), response.getEserviceId());
+        assertEquals(DataBuilder.getConsumerDto().getDescriptorId(), response.getDescriptorId());
+        assertEquals(DataBuilder.getConsumerDto().getEventId(), response.getEventId());
+    }
+
+    @Test
+    void whenTokenWasExpiredAgreementThenThrowConnectionResetException() {
+        Mockito.when(client.getAgreement(Mockito.any()))
+                .thenThrow(EXCEPTION_TOKEN_EXPIRED);
+
+        assertThrows(PDNDConnectionResetException.class,
+                () -> interopService.getConsumerEService(DataBuilder.getConsumerDto().getAgreementId(), 2L));
+    }
+
+    @Test
+    void whenDetailAgreementNotFoundThenThrowConnectionResetException() {
+        Mockito.when(client.getAgreement(Mockito.any()))
+                .thenThrow(EXCEPTION_NOT_FOUND);
+
+        assertThrows(PDNDClientException.class,
+                () -> interopService.getConsumerEService(DataBuilder.getConsumerDto().getAgreementId(), 2L));
+    }
+
+
+    /** TEST GET ESERVICE DESCRIPTOR **/
+
+
+
+    @Test
+    void whenRetrievedDetailEserviceThenReturnNewState() {
+        Mockito.when(client.getEServiceDescriptor(Mockito.any(), Mockito.any())).thenReturn(DataBuilder.getEserviceDescriptor());
+
+        OrganizationEServiceDto response = interopService.getEServiceDescriptor(DataBuilder.getEservice());
 
         assertNotNull(response);
         assertEquals(EServiceDescriptorState.ARCHIVED.getValue(), response.getState());
-        assertEquals(getEservice().getEserviceId(), response.getEserviceId());
-        assertEquals(getEservice().getDescriptorId(), response.getDescriptorId());
-        assertEquals(getEservice().getEventId(), response.getEventId());
+        assertEquals(DataBuilder.getEservice().getEserviceId(), response.getEserviceId());
+        assertEquals(DataBuilder.getEservice().getDescriptorId(), response.getDescriptorId());
+        assertEquals(DataBuilder.getEservice().getEventId(), response.getEventId());
     }
 
     @Test
@@ -133,7 +177,7 @@ class InteropServiceImplTest {
                 .thenThrow(EXCEPTION_TOKEN_EXPIRED);
 
         assertThrows(PDNDConnectionResetException.class,
-                () -> interopService.getEServiceDescriptor(getEservice()));
+                () -> interopService.getEServiceDescriptor(DataBuilder.getEservice()));
     }
 
     @Test
@@ -142,32 +186,8 @@ class InteropServiceImplTest {
                 .thenThrow(EXCEPTION_NOT_FOUND);
 
         assertThrows(PDNDClientException.class,
-                () -> interopService.getEServiceDescriptor(getEservice()));
+                () -> interopService.getEServiceDescriptor(DataBuilder.getEservice()));
     }
 
-
-    private EService getEserviceResponse(){
-        EService eService = new EService();
-        eService.setId(UUID.fromString("1925cc0d-b65c-4a78-beca-b990b933ecf3"));
-        Organization organization = new Organization();
-        organization.setId(UUID.fromString("63362ead-f496-4a00-8d1e-1073d744a13f"));
-        eService.setProducer(organization);
-        return eService;
-    }
-
-    private OrganizationEServiceDto getEservice(){
-        OrganizationEServiceDto dto = new OrganizationEServiceDto();
-        dto.setEserviceId("1925cc0d-b65c-4a78-beca-b990b933ecf3");
-        dto.setDescriptorId("3627f106-00c5-4ddc-8c0b-9ba68cd4446b");
-        dto.setEventId(2L);
-        dto.setProducerId("63362ead-f496-4a00-8d1e-1073d744a13f");
-        return dto;
-    }
-
-    private EServiceDescriptor getEserviceDescriptor(){
-        EServiceDescriptor dto = new EServiceDescriptor();
-        dto.setState(EServiceDescriptorState.ARCHIVED);
-        return dto;
-    }
 
 }
