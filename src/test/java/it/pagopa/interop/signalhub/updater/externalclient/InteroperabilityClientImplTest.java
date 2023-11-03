@@ -10,6 +10,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.Exceptions;
 import reactor.core.publisher.Mono;
@@ -277,7 +279,6 @@ class InteroperabilityClientImplTest extends BaseTest.WithMockServer {
 
     @Test
     void whenClientCallEserviceIdAndDescriptorIdThrowConnectionExceptionThenRetry4Attempts(){
-
         Mockito.when(gatewayApi.getEServiceDescriptor(UUID.fromString(ESERVICE_DESCRIPTOR_ESERVICEID_NO_CONNECT), UUID.fromString(ESERVICE_DESCRIPTOR_DESCRIPTORID_NO_CONNECT)))
                 .thenReturn(Mono.error(new ConnectException()));
 
@@ -286,6 +287,19 @@ class InteroperabilityClientImplTest extends BaseTest.WithMockServer {
         } catch (Throwable ex) {
             assertTrue(Exceptions.isRetryExhausted(ex));
             assertTrue(ex.getCause() instanceof ConnectException);
+        }
+    }
+
+    @Test
+    void whenClientCallEserviceIdAndDescriptorIdThrowHttpClientErrorExceptionThenRetry4Attempts() {
+        Mockito.when(gatewayApi.getEServiceDescriptor(UUID.fromString(ESERVICE_DESCRIPTOR_ESERVICEID_NO_CONNECT), UUID.fromString(ESERVICE_DESCRIPTOR_DESCRIPTORID_NO_CONNECT)))
+                .thenReturn(Mono.error(new HttpClientErrorException(HttpStatus.GATEWAY_TIMEOUT)));
+
+        try {
+            interoperabilityClient.getEServiceDescriptor(ESERVICE_DESCRIPTOR_ESERVICEID_NO_CONNECT, ESERVICE_DESCRIPTOR_DESCRIPTORID_NO_CONNECT);
+        } catch (Throwable ex) {
+            assertTrue(ex instanceof HttpClientErrorException);
+            assertEquals(HttpStatus.GATEWAY_TIMEOUT, ((HttpClientErrorException) ex).getStatusCode());
         }
     }
 }
