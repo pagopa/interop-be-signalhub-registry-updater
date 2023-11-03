@@ -39,12 +39,10 @@ public class InteroperabilityClientImpl implements InteroperabilityClient {
     @Override
     public Agreement getAgreement(String agreementId) {
         UUID uuidAgreementId = UUID.fromString(agreementId);
-        return Mono.just(uuidAgreementId)
-                .flatMap(item -> gatewayApi.getAgreement(uuidAgreementId)
-                        .retryWhen(
-                                Retry.backoff(4, Duration.ofMillis(1000))
-                                        .filter(this.isRetryException())
-                        )
+        return gatewayApi.getAgreement(uuidAgreementId)
+                .retryWhen(
+                        Retry.backoff(4, Duration.ofMillis(1000))
+                                .filter(this.isRetryException())
                 )
                 .block();
     }
@@ -82,5 +80,4 @@ public class InteroperabilityClientImpl implements InteroperabilityClient {
             return false;
         };
     }
-
 }
