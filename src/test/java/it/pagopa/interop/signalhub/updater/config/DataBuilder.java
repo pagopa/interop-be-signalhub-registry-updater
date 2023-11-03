@@ -1,6 +1,7 @@
 package it.pagopa.interop.signalhub.updater.config;
 
 import it.pagopa.interop.signalhub.updater.entity.ConsumerEService;
+import it.pagopa.interop.signalhub.updater.entity.OrganizationEService;
 import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.*;
 import it.pagopa.interop.signalhub.updater.model.*;
 
@@ -49,6 +50,16 @@ public class DataBuilder {
         return dto;
     }
 
+    public static EServiceEventDto getEserviceEventDTO(){
+        EServiceEventDto dto = new EServiceEventDto();
+        dto.setDescriptorId("3627f106-00c5-4ddc-8c0b-9ba68cd4446b");
+        dto.setEventId(3L);
+        dto.setObjectType("CREATE");
+        dto.setEventType(AGREEMENT_EVENT);
+        dto.setEServiceId("09662b6b-5cbf-4bb8-b353-e23d7af6cb5e");
+        return dto;
+    }
+
     public static Agreement getDetailAgreement(){
         Agreement data = new Agreement();
         data.setEserviceId(UUID.fromString("1925cc0d-b65c-4a78-beca-b990b933ecf3"));
@@ -72,6 +83,16 @@ public class DataBuilder {
 
     public static OrganizationEServiceDto getEservice(){
         OrganizationEServiceDto dto = new OrganizationEServiceDto();
+        dto.setEserviceId("1925cc0d-b65c-4a78-beca-b990b933ecf3");
+        dto.setDescriptorId("3627f106-00c5-4ddc-8c0b-9ba68cd4446b");
+        dto.setProducerId("63362ead-f496-4a00-8d1e-1073d744a13f");
+        dto.setState(EServiceDescriptorState.PUBLISHED.getValue());
+        dto.setEventId(2L);
+        return dto;
+    }
+
+    public static OrganizationEService getEserviceEntity(){
+        OrganizationEService dto = new OrganizationEService();
         dto.setEserviceId("1925cc0d-b65c-4a78-beca-b990b933ecf3");
         dto.setDescriptorId("3627f106-00c5-4ddc-8c0b-9ba68cd4446b");
         dto.setProducerId("63362ead-f496-4a00-8d1e-1073d744a13f");

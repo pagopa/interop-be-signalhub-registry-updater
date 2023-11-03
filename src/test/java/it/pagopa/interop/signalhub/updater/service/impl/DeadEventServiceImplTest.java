@@ -31,13 +31,35 @@ class DeadEventServiceImplTest {
 
 
     @Test
-    void saveDeadEvent() {
+    void whenOccuranceUnderAttemptPropsThenSaveOnDB() {
         EventDto eventDto= new EServiceEventDto();
-        eventDto.setEventId(1l);
-        Mockito.when(tracingBatchService.countBatchInErrorWithLastEventId(Mockito.any())).thenReturn(1);
-        Mockito.when(registryUpdaterProps.getAttemptEvent()).thenReturn(1);
+        eventDto.setEventId(1L);
+        Mockito.when(tracingBatchService.countBatchInErrorWithLastEventId(Mockito.any()))
+                .thenReturn(1);
+        Mockito.when(registryUpdaterProps.getAttemptEvent()).thenReturn(5);
+
+        assertNull(deadEventService.saveDeadEvent(eventDto));
+
+        Mockito.verify(deadEventRepository, Mockito.timeout(1000).times(0))
+                .saveAndFlush(Mockito.any());
+    }
+
+    @Test
+    void whenOccuranceOverAttemptPropsThenSaveOnDB(){
+        EventDto eventDto= new EServiceEventDto();
+        eventDto.setEventId(1L);
+
+        Mockito.when(tracingBatchService.countBatchInErrorWithLastEventId(Mockito.any()))
+                .thenReturn(4);
+
+        Mockito.when(registryUpdaterProps.getAttemptEvent()).thenReturn(2);
+
         Mockito.when(deadEventRepository.saveAndFlush(Mockito.any())).thenReturn(new DeadEvent());
         Mockito.when(deadEventMapperImpl.toDeadEvent(Mockito.any())).thenReturn(new DeadEvent());
+
         assertNull(deadEventService.saveDeadEvent(eventDto));
+
+        Mockito.verify(deadEventRepository, Mockito.timeout(1000).times(1))
+                .saveAndFlush(Mockito.any());
     }
 }

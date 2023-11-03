@@ -46,16 +46,17 @@ public class OrganizationServiceImpl implements OrganizationService {
                 detailEservice.getDescriptorId(),
                 entity.getTmstInsert() ==  null ? "not" : "");
 
+        if(!StringUtils.equalsIgnoreCase(entity.getState(), detailEservice.getState())) {
+            organizationEServiceCache.updateOrganizationEService(organizationEServiceMapper.toCacheFromEntity(entity));
+        }
 
-        String entityState= entity.getState();
         entity.setState(detailEservice.getState());
         entity = this.repository.saveAndFlush(entity);
+
         log.info("[{} - {} - {}] Entity saved",
                 eServiceEventDTO.getEventId(),
                 eServiceEventDTO.getEServiceId(), eServiceEventDTO.getDescriptorId());
-        if(!StringUtils.equalsIgnoreCase(entityState, detailEservice.getState())) {
-            organizationEServiceCache.updateOrganizationEService(organizationEServiceMapper.toCacheFromEntity(entity));
-        }
+
         return organizationEServiceMapper.toDtoFromEntity(entity);
     }
 
