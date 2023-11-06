@@ -51,7 +51,7 @@ class InteropServiceImplTest {
         EventsDto eventsDto = interopService.getAgreementsAndEServices(1L);
         assertNotNull(eventsDto);
         assertEquals(responseMock.getLastEventId(), eventsDto.getLastEventId());
-        assertEquals(responseMock.getEvents().size()-1, eventsDto.getEvents().size());
+        assertEquals(7, eventsDto.getEvents().size());
     }
 
     @Test
