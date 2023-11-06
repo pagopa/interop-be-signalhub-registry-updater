@@ -4,10 +4,8 @@ import it.pagopa.interop.signalhub.updater.config.RegistryUpdaterProps;
 import it.pagopa.interop.signalhub.updater.entity.TracingBatchEntity;
 import it.pagopa.interop.signalhub.updater.exception.PDNDBatchAlreadyExistException;
 import it.pagopa.interop.signalhub.updater.exception.PDNDEntityNotFound;
-import it.pagopa.interop.signalhub.updater.exception.PDNDNoEventsException;
 import it.pagopa.interop.signalhub.updater.mapper.TracingBatchMapper;
 import it.pagopa.interop.signalhub.updater.model.TracingBatchDto;
-import it.pagopa.interop.signalhub.updater.model.TracingBatchStateEnum;
 import it.pagopa.interop.signalhub.updater.repository.TracingBatchRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,12 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static it.pagopa.interop.signalhub.updater.model.TracingBatchStateEnum.*;
+import static it.pagopa.interop.signalhub.updater.model.TracingBatchStateEnum.ENDED;
+import static it.pagopa.interop.signalhub.updater.model.TracingBatchStateEnum.IN_PROGRESS;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -62,7 +59,7 @@ class TracingBatchServiceImplTest {
         //lastEventId==tracingBatchEntity.getLastEventId()
         TracingBatchEntity tracingBatchEntity= new TracingBatchEntity();
         tracingBatchEntity.setState(ENDED.name());
-        tracingBatchEntity.setLastEventId(1l);
+        tracingBatchEntity.setLastEventId(1L);
         List<TracingBatchEntity> list= new ArrayList<>();
         list.add(tracingBatchEntity);
         Mockito.when(repository.findByStateAndLastEventIdMax()).thenReturn(list);
@@ -84,21 +81,28 @@ class TracingBatchServiceImplTest {
     @Test
     void countBatchInErrorWithLastEventId() {
         Mockito.when(repository.findAllStateEndedWithErrorAndLastEventId(Mockito.any(), Mockito.any())).thenReturn(null);
-        assertEquals(tracingBatchService.countBatchInErrorWithLastEventId(1l), 0);
+        assertEquals(0, tracingBatchService.countBatchInErrorWithLastEventId(1L));
 
         Mockito.when(repository.findAllStateEndedWithErrorAndLastEventId(Mockito.any(), Mockito.any())).thenReturn(new ArrayList<>());
-        assertEquals(tracingBatchService.countBatchInErrorWithLastEventId(1l), 0);
+        assertEquals(0, tracingBatchService.countBatchInErrorWithLastEventId(1L));
+
+        List<TracingBatchEntity> tracingBatchEntityList = new ArrayList<>();
+        tracingBatchEntityList.add(new TracingBatchEntity());
+        Mockito.when(repository.findAllStateEndedWithErrorAndLastEventId(Mockito.any(), Mockito.any()))
+                .thenReturn(tracingBatchEntityList);
+        assertEquals(1, tracingBatchService.countBatchInErrorWithLastEventId(1L));
+
     }
 
     @Test
     void terminateTracingBatchButBatchNotFound() {
-        Long batchId= 1l;
+        Long batchId= 1L;
         Mockito.when(repository.findById(Mockito.any())).thenReturn(Optional.empty());
 
         PDNDEntityNotFound thrown = assertThrows(
                 PDNDEntityNotFound.class,
                 () -> {
-                    tracingBatchService.terminateTracingBatch(batchId, IN_PROGRESS, 1l );
+                    tracingBatchService.terminateTracingBatch(batchId, IN_PROGRESS, 1L );
                 }
         );
         assertEquals("Batch entity not founded with ".concat(batchId.toString()).concat(" id"), thrown.getMessage());
@@ -109,6 +113,6 @@ class TracingBatchServiceImplTest {
         Mockito.when(repository.findById(Mockito.any())).thenReturn(Optional.of(new TracingBatchEntity()));
         Mockito.when(repository.saveAndFlush(Mockito.any())).thenReturn(new TracingBatchEntity());
         Mockito.when(mapper.toDto(Mockito.any())).thenReturn(new TracingBatchDto());
-        assertNotNull(tracingBatchService.terminateTracingBatch(1l, ENDED, 1L ));
+        assertNotNull(tracingBatchService.terminateTracingBatch(1L, ENDED, 1L ));
     }
 }
