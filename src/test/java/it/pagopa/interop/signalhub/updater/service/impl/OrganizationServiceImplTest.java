@@ -8,7 +8,7 @@ import it.pagopa.interop.signalhub.updater.mapper.OrganizationEServiceMapper;
 import it.pagopa.interop.signalhub.updater.model.EServiceDescriptorDto;
 import it.pagopa.interop.signalhub.updater.model.EServiceEventDto;
 import it.pagopa.interop.signalhub.updater.model.OrganizationEServiceDto;
-import it.pagopa.interop.signalhub.updater.repository.OrganizationEserviceRepository;
+import it.pagopa.interop.signalhub.updater.repository.OrganizationEServiceRepository;
 import it.pagopa.interop.signalhub.updater.service.InteropService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class OrganizationServiceImplTest {
     @Mock
     private InteropService interopService;
     @Mock
-    private OrganizationEserviceRepository repository;
+    private OrganizationEServiceRepository repository;
     @Mock
     private OrganizationEServiceMapper mapper;
     @Mock
@@ -66,7 +66,7 @@ class OrganizationServiceImplTest {
     void updateOrganizationEService() {
         Mockito.when(interopService.getEService(Mockito.any(), Mockito.any())).thenReturn(organizationEServiceDto);
         Mockito.when(interopService.getEServiceDescriptor(Mockito.any())).thenReturn(organizationEServiceDto);
-        Mockito.when(repository.findByEserviceIdAndProducerIdAndDescriptorId(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Optional.empty());
+        Mockito.when(repository.findByEserviceIdAndProducerIdAndDescriptorId(Mockito.any(), Mockito.any())).thenReturn(Optional.empty());
         Mockito.when(mapper.toEntityFromDto(Mockito.any())).thenReturn(organizationEService);
         Mockito.when(repository.saveAndFlush(Mockito.any())).thenReturn(organizationEService);
         Mockito.when(mapper.toCacheFromEntity(Mockito.any())).thenReturn(new OrganizationEServiceCache());
@@ -77,20 +77,20 @@ class OrganizationServiceImplTest {
 
     @Test
     void checkAndUpdate() {
-        Mockito.when(repository.findByEserviceIdAndProducerIdAndDescriptorId(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Optional.of(organizationEService));
+        Mockito.when(repository.findByEserviceIdAndProducerIdAndDescriptorId(Mockito.any(), Mockito.any())).thenReturn(Optional.of(organizationEService));
         Mockito.when(mapper.toDtoFromEntity(Mockito.any())).thenReturn(new OrganizationEServiceDto());
         assertNotNull(organizationService.checkAndUpdate("123", "123", "123", 1L));
     }
 
     @Test
     void checkAndUpdateWhenOrganizationIsNotPresentToDb() {
-        Mockito.when(repository.findByEserviceIdAndProducerIdAndDescriptorId(Mockito.any(), Mockito.any(), Mockito.any()))
+        Mockito.when(repository.findByEserviceIdAndProducerIdAndDescriptorId(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.empty());
         Mockito.when(interopService.getEService(Mockito.any(), Mockito.any()))
                 .thenReturn(organizationEServiceDto);
         Mockito.when(interopService.getEServiceDescriptor(Mockito.any()))
                 .thenReturn(DataBuilder.getEservice());
-        Mockito.when(repository.findByEserviceIdAndProducerIdAndDescriptorId(Mockito.any(), Mockito.any(), Mockito.any()))
+        Mockito.when(repository.findByEserviceIdAndProducerIdAndDescriptorId(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.empty());
         Mockito.when(mapper.toEntityFromDto(Mockito.any()))
                 .thenReturn(organizationEService);
@@ -106,13 +106,13 @@ class OrganizationServiceImplTest {
 
     @Test
     void checkAndUpdateButEserviceNotExist() {
-        Mockito.when(repository.findByEserviceIdAndProducerIdAndDescriptorId(Mockito.any(), Mockito.any(), Mockito.any()))
+        Mockito.when(repository.findByEserviceIdAndProducerIdAndDescriptorId(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.empty());
         Mockito.when(interopService.getEService(Mockito.any(), Mockito.any()))
                 .thenReturn(DataBuilder.getEservice());
         Mockito.when(interopService.getEServiceDescriptor(Mockito.any()))
                 .thenReturn(DataBuilder.getEservice());
-        Mockito.when(repository.findByEserviceIdAndProducerIdAndDescriptorId(Mockito.any(), Mockito.any(), Mockito.any()))
+        Mockito.when(repository.findByEserviceIdAndProducerIdAndDescriptorId(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.empty());
         Mockito.when(mapper.toEntityFromDto(Mockito.any()))
                 .thenReturn(organizationEService);
