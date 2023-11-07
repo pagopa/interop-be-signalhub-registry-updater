@@ -6,7 +6,7 @@ import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.mode
 import it.pagopa.interop.signalhub.updater.mapper.ConsumerEServiceMapper;
 import it.pagopa.interop.signalhub.updater.model.ConsumerEServiceDto;
 import it.pagopa.interop.signalhub.updater.model.OrganizationEServiceDto;
-import it.pagopa.interop.signalhub.updater.repository.ConsumerEserviceRepository;
+import it.pagopa.interop.signalhub.updater.repository.ConsumerEServiceRepository;
 import it.pagopa.interop.signalhub.updater.cache.repository.ConsumerEServiceCacheRepository;
 import it.pagopa.interop.signalhub.updater.service.InteropService;
 import it.pagopa.interop.signalhub.updater.service.OrganizationService;
@@ -16,14 +16,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
+
 
 @ExtendWith(MockitoExtension.class)
 class ConsumerServiceImplTest {
-
     @InjectMocks
     private ConsumerServiceImpl consumerService;
     @Mock
@@ -31,11 +29,12 @@ class ConsumerServiceImplTest {
     @Mock
     private OrganizationService organizationService;
     @Mock
-    private ConsumerEserviceRepository consumerEserviceRepository;
+    private ConsumerEServiceRepository consumerEserviceRepository;
     @Mock
     private ConsumerEServiceMapper mapper;
     @Mock
     private ConsumerEServiceCacheRepository consumerEServiceCacheRepository;
+
 
     @Test
     void whenConsumerStateIsActiveAndNoEditThenCallOrganizationServiceAndSaveOnlyDB(){
@@ -53,7 +52,7 @@ class ConsumerServiceImplTest {
                 Mockito.any())).thenReturn(DataBuilder.getConsumerEntity());
 
         //Mock return empty from DB
-        Mockito.when(consumerEserviceRepository.findByEserviceIdAndConsumerIdAndDescriptorId(Mockito.any()))
+        Mockito.when(consumerEserviceRepository.findByEserviceIdAndConsumerIdAndDescriptorId(Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.empty());
 
         //Mock check and update organization service because state is active
@@ -109,7 +108,7 @@ class ConsumerServiceImplTest {
         entity.setState(AgreementState.ACTIVE.getValue());
 
         //Mock return empty from DB
-        Mockito.when(consumerEserviceRepository.findByEserviceIdAndConsumerIdAndDescriptorId(Mockito.any()))
+        Mockito.when(consumerEserviceRepository.findByEserviceIdAndConsumerIdAndDescriptorId(Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.of(entity));
 
         //Mock check and update organization service because state is active
