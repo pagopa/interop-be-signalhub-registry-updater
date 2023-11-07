@@ -11,8 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface TracingBatchRepository extends JpaRepository<TracingBatchEntity, Long> {
-
-
     @Query("select trace from TracingBatchEntity trace where trace.state = :state order by trace.lastEventId desc limit 1")
     Optional<TracingBatchEntity> findByStateProgressAndLastEventIdMax(String state);
 
@@ -21,5 +19,4 @@ public interface TracingBatchRepository extends JpaRepository<TracingBatchEntity
 
     @Query("SELECT trace FROM TracingBatchEntity trace WHERE trace.state = :state AND trace.lastEventId = :lastEventId")
     List<TracingBatchEntity> findAllStateEndedWithErrorAndLastEventId(String state, Long lastEventId);
-
 }
