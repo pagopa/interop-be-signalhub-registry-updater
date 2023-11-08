@@ -13,6 +13,7 @@ import java.time.Instant;
 @ToString
 @Entity
 @Table(name = "CONSUMER_ESERVICE")
+@IdClass(ConsumerKey.class)
 public class ConsumerEService {
     public static final String COLUMN_ESERVICE_ID = "eservice_id";
     public static final String COLUMN_CONSUMER_ID = "consumer_id";
@@ -24,19 +25,19 @@ public class ConsumerEService {
     public static final String COLUMN_DATE_UPDATE = "tmst_last_edit";
 
     @Id
-    @Column(name = COLUMN_AGREEMENT_ID)
-    private String agreementId;
-
     @Column(name = COLUMN_ESERVICE_ID)
     private String eserviceId;
 
+    @Id
     @Column(name = COLUMN_CONSUMER_ID)
     private String consumerId;
 
+    @Id
     @Column(name = COLUMN_DESCRIPTOR_ID)
     private String descriptorId;
 
-
+    @Column(name = COLUMN_AGREEMENT_ID)
+    private String agreementId;
 
     @Column(name = COLUMN_STATE)
     private String state;

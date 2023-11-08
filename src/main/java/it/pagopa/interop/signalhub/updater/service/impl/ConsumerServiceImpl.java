@@ -5,7 +5,7 @@ import it.pagopa.interop.signalhub.updater.entity.ConsumerEService;
 import it.pagopa.interop.signalhub.updater.mapper.ConsumerEServiceMapper;
 import it.pagopa.interop.signalhub.updater.model.AgreementEventDto;
 import it.pagopa.interop.signalhub.updater.model.ConsumerEServiceDto;
-import it.pagopa.interop.signalhub.updater.repository.ConsumerEserviceRepository;
+import it.pagopa.interop.signalhub.updater.repository.ConsumerEServiceRepository;
 import it.pagopa.interop.signalhub.updater.cache.repository.ConsumerEServiceCacheRepository;
 import it.pagopa.interop.signalhub.updater.service.ConsumerService;
 import it.pagopa.interop.signalhub.updater.service.InteropService;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class ConsumerServiceImpl implements ConsumerService {
     private final InteropService interopService;
     private final OrganizationService organizationService;
-    private final ConsumerEserviceRepository consumerEserviceRepository;
+    private final ConsumerEServiceRepository consumerEserviceRepository;
     private final ConsumerEServiceMapper consumerEServiceMapper;
     private final ConsumerEServiceCacheRepository consumerEServiceCacheRepository;
 
@@ -35,7 +35,7 @@ public class ConsumerServiceImpl implements ConsumerService {
 
         log.info("[{} - {}] Detail agreement retrieved with state {}", agreementEventDto.getEventId(), agreementEventDto.getAgreementId(), detailAgreement.getState());
 
-        ConsumerEService entity = this.consumerEserviceRepository.findByEserviceIdAndConsumerIdAndDescriptorId(detailAgreement.getAgreementId())
+        ConsumerEService entity = this.consumerEserviceRepository.findByEserviceIdAndConsumerIdAndDescriptorId(detailAgreement.getEserviceId(), detailAgreement.getConsumerId(), detailAgreement.getDescriptorId())
                 .orElse(getInitialConsumerEService(detailAgreement));
         log.info("[{} - {} - {}] Entity {} exist into DB",
                 agreementEventDto.getEventId(),

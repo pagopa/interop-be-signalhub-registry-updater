@@ -32,7 +32,6 @@ public class OrganizationEService {
     @Column(name = COLUMN_PRODUCER_ID)
     private String producerId;
 
-    @Id
     @Column(name = COLUMN_DESCRIPTOR_ID)
     private String descriptorId;
 

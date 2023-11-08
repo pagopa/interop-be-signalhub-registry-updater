@@ -262,6 +262,9 @@
                     <excludes>
                         <exclude>it/pagopa/interop/signalhub/updater/config/**</exclude>
                         <exclude>it/pagopa/interop/signalhub/updater/generated/**</exclude>
+                        <exclude>it/pagopa/interop/signalhub/updater/cache/model/**</exclude>
+                        <exclude>it/pagopa/interop/signalhub/updater/entity/**</exclude>
+                        <exclude>it/pagopa/interop/signalhub/updater/execution/**</exclude>
                         <exclude>**/UpdaterApplication.class</exclude>
                     </excludes>
                 </configuration>

@@ -1,7 +1,6 @@
 package it.pagopa.interop.signalhub.updater.controller;
 
-import it.pagopa.interop.signalhub.updater.exception.PDNDBatchAlreadyExistException;
-import it.pagopa.interop.signalhub.updater.exception.PDNDClientException;
+import it.pagopa.interop.signalhub.updater.exception.PDNDEventException;
 import it.pagopa.interop.signalhub.updater.exception.PDNDConnectionResetException;
 import it.pagopa.interop.signalhub.updater.exception.PDNDNoEventsException;
 import it.pagopa.interop.signalhub.updater.model.*;
@@ -9,7 +8,6 @@ import it.pagopa.interop.signalhub.updater.service.*;
 import it.pagopa.interop.signalhub.updater.utility.Predicates;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -31,27 +29,23 @@ public class AutoUpdaterController {
 
     public void scheduleUpdater() {
         log.info("ScheduleUpdater Started: {}", dateTimeFormatter.format(LocalDateTime.now()));
-        try {
-            TracingBatchDto instanceTracingBatch = this.tracingBatchService.checkAndCreateTracingBatch();
-            Long lastEventId = updateRecursiveFlow(instanceTracingBatch.getLastEventId(), instanceTracingBatch.getBatchId());
-            tracingBatchService.terminateTracingBatch(instanceTracingBatch.getBatchId(), TracingBatchStateEnum.ENDED, lastEventId);
-        } catch (PDNDBatchAlreadyExistException ex) {
-            log.info(ex.getMessage());
-        }
+        Long lastEventId = this.tracingBatchService.getLastEventIdByTracingBatch();
+        lastEventId = updateRecursiveFlow(lastEventId);
+        tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, lastEventId+1);
     }
 
-    private Long updateRecursiveFlow(Long lastEventId, Long batchId) {
+    private Long updateRecursiveFlow(Long lastEventId) {
         try {
             EventsDto events = this.interopService.getAgreementsAndEServices(lastEventId);
             updateEvents(events.getEvents());
-            return updateRecursiveFlow(events.getLastEventId(), batchId);
+            return updateRecursiveFlow(events.getLastEventId());
         } catch (PDNDConnectionResetException ex) {
-            tracingBatchService.terminateTracingBatch(batchId, TracingBatchStateEnum.ENDED, ex.getEventId());
+            tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, ex.getEventId());
             throw ex;
         } catch (PDNDNoEventsException ex) {
             return lastEventId;
-        } catch (PDNDClientException ex) {
-            tracingBatchService.terminateTracingBatch(batchId, TracingBatchStateEnum.ENDED_WITH_ERROR, ex.getEventId()-1);
+        } catch (PDNDEventException ex) {
+            tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED_WITH_ERROR, ex.getEventId());
             throw ex;
         }
     }
@@ -65,7 +59,7 @@ public class AutoUpdaterController {
                     consumerService.updateConsumer((AgreementEventDto) event);
                 }
             }
-            catch (PDNDClientException ex) {
+            catch (PDNDEventException ex) {
                 deadEventService.saveDeadEvent(event);
                 throw ex;
             }
