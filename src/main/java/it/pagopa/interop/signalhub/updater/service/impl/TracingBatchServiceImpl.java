@@ -2,7 +2,6 @@ package it.pagopa.interop.signalhub.updater.service.impl;
 
 import it.pagopa.interop.signalhub.updater.config.RegistryUpdaterProps;
 import it.pagopa.interop.signalhub.updater.entity.TracingBatchEntity;
-import it.pagopa.interop.signalhub.updater.exception.PDNDEntityNotFound;
 import it.pagopa.interop.signalhub.updater.mapper.TracingBatchMapper;
 import it.pagopa.interop.signalhub.updater.model.TracingBatchDto;
 import it.pagopa.interop.signalhub.updater.model.TracingBatchStateEnum;
