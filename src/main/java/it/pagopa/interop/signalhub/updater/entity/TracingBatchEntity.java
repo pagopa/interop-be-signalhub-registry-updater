@@ -18,8 +18,7 @@ public class TracingBatchEntity {
     public static final String COLUMN_BATCH_ID = "batch_id";
     public static final String COLUMN_LAST_EVENT_ID = "last_event_id";
     public static final String COLUMN_STATE = "state";
-    public static final String COLUMN_DATE_STARTED = "tmst_started";
-    public static final String COLUMN_DATE_ENDED = "tmst_ended";
+    public static final String COLUMN_DATE_CREATED = "tmst_created";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,15 +31,11 @@ public class TracingBatchEntity {
     @Column(name = COLUMN_STATE)
     private String state;
 
-    @Column(name = COLUMN_DATE_STARTED)
-    private Timestamp tmstInsert;
-
-    @Column(name = COLUMN_DATE_ENDED)
-    private Timestamp tmstEnded;
+    @Column(name = COLUMN_DATE_CREATED)
+    private Timestamp tmstCreated;
 
     @PrePersist
     public void prePersist(){
-        this.tmstInsert = Timestamp.from(Instant.now());
+        this.tmstCreated = Timestamp.from(Instant.now());
     }
-
 }
