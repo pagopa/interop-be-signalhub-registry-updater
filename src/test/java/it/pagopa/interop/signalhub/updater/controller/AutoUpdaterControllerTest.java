@@ -1,8 +1,7 @@
 package it.pagopa.interop.signalhub.updater.controller;
 
 import it.pagopa.interop.signalhub.updater.entity.DeadEvent;
-import it.pagopa.interop.signalhub.updater.exception.PDNDBatchAlreadyExistException;
-import it.pagopa.interop.signalhub.updater.exception.PDNDClientException;
+import it.pagopa.interop.signalhub.updater.exception.PDNDEventException;
 import it.pagopa.interop.signalhub.updater.exception.PDNDConnectionResetException;
 import it.pagopa.interop.signalhub.updater.exception.PDNDNoEventsException;
 import it.pagopa.interop.signalhub.updater.model.*;
@@ -154,7 +153,7 @@ class AutoUpdaterControllerTest {
                 .thenReturn(eventsDto);
 
         Mockito.when(consumerService.updateConsumer(agreementEventDto))
-                .thenThrow(new PDNDClientException("Error with retrieve agreement details", agreementEventDto.getEventId()));
+                .thenThrow(new PDNDEventException("Error with retrieve agreement details", agreementEventDto.getEventId()));
 
         Mockito.when(deadEventService.saveDeadEvent(agreementEventDto))
                 .thenReturn(new DeadEvent());
@@ -164,17 +163,9 @@ class AutoUpdaterControllerTest {
                         tracingBatchDto.getBatchId(), TracingBatchStateEnum.ENDED_WITH_ERROR, agreementEventDto.getEventId()-1))
                 .thenReturn(tracingBatchDto);
 
-        Exception exception = assertThrows(PDNDClientException.class, () -> autoUpdaterController.scheduleUpdater());
+        Exception exception = assertThrows(PDNDEventException.class, () -> autoUpdaterController.scheduleUpdater());
         assertEquals("Error with retrieve agreement details", exception.getMessage());
     }
-
-    @Test
-    void scheduleUpdaterWhenBatchAlreadyExistTest() {
-        Mockito.when(tracingBatchService.checkAndCreateTracingBatch())
-                .thenThrow(new PDNDBatchAlreadyExistException());
-        assertDoesNotThrow(() -> autoUpdaterController.scheduleUpdater());
-    }
-
 
     private TracingBatchDto getTracingBatchDto() {
         TracingBatchDto tracingBatchDto = new TracingBatchDto();
