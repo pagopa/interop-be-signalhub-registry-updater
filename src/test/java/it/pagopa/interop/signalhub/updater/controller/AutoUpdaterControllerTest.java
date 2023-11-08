@@ -44,13 +44,13 @@ class AutoUpdaterControllerTest {
     void preTest(){
         this.setUp();
     }
-/*
+
     @Test
     void scheduleUpdaterWhenEServiceEventIsConsumedTest() {
         TracingBatchDto tracingBatchDto = getTracingBatchDto();
 
-       // Mockito.when(tracingBatchService.checkAndCreateTracingBatch())
-         //       .thenReturn(tracingBatchDto);
+        Mockito.when(tracingBatchService.getLastEventIdByTracingBatch())
+                .thenReturn(this.startEventId);
 
         EventsDto eventsDto1 = getEventsDtoWithEservice();
         EServiceEventDto eServiceEventDto = (EServiceEventDto)eventsDto1.getEvents().get(0);
@@ -70,9 +70,8 @@ class AutoUpdaterControllerTest {
                 .getAgreementsAndEServices(tracingBatchDto.getLastEventId());
 
         tracingBatchDto.setState(TracingBatchStateEnum.ENDED);
-       // Mockito.when(tracingBatchService.terminateTracingBatch(
-        //        tracingBatchDto.getBatchId(), TracingBatchStateEnum.ENDED, tracingBatchDto.getLastEventId()))
-          //      .thenReturn(tracingBatchDto);
+        Mockito.when(tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, tracingBatchDto.getLastEventId()+1))
+                .thenReturn(tracingBatchDto);
 
         assertDoesNotThrow(() -> autoUpdaterController.scheduleUpdater());
     }
@@ -81,8 +80,8 @@ class AutoUpdaterControllerTest {
     void scheduleUpdaterWhenAgreementEventIsConsumedTest() {
         TracingBatchDto tracingBatchDto = getTracingBatchDto();
 
-        Mockito.when(tracingBatchService.checkAndCreateTracingBatch())
-                .thenReturn(tracingBatchDto);
+        Mockito.when(tracingBatchService.getLastEventIdByTracingBatch())
+                .thenReturn(this.startEventId);
 
         EventsDto eventsDto1 = getEventsDtoWithAgreement();
         AgreementEventDto agreementEventDto = (AgreementEventDto)eventsDto1.getEvents().get(0);
@@ -102,8 +101,7 @@ class AutoUpdaterControllerTest {
                 .getAgreementsAndEServices(tracingBatchDto.getLastEventId());
 
         tracingBatchDto.setState(TracingBatchStateEnum.ENDED);
-        Mockito.when(tracingBatchService.terminateTracingBatch(
-                        tracingBatchDto.getBatchId(), TracingBatchStateEnum.ENDED, tracingBatchDto.getLastEventId()))
+        Mockito.when(tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, tracingBatchDto.getLastEventId()+1))
                 .thenReturn(tracingBatchDto);
 
         assertDoesNotThrow(() -> autoUpdaterController.scheduleUpdater());
@@ -113,8 +111,8 @@ class AutoUpdaterControllerTest {
     void scheduleUpdaterWhenConnectionResetTest() {
         TracingBatchDto tracingBatchDto = getTracingBatchDto();
 
-        Mockito.when(tracingBatchService.checkAndCreateTracingBatch())
-                .thenReturn(tracingBatchDto);
+        Mockito.when(tracingBatchService.getLastEventIdByTracingBatch())
+                .thenReturn(this.startEventId);
 
         EventsDto eventsDto1 = getEventsDtoWithEservice();
         EServiceEventDto eServiceEventDto = (EServiceEventDto)eventsDto1.getEvents().get(0);
@@ -131,8 +129,7 @@ class AutoUpdaterControllerTest {
                 .getAgreementsAndEServices(tracingBatchDto.getLastEventId());
 
         tracingBatchDto.setState(TracingBatchStateEnum.ENDED);
-        Mockito.when(tracingBatchService.terminateTracingBatch(
-                        tracingBatchDto.getBatchId(), TracingBatchStateEnum.ENDED, eServiceEventDto.getEventId()))
+        Mockito.when(tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, eServiceEventDto.getEventId()))
                 .thenReturn(tracingBatchDto);
 
         Exception exception = assertThrows(PDNDConnectionResetException.class, () -> autoUpdaterController.scheduleUpdater());
@@ -143,8 +140,8 @@ class AutoUpdaterControllerTest {
     void scheduleUpdaterWhenHttpStatusDifferentOf200Test() {
         TracingBatchDto tracingBatchDto = getTracingBatchDto();
 
-        Mockito.when(tracingBatchService.checkAndCreateTracingBatch())
-                .thenReturn(tracingBatchDto);
+        Mockito.when(tracingBatchService.getLastEventIdByTracingBatch())
+                .thenReturn(this.startEventId);
 
         EventsDto eventsDto = getEventsDtoWithAgreement();
         AgreementEventDto agreementEventDto = (AgreementEventDto)eventsDto.getEvents().get(0);
@@ -159,8 +156,7 @@ class AutoUpdaterControllerTest {
                 .thenReturn(new DeadEvent());
 
         tracingBatchDto.setState(TracingBatchStateEnum.ENDED_WITH_ERROR);
-        Mockito.when(tracingBatchService.terminateTracingBatch(
-                        tracingBatchDto.getBatchId(), TracingBatchStateEnum.ENDED_WITH_ERROR, agreementEventDto.getEventId()-1))
+        Mockito.when(tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED_WITH_ERROR, agreementEventDto.getEventId()))
                 .thenReturn(tracingBatchDto);
 
         Exception exception = assertThrows(PDNDEventException.class, () -> autoUpdaterController.scheduleUpdater());
@@ -169,7 +165,7 @@ class AutoUpdaterControllerTest {
 
     private TracingBatchDto getTracingBatchDto() {
         TracingBatchDto tracingBatchDto = new TracingBatchDto();
-        tracingBatchDto.setState(TracingBatchStateEnum.IN_PROGRESS);
+        tracingBatchDto.setState(TracingBatchStateEnum.ENDED);
         tracingBatchDto.setLastEventId(this.startEventId);
         tracingBatchDto.setBatchId(this.batchId);
         return tracingBatchDto;
@@ -198,7 +194,7 @@ class AutoUpdaterControllerTest {
         eventsDto.setLastEventId(this.finalEventId);
         return eventsDto;
     }
-*/
+
     private void setUp() {
         this.batchId = 0L;
         this.startEventId = 0L;
