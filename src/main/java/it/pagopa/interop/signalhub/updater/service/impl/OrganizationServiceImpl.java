@@ -2,7 +2,7 @@ package it.pagopa.interop.signalhub.updater.service.impl;
 
 import it.pagopa.interop.signalhub.updater.entity.OrganizationEService;
 import it.pagopa.interop.signalhub.updater.mapper.OrganizationEServiceMapper;
-import it.pagopa.interop.signalhub.updater.model.EServiceEventDTO;
+import it.pagopa.interop.signalhub.updater.model.EServiceEventDto;
 import it.pagopa.interop.signalhub.updater.model.OrganizationEServiceDto;
 import it.pagopa.interop.signalhub.updater.repository.OrganizationEserviceRepository;
 import it.pagopa.interop.signalhub.updater.service.InteropService;
@@ -23,7 +23,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 
     @Override
-    public OrganizationEServiceDto updateOrganizationEService(EServiceEventDTO eServiceEventDTO) {
+    public OrganizationEServiceDto updateOrganizationEService(EServiceEventDto eServiceEventDTO) {
         log.info("[{} - {}] Retrieving detail eservice...", eServiceEventDTO.getEventId(), eServiceEventDTO.getEServiceId());
         OrganizationEServiceDto detailEservice = this.interopService.getEService(eServiceEventDTO.getEServiceId(), eServiceEventDTO.getEventId());
         log.info("[{} - {}] Detail eservice retrieved with state {}", eServiceEventDTO.getEventId(), eServiceEventDTO.getEServiceId(), detailEservice.getState());
@@ -55,7 +55,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             return mapper.toDtoFromEntity(entity);
         }
 
-        EServiceEventDTO eventDTO = new EServiceEventDTO();
+        EServiceEventDto eventDTO = new EServiceEventDto();
         eventDTO.setEventId(eventId);
         eventDTO.setEServiceId(eserviceId);
         log.info("[{} - {}] Eservice doesn't exist", eserviceId, producerId);

@@ -59,7 +59,7 @@ public class AutoUpdaterController {
     private void updateEvents(List<EventDto> events){
         for (EventDto event : events){
             if (Predicates.isEServiceEvent().test(event)){
-                organizationService.updateOrganizationEService((EServiceEventDTO) event);
+                organizationService.updateOrganizationEService((EServiceEventDto) event);
             } else {
                 consumerService.updateConsumer((AgreementEventDto) event);
             }
