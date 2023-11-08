@@ -1,34 +1,18 @@
 package it.pagopa.interop.signalhub.updater;
 
-import it.pagopa.interop.signalhub.updater.controller.AutoUpdaterController;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 
 
-@Slf4j
+@EnableReactiveMethodSecurity
 @SpringBootApplication
-@EnableCaching
-public class UpdaterApplication implements CommandLineRunner {
+@EnableScheduling
+public class UpdaterApplication {
 
-    private final AutoUpdaterController autoUpdaterController;
-
-    public UpdaterApplication(AutoUpdaterController autoUpdaterController) {
-        this.autoUpdaterController = autoUpdaterController;
-    }
-
-    public static void main(String[] args){
-        SpringApplicationBuilder app = new SpringApplicationBuilder(UpdaterApplication.class);
-        app.run(args);
-    }
-
-    @Override
-    public void run(String... args) {
-        log.info("Running batch");
-        autoUpdaterController.scheduleUpdater();
-        log.info("Batch ended");
+    public static void main(String[] args) {
+        SpringApplication.run(UpdaterApplication.class, args);
     }
 
 }

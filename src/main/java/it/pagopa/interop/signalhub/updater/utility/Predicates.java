@@ -1,7 +1,7 @@
 package it.pagopa.interop.signalhub.updater.utility;
 
 import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.Event;
-import it.pagopa.interop.signalhub.updater.model.EServiceEventDto;
+import it.pagopa.interop.signalhub.updater.model.EServiceEventDTO;
 import it.pagopa.interop.signalhub.updater.model.EventDto;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,8 +22,8 @@ public class Predicates {
 
     public static Predicate<EventDto> isEServiceEvent() {
         return event -> {
-            log.info("Verifico object type: {} ", (event instanceof EServiceEventDto) ? "ESERVICE" : "AGREEMENT");
-            return (event instanceof EServiceEventDto);
+            log.info("Verifico object type: {} ", (event instanceof EServiceEventDTO) ? "ESERVICE" : "AGREEMENT");
+            return (event instanceof EServiceEventDTO);
         };
     }
 

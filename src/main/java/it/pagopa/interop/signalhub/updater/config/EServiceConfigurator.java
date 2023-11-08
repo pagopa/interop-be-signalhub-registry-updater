@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class EServiceConfigurator {
 
-    @Value("${pdnd.client.event.endpoint-url}")
+    @Value("${pdnd.client.event.enpoind-url}")
     private String basePath;
 
     @Bean

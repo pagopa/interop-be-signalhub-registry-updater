@@ -8,7 +8,6 @@ import it.pagopa.interop.signalhub.updater.mapper.TracingBatchMapper;
 import it.pagopa.interop.signalhub.updater.model.TracingBatchDto;
 import it.pagopa.interop.signalhub.updater.model.TracingBatchStateEnum;
 import it.pagopa.interop.signalhub.updater.repository.TracingBatchRepository;
-import it.pagopa.interop.signalhub.updater.service.DeadEventService;
 import it.pagopa.interop.signalhub.updater.service.TracingBatchService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

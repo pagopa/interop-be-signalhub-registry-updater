@@ -3,7 +3,6 @@ package it.pagopa.interop.signalhub.updater.mapper;
 import it.pagopa.interop.signalhub.updater.entity.ConsumerEService;
 import it.pagopa.interop.signalhub.updater.model.ConsumerEServiceDto;
 import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.Agreement;
-import it.pagopa.interop.signalhub.updater.repository.cache.model.ConsumerEServiceCache;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -21,5 +20,4 @@ public interface ConsumerEServiceMapper {
     })
     ConsumerEService toEntityFromProps(String eserviceId, String consumerId, String state);
 
-    ConsumerEServiceCache toCacheFromEntity(ConsumerEService eService);
 }

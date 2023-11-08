@@ -8,8 +8,6 @@ import lombok.Setter;
 @Setter
 public abstract class EventDto {
     private Long eventId;
-    private String objectType;
-    private String eventType;
 
 
     @Override
@@ -20,4 +18,6 @@ public abstract class EventDto {
 
     @Override
     public abstract String toString();
+
+
 }

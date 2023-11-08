@@ -2,7 +2,6 @@ package it.pagopa.interop.signalhub.updater.service.impl;
 
 
 import it.pagopa.interop.signalhub.updater.exception.PDNDClientException;
-import it.pagopa.interop.signalhub.updater.exception.PDNDConnectionResetException;
 import it.pagopa.interop.signalhub.updater.exception.PDNDNoEventsException;
 import it.pagopa.interop.signalhub.updater.externalclient.InteroperabilityClient;
 import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.Agreement;
@@ -17,7 +16,6 @@ import it.pagopa.interop.signalhub.updater.utility.Predicates;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.Comparator;
@@ -42,8 +40,6 @@ public class InteropServiceImpl implements InteropService {
         try {
             log.info("Rerieving events from {} eventId", lastEventId);
             response = client.getEventsFromId(lastEventId);
-        } catch (WebClientRequestException ex) {
-            throw new PDNDConnectionResetException("Connection token was expired", lastEventId);
         } catch (WebClientResponseException ex) {
             throw new PDNDClientException("Error with retrieve events", lastEventId);
         }
@@ -77,8 +73,6 @@ public class InteropServiceImpl implements InteropService {
             Agreement agreement = client.getAgreement(agreementId);
             log.info("[{} - {}] Retrieving detail agreement", eventId, agreementId);
             return mapperConsumer.toConsumerEServiceDtoFromAgreement(agreement, eventId);
-        } catch (WebClientRequestException ex) {
-            throw new PDNDConnectionResetException("Connection token was expired", eventId);
         } catch (WebClientResponseException ex) {
             log.error("[{} - {}] Error with retrieving Agreement detail", eventId, agreementId);
             throw new PDNDClientException("Error with retrieve agreement details", eventId);
@@ -91,8 +85,6 @@ public class InteropServiceImpl implements InteropService {
             EService eService = client.getEService(eserviceId);
             log.info("[{} - {}] Retrieving detail eservice", eventId, eserviceId);
             return mapperOrganization.fromEServiceToOrganizationEServiceDto(eService, eventId);
-        }  catch (WebClientRequestException ex) {
-            throw new PDNDConnectionResetException("Connection token was expired", eventId);
         } catch (WebClientResponseException ex) {
             log.error("[{} - {}] Error with retrieving Eservice detail", eventId, eserviceId);
             throw new PDNDClientException("Error with retrieve eservice details", eventId);
@@ -102,18 +94,14 @@ public class InteropServiceImpl implements InteropService {
 
     private EventDto toEventDto(Event event){
         if (event.getObjectType().equals(ESERVICE_EVENT)){
-            EServiceEventDto dto = new EServiceEventDto();
+            EServiceEventDTO dto = new EServiceEventDTO();
             dto.setEventId(event.getEventId());
             dto.setEServiceId(event.getObjectId().get(ESERVICE_KEY_ID));
-            dto.setEventType(event.getEventType());
-            dto.setObjectType(event.getObjectType());
             return dto;
         }
         AgreementEventDto dto = new AgreementEventDto();
         dto.setEventId(event.getEventId());
         dto.setAgreementId(event.getObjectId().get(AGREEMENT_KEY_ID));
-        dto.setEventType(event.getEventType());
-        dto.setObjectType(event.getObjectType());
         return dto;
     }
 }

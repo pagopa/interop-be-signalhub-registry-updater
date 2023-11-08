@@ -2,15 +2,13 @@ package it.pagopa.interop.signalhub.updater.service.impl;
 
 import it.pagopa.interop.signalhub.updater.entity.OrganizationEService;
 import it.pagopa.interop.signalhub.updater.mapper.OrganizationEServiceMapper;
-import it.pagopa.interop.signalhub.updater.model.EServiceEventDto;
+import it.pagopa.interop.signalhub.updater.model.EServiceEventDTO;
 import it.pagopa.interop.signalhub.updater.model.OrganizationEServiceDto;
 import it.pagopa.interop.signalhub.updater.repository.OrganizationEserviceRepository;
-import it.pagopa.interop.signalhub.updater.repository.cache.repository.OrganizationEServiceCacheRepository;
 import it.pagopa.interop.signalhub.updater.service.InteropService;
 import it.pagopa.interop.signalhub.updater.service.OrganizationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 
@@ -22,11 +20,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final InteropService interopService;
     private final OrganizationEserviceRepository repository;
     private final OrganizationEServiceMapper mapper;
-    private final OrganizationEServiceCacheRepository organizationEServiceCache;
 
 
     @Override
-    public OrganizationEServiceDto updateOrganizationEService(EServiceEventDto eServiceEventDTO) {
+    public OrganizationEServiceDto updateOrganizationEService(EServiceEventDTO eServiceEventDTO) {
         log.info("[{} - {}] Retrieving detail eservice...", eServiceEventDTO.getEventId(), eServiceEventDTO.getEServiceId());
         OrganizationEServiceDto detailEservice = this.interopService.getEService(eServiceEventDTO.getEServiceId(), eServiceEventDTO.getEventId());
         log.info("[{} - {}] Detail eservice retrieved with state {}", eServiceEventDTO.getEventId(), eServiceEventDTO.getEServiceId(), detailEservice.getState());
@@ -40,15 +37,11 @@ public class OrganizationServiceImpl implements OrganizationService {
                 entity.getTmstInsert() ==  null ? "not" : "");
 
 
-        String entityState= entity.getState();
         entity.setState(detailEservice.getState());
         entity = this.repository.saveAndFlush(entity);
         log.info("[{} - {}] Entity saved",
                 eServiceEventDTO.getEventId(),
                 eServiceEventDTO.getEServiceId());
-        if(!StringUtils.equalsIgnoreCase(entityState, detailEservice.getState())) {
-            organizationEServiceCache.updateOrganizationEService(mapper.toCacheFromEntity(entity));
-        }
         return mapper.toDtoFromEntity(entity);
     }
 
@@ -56,13 +49,13 @@ public class OrganizationServiceImpl implements OrganizationService {
     public OrganizationEServiceDto checkAndUpdate(String eserviceId, String producerId, Long eventId) {
         log.info("[{} - {}] Check and Update organization eservice", eserviceId, producerId);
         OrganizationEService entity = this.repository.findByEserviceIdAndProducerId(eserviceId, producerId)
-                .orElse(null);
+                                        .orElse(null);
         if (entity != null) {
             log.info("[{} - {}] Eservice already exist with state {}", eserviceId, producerId, entity.getState());
             return mapper.toDtoFromEntity(entity);
         }
 
-        EServiceEventDto eventDTO = new EServiceEventDto();
+        EServiceEventDTO eventDTO = new EServiceEventDTO();
         eventDTO.setEventId(eventId);
         eventDTO.setEServiceId(eserviceId);
         log.info("[{} - {}] Eservice doesn't exist", eserviceId, producerId);

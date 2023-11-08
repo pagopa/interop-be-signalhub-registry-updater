@@ -13,5 +13,7 @@ public class SecurityProps {
     private String clientId;
     private String clientSecret;
     private String tokenUri;
-    private String kmsKeyId;
+    private String pathPrivateKey;
+    private String pathPublicKey;
+    private String kid;
 }
