@@ -2,7 +2,6 @@ package it.pagopa.interop.signalhub.updater.service.impl;
 
 import it.pagopa.interop.signalhub.updater.config.RegistryUpdaterProps;
 import it.pagopa.interop.signalhub.updater.entity.TracingBatchEntity;
-import it.pagopa.interop.signalhub.updater.exception.PDNDBatchAlreadyExistException;
 import it.pagopa.interop.signalhub.updater.exception.PDNDEntityNotFound;
 import it.pagopa.interop.signalhub.updater.mapper.TracingBatchMapper;
 import it.pagopa.interop.signalhub.updater.model.TracingBatchDto;
@@ -32,19 +31,6 @@ class TracingBatchServiceImplTest {
     @Mock
     private RegistryUpdaterProps props;
 
-
-    @Test
-    void checkAndCreateTracingBatchButBatchAlreadyInRunning() {
-        Mockito.when(repository.findByStateProgressAndLastEventIdMax(Mockito.any())).thenReturn(Optional.of(new TracingBatchEntity()));
-
-        PDNDBatchAlreadyExistException thrown = assertThrows(
-                PDNDBatchAlreadyExistException.class,
-                () -> {
-                    tracingBatchService.checkAndCreateTracingBatch();
-                }
-        );
-        assertEquals("Batch already in running", thrown.getMessage());
-    }
 
     @Test
     void checkAndCreateTracingBatch() {

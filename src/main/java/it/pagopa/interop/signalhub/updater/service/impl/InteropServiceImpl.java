@@ -1,7 +1,7 @@
 package it.pagopa.interop.signalhub.updater.service.impl;
 
 
-import it.pagopa.interop.signalhub.updater.exception.PDNDClientException;
+import it.pagopa.interop.signalhub.updater.exception.PDNDEventException;
 import it.pagopa.interop.signalhub.updater.exception.PDNDConnectionResetException;
 import it.pagopa.interop.signalhub.updater.exception.PDNDNoEventsException;
 import it.pagopa.interop.signalhub.updater.externalclient.InteroperabilityClient;
@@ -40,9 +40,9 @@ public class InteropServiceImpl implements InteropService {
             log.info("Rerieving events from {} eventId", lastEventId);
             response = client.getEventsFromId(lastEventId);
         } catch (WebClientRequestException ex) {
-            throw new PDNDConnectionResetException("Connection token was expired", lastEventId);
+            throw new PDNDConnectionResetException("Connection token was expired", lastEventId + 1);
         } catch (WebClientResponseException ex) {
-            throw new PDNDClientException("Error with retrieve events", lastEventId);
+            throw new PDNDEventException("Error with retrieve events", lastEventId);
         }
 
         if (response == null || response.getEvents().isEmpty()){
@@ -78,7 +78,7 @@ public class InteropServiceImpl implements InteropService {
             throw new PDNDConnectionResetException("Connection token was expired", eventId);
         } catch (WebClientResponseException ex) {
             log.error("[{} - {}] Error with retrieving Agreement detail", eventId, agreementId);
-            throw new PDNDClientException("Error with retrieve agreement details", eventId);
+            throw new PDNDEventException("Error with retrieve agreement details", eventId);
         }
     }
 
@@ -92,7 +92,7 @@ public class InteropServiceImpl implements InteropService {
             throw new PDNDConnectionResetException("Connection token was expired", eventId);
         } catch (WebClientResponseException ex) {
             log.error("[{} - {}] Error with retrieving Eservice detail", eventId, eserviceId);
-            throw new PDNDClientException("Error with retrieve eservice details", eventId);
+            throw new PDNDEventException("Error with retrieve eservice details", eventId);
         }
     }
 
@@ -107,7 +107,7 @@ public class InteropServiceImpl implements InteropService {
             throw new PDNDConnectionResetException("Connection token was expired", eServiceDto.getEventId());
         } catch (WebClientResponseException ex) {
             log.error("[{} - {} - {}] Error with retrieving Eservice detail", eServiceDto.getEventId(), eServiceDto.getEserviceId(), eServiceDto.getDescriptorId());
-            throw new PDNDClientException("Error with retrieve eservice descriptor details", eServiceDto.getEventId());
+            throw new PDNDEventException("Error with retrieve eservice descriptor details", eServiceDto.getEventId());
         }
     }
 

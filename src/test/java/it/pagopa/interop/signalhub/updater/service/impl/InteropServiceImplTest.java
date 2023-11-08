@@ -1,7 +1,7 @@
 package it.pagopa.interop.signalhub.updater.service.impl;
 
 import it.pagopa.interop.signalhub.updater.config.DataBuilder;
-import it.pagopa.interop.signalhub.updater.exception.PDNDClientException;
+import it.pagopa.interop.signalhub.updater.exception.PDNDEventException;
 import it.pagopa.interop.signalhub.updater.exception.PDNDConnectionResetException;
 import it.pagopa.interop.signalhub.updater.exception.PDNDNoEventsException;
 import it.pagopa.interop.signalhub.updater.externalclient.InteroperabilityClient;
@@ -80,7 +80,7 @@ class InteropServiceImplTest {
         Mockito.when(client.getEventsFromId(Mockito.any()))
                 .thenThrow(EXCEPTION_NOT_FOUND);
 
-        assertThrows(PDNDClientException.class,
+        assertThrows(PDNDEventException.class,
                 () -> interopService.getAgreementsAndEServices(2L));
     }
 
@@ -114,7 +114,7 @@ class InteropServiceImplTest {
         Mockito.when(client.getEService(Mockito.any()))
                 .thenThrow(EXCEPTION_NOT_FOUND);
 
-        assertThrows(PDNDClientException.class,
+        assertThrows(PDNDEventException.class,
                 () -> interopService.getEService(DataBuilder.getEservice().getEserviceId(), 2L));
     }
 
@@ -149,7 +149,7 @@ class InteropServiceImplTest {
         Mockito.when(client.getAgreement(Mockito.any()))
                 .thenThrow(EXCEPTION_NOT_FOUND);
 
-        assertThrows(PDNDClientException.class,
+        assertThrows(PDNDEventException.class,
                 () -> interopService.getConsumerEService(DataBuilder.getConsumerDto().getAgreementId(), 2L));
     }
 
@@ -185,7 +185,7 @@ class InteropServiceImplTest {
         Mockito.when(client.getEServiceDescriptor(Mockito.any(), Mockito.any()))
                 .thenThrow(EXCEPTION_NOT_FOUND);
 
-        assertThrows(PDNDClientException.class,
+        assertThrows(PDNDEventException.class,
                 () -> interopService.getEServiceDescriptor(DataBuilder.getEservice()));
     }
 
