@@ -2,6 +2,7 @@ package it.pagopa.interop.signalhub.updater.service.impl;
 
 
 import it.pagopa.interop.signalhub.updater.entity.ConsumerEService;
+import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.AgreementState;
 import it.pagopa.interop.signalhub.updater.mapper.ConsumerEServiceMapper;
 import it.pagopa.interop.signalhub.updater.model.AgreementEventDto;
 import it.pagopa.interop.signalhub.updater.model.ConsumerEServiceDto;
@@ -34,6 +35,11 @@ public class ConsumerServiceImpl implements ConsumerService {
         ConsumerEServiceDto detailAgreement = this.interopService.getConsumerEService(agreementEventDto.getAgreementId(), agreementEventDto.getEventId());
 
         log.info("[{} - {}] Detail agreement retrieved with state {}", agreementEventDto.getEventId(), agreementEventDto.getAgreementId(), detailAgreement.getState());
+
+        if (detailAgreement.getState().equals(AgreementState.REJECTED.getValue())) {
+            log.info("[{} - {}] agreement state rejected", agreementEventDto.getEventId(), agreementEventDto.getAgreementId());
+            return detailAgreement;
+        }
 
         ConsumerEService entity = this.consumerEserviceRepository.findByEserviceIdAndConsumerIdAndDescriptorId(detailAgreement.getEserviceId(), detailAgreement.getConsumerId(), detailAgreement.getDescriptorId())
                 .orElse(getInitialConsumerEService(detailAgreement));
