@@ -31,7 +31,7 @@ public class AutoUpdaterController {
         log.info("ScheduleUpdater Started: {}", dateTimeFormatter.format(LocalDateTime.now()));
         Long lastEventId = this.tracingBatchService.getLastEventIdByTracingBatch();
         lastEventId = updateRecursiveFlow(lastEventId);
-        tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, lastEventId+1);
+        tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, lastEventId);
     }
 
     private Long updateRecursiveFlow(Long lastEventId) {
