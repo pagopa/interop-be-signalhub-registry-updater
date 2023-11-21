@@ -3,6 +3,7 @@ package it.pagopa.interop.signalhub.updater.externalclient.impl;
 import it.pagopa.interop.signalhub.updater.externalclient.InteroperabilityClient;
 import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.api.v1.GatewayApi;
 import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.*;
+import it.pagopa.interop.signalhub.updater.utility.Const;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
@@ -27,13 +28,23 @@ public class InteroperabilityClientImpl implements InteroperabilityClient {
 
 
     @Override
-    public Events getEventsFromId(Long lastEventId) {
-        return gatewayApi.getEventsFromId(lastEventId, MAX_LIMIT_BLOCK)
-                .retryWhen(
-                        Retry.backoff(4, Duration.ofMillis(1000))
-                                .filter(this.isRetryException())
-                )
-                .block();
+    public Events getEventsFromIdAndType(Long lastEventId, String type) {
+        if (type.equals(Const.ESERVICE_EVENT)){
+            return gatewayApi.getEservicesEventsFromId(lastEventId, MAX_LIMIT_BLOCK)
+                    .retryWhen(
+                            Retry.backoff(4, Duration.ofMillis(1000))
+                                    .filter(this.isRetryException())
+                    )
+                    .block();
+        } else if (type.equals(Const.AGREEMENT_EVENT)) {
+            return gatewayApi.getAgreementsEventsFromId(lastEventId, MAX_LIMIT_BLOCK)
+                    .retryWhen(
+                            Retry.backoff(4, Duration.ofMillis(1000))
+                                    .filter(this.isRetryException())
+                    )
+                    .block();
+        }
+        return null;
     }
 
     @Override

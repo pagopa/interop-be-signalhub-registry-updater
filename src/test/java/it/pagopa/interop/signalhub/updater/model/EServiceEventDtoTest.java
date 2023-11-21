@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 class EServiceEventDtoTest {
     private String eServiceId;
+    private String descriptorId;
     private Long eventId;
     private String eventType;
     private String objectType;
@@ -76,6 +77,8 @@ class EServiceEventDtoTest {
     private EServiceEventDto getEServiceEventDto(String eServiceId) {
         EServiceEventDto eServiceEventDto = new EServiceEventDto();
         eServiceEventDto.setEServiceId(eServiceId);
+        eServiceEventDto.setDescriptorId(eServiceId.concat("123"));
+        eServiceEventDto.setObjectType(this.objectType);
         return eServiceEventDto;
     }
 
@@ -84,5 +87,6 @@ class EServiceEventDtoTest {
         this.eventId = 0L;
         this.eventType = "ADDED";
         this.objectType = "ESERVICE";
+        this.descriptorId = "122211-22222";
     }
 }

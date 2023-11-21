@@ -66,13 +66,10 @@ class InteroperabilityClientImplTest extends BaseTest.WithMockServer {
     void whenRetrieveEventsByLastEventIdThenReturnEventsList() {
         String toMatch = ESERVICE_EVENT.concat("|").concat(AGREEMENT_EVENT);
 
-        Events events = interoperabilityClient.getEventsFromId(EVENTSID_OK);
+        Events events = interoperabilityClient.getEventsFromIdAndType(EVENTSID_OK, AGREEMENT_EVENT);
         assertNotNull(events);
 
-        List<Event> eventList = events.getEvents()
-                .stream()
-                .filter(Predicates.isAgreementOrEServiceEvent())
-                .toList();
+        List<Event> eventList = events.getEvents();
 
         eventList.forEach(event -> {
             assertTrue(event.getObjectType().matches(toMatch));
@@ -81,13 +78,10 @@ class InteroperabilityClientImplTest extends BaseTest.WithMockServer {
 
     @Test
     void whenRetrieveEventsByLastEventIdThenReturnEventsListEmpty() {
-        Events events = interoperabilityClient.getEventsFromId(EVENTSID_OK_EMPTY);
+        Events events = interoperabilityClient.getEventsFromIdAndType(EVENTSID_OK_EMPTY,  AGREEMENT_EVENT);
         assertNotNull(events);
 
-        List<Event> eventList = events.getEvents()
-                .stream()
-                .filter(Predicates.isAgreementOrEServiceEvent())
-                .toList();
+        List<Event> eventList = events.getEvents();
 
         assertEquals(0, eventList.size());
     }
@@ -95,7 +89,7 @@ class InteroperabilityClientImplTest extends BaseTest.WithMockServer {
     @Test
     void whenLastEventIdBadlyFormatThenThrowBadRequestException() {
         WebClientResponseException exception =
-                assertThrows(WebClientResponseException.class, () -> interoperabilityClient.getEventsFromId(EVENTSID_BAD_REQUEST));
+                assertThrows(WebClientResponseException.class, () -> interoperabilityClient.getEventsFromIdAndType(EVENTSID_BAD_REQUEST,  ESERVICE_EVENT));
 
         assertNotNull(exception);
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
@@ -103,11 +97,11 @@ class InteroperabilityClientImplTest extends BaseTest.WithMockServer {
 
     @Test
     void whenClientCallLastEventIdTimeoutThenRetry4Attempts(){
-        Mockito.when(gatewayApi.getEventsFromId(EVENTSID_CONNECTION_TIMEOUT, InteroperabilityClientImpl.MAX_LIMIT_BLOCK))
+        Mockito.when(gatewayApi.getAgreementsEventsFromId(EVENTSID_CONNECTION_TIMEOUT, InteroperabilityClientImpl.MAX_LIMIT_BLOCK))
                 .thenReturn(Mono.error(new TimeoutException()));
 
         try {
-            interoperabilityClient.getEventsFromId(EVENTSID_CONNECTION_TIMEOUT);
+            interoperabilityClient.getEventsFromIdAndType(EVENTSID_CONNECTION_TIMEOUT, AGREEMENT_EVENT);
         } catch (Throwable ex) {
             assertTrue(Exceptions.isRetryExhausted(ex));
             assertTrue(ex.getCause() instanceof TimeoutException);
@@ -116,11 +110,11 @@ class InteroperabilityClientImplTest extends BaseTest.WithMockServer {
 
     @Test
     void whenClientCallLastEventIdThrowConnectionExceptionThenRetry4Attempts(){
-        Mockito.when(gatewayApi.getEventsFromId(EVENTSID_NO_CONNECT, InteroperabilityClientImpl.MAX_LIMIT_BLOCK))
+        Mockito.when(gatewayApi.getEservicesEventsFromId(EVENTSID_NO_CONNECT, InteroperabilityClientImpl.MAX_LIMIT_BLOCK))
                 .thenReturn(Mono.error(new ConnectException()));
 
         try {
-            interoperabilityClient.getEventsFromId(EVENTSID_NO_CONNECT);
+            interoperabilityClient.getEventsFromIdAndType(EVENTSID_NO_CONNECT, ESERVICE_EVENT);
         } catch (Throwable ex) {
             assertTrue(Exceptions.isRetryExhausted(ex));
             assertTrue(ex.getCause() instanceof ConnectException);

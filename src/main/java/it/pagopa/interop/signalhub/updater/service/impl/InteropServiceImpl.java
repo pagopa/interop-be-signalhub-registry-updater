@@ -10,9 +10,9 @@ import it.pagopa.interop.signalhub.updater.mapper.ConsumerEServiceMapper;
 import it.pagopa.interop.signalhub.updater.mapper.OrganizationEServiceMapper;
 import it.pagopa.interop.signalhub.updater.model.*;
 import it.pagopa.interop.signalhub.updater.service.InteropService;
-import it.pagopa.interop.signalhub.updater.utility.Predicates;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -34,13 +34,13 @@ public class InteropServiceImpl implements InteropService {
 
 
     @Override
-    public EventsDto getAgreementsAndEServices(Long lastEventId) {
+    public EventsDto getEventsByType(Long lastEventId, String type) {
         Events response = null;
         try {
             log.info("Rerieving events from {} eventId", lastEventId);
-            response = client.getEventsFromId(lastEventId);
+            response = client.getEventsFromIdAndType(lastEventId, type);
         } catch (WebClientRequestException ex) {
-            throw new PDNDConnectionResetException("Connection token was expired", lastEventId + 1);
+            throw new PDNDConnectionResetException("Connection token was expired {}", lastEventId + 1);
         } catch (WebClientResponseException ex) {
             throw new PDNDEventException("Error with retrieve events", lastEventId);
         }
@@ -53,8 +53,8 @@ public class InteropServiceImpl implements InteropService {
         log.info("Total events retrieved {}", response.getEvents().size());
         Set<EventDto> events = response.getEvents()
                                     .parallelStream()
-                                    .filter(Predicates.isAgreementOrEServiceEvent())
                                     .map(this::toEventDto)
+                                    .filter(event -> StringUtils.isNotBlank(event.getDescriptorId()))
                                     .collect(Collectors.toSet());
 
         log.info("Total events filtered {}", events.size());

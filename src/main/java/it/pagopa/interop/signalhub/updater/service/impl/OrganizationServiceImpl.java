@@ -27,15 +27,18 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public OrganizationEServiceDto updateOrganizationEService(EServiceEventDto eServiceEventDTO) {
-        log.info("[{} - {} - {}] Retrieving detail eservice...", eServiceEventDTO.getEventId(), eServiceEventDTO.getEServiceId(), eServiceEventDTO.getDescriptorId());
+        log.info("[{} - {} - {}] Retrieving producerID eservice...", eServiceEventDTO.getEventId(), eServiceEventDTO.getEServiceId(), eServiceEventDTO.getDescriptorId());
         //Only for retrieving Producer ID
         OrganizationEServiceDto detailEservice = this.interopService.getEService(eServiceEventDTO.getEServiceId(), eServiceEventDTO.getEventId());
         detailEservice.setDescriptorId(eServiceEventDTO.getDescriptorId());
 
-        log.info("[{} - {} - {}] Detail eservice retrieved with state {}", detailEservice.getEventId(), detailEservice.getEserviceId(), detailEservice.getDescriptorId(), detailEservice.getState());
+        log.info("[{} - {} - {}] Detail eservice retrieved with producerID {}", detailEservice.getEventId(), detailEservice.getEserviceId(), detailEservice.getDescriptorId(), detailEservice.getProducerId());
 
+        log.info("[{} - {} - {}] Retrieving state of eservice...", eServiceEventDTO.getEventId(), eServiceEventDTO.getEServiceId(), eServiceEventDTO.getDescriptorId());
         //Only setting eservices state
         detailEservice = this.interopService.getEServiceDescriptor(detailEservice);
+
+        log.info("[{} - {} - {}] Detail eservice retrieved with state {}", detailEservice.getEventId(), detailEservice.getEserviceId(), detailEservice.getDescriptorId(), detailEservice.getState());
 
         OrganizationEService entity = this.repository.findByEserviceIdAndProducerIdAndDescriptorId(detailEservice.getEserviceId(), detailEservice.getProducerId())
                 .orElse(getInitialEService(detailEservice));

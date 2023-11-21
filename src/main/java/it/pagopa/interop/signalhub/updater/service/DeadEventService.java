@@ -4,5 +4,5 @@ import it.pagopa.interop.signalhub.updater.entity.DeadEvent;
 import it.pagopa.interop.signalhub.updater.model.EventDto;
 
 public interface DeadEventService {
-    DeadEvent saveDeadEvent(EventDto eventDto);
+    DeadEvent saveDeadEvent(EventDto eventDto, String type);
 }

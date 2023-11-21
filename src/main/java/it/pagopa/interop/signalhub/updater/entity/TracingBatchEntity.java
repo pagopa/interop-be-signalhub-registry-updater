@@ -17,6 +17,7 @@ import java.time.Instant;
 public class TracingBatchEntity {
     public static final String COLUMN_BATCH_ID = "batch_id";
     public static final String COLUMN_LAST_EVENT_ID = "last_event_id";
+    public static final String COLUMN_TYPE = "type";
     public static final String COLUMN_STATE = "state";
     public static final String COLUMN_DATE_CREATED = "tmst_created";
 
@@ -27,6 +28,9 @@ public class TracingBatchEntity {
 
     @Column(name = COLUMN_LAST_EVENT_ID)
     private Long lastEventId;
+
+    @Column(name = COLUMN_TYPE)
+    private String type;
 
     @Column(name = COLUMN_STATE)
     private String state;

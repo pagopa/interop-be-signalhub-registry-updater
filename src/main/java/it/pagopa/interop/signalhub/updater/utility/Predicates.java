@@ -4,11 +4,12 @@ import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.mode
 import it.pagopa.interop.signalhub.updater.model.EServiceEventDto;
 import it.pagopa.interop.signalhub.updater.model.EventDto;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.env.Environment;
 
 import java.util.function.Predicate;
 
-import static it.pagopa.interop.signalhub.updater.utility.Const.AGREEMENT_EVENT;
-import static it.pagopa.interop.signalhub.updater.utility.Const.ESERVICE_EVENT;
+import static it.pagopa.interop.signalhub.updater.utility.Const.*;
 
 @Slf4j
 public class Predicates {
@@ -27,5 +28,13 @@ public class Predicates {
         };
     }
 
+
+    public static boolean isCorrectApplicationType(Environment envs) {
+        if (envs.containsProperty(APPLICATION_TYPE_ARG)){
+            String applicationType = envs.getProperty(APPLICATION_TYPE_ARG);
+            return StringUtils.equals(ESERVICE_EVENT, applicationType) || StringUtils.equals(AGREEMENT_EVENT, applicationType);
+        }
+        return false;
+    }
 
 }

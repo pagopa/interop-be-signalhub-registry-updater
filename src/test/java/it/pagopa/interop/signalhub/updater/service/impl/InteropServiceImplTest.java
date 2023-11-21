@@ -11,6 +11,7 @@ import it.pagopa.interop.signalhub.updater.mapper.OrganizationEServiceMapper;
 import it.pagopa.interop.signalhub.updater.model.ConsumerEServiceDto;
 import it.pagopa.interop.signalhub.updater.model.EventsDto;
 import it.pagopa.interop.signalhub.updater.model.OrganizationEServiceDto;
+import it.pagopa.interop.signalhub.updater.utility.Const;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -45,43 +46,45 @@ class InteropServiceImplTest {
     @Test
     void getAgreementsAndEServices() {
         Events responseMock = DataBuilder.getEventsWithDuplicate();
-        Mockito.when(client.getEventsFromId(Mockito.any()))
+        Mockito.when(client.getEventsFromIdAndType(Mockito.any(), Mockito.any()))
                 .thenReturn(responseMock);
 
-        EventsDto eventsDto = interopService.getAgreementsAndEServices(1L);
+        EventsDto eventsDto = interopService.getEventsByType(1L, Const.ESERVICE_EVENT);
         assertNotNull(eventsDto);
         assertEquals(responseMock.getLastEventId(), eventsDto.getLastEventId());
-        assertEquals(7, eventsDto.getEvents().size());
+        assertEquals(3, eventsDto.getEvents().size());
     }
 
     @Test
     void whenEventsClientReturnNullOrEmptyThenThrowException(){
-        Mockito.when(client.getEventsFromId(Mockito.any())).thenReturn(null);
-        PDNDNoEventsException thrownIsNull = assertThrows(PDNDNoEventsException.class,() -> interopService.getAgreementsAndEServices(20L));
+        Mockito.when(client.getEventsFromIdAndType(Mockito.any(), Mockito.any()))
+                .thenReturn(null);
+        PDNDNoEventsException thrownIsNull = assertThrows(PDNDNoEventsException.class,() -> interopService.getEventsByType(20L, Const.AGREEMENT_EVENT));
         assertEquals("No events from last event id 20", thrownIsNull.getMessage());
 
-        Mockito.when(client.getEventsFromId(Mockito.any())).thenReturn(new Events());
-        PDNDNoEventsException thrownIsEmpty = assertThrows(PDNDNoEventsException.class,() -> interopService.getAgreementsAndEServices(20L));
+        Mockito.when(client.getEventsFromIdAndType(Mockito.any(), Mockito.any()))
+                .thenReturn(new Events());
+        PDNDNoEventsException thrownIsEmpty = assertThrows(PDNDNoEventsException.class,() -> interopService.getEventsByType(20L, Const.AGREEMENT_EVENT));
         assertEquals("No events from last event id 20", thrownIsEmpty.getMessage());
 
     }
 
     @Test
     void whenTokenWasExpiredEventsThenThrowConnectionResetException() {
-        Mockito.when(client.getEventsFromId(Mockito.any()))
+        Mockito.when(client.getEventsFromIdAndType(Mockito.any(), Mockito.any()))
                 .thenThrow(EXCEPTION_TOKEN_EXPIRED);
 
         assertThrows(PDNDConnectionResetException.class,
-                () -> interopService.getAgreementsAndEServices(2L));
+                () -> interopService.getEventsByType(20L, Const.AGREEMENT_EVENT));
     }
 
     @Test
     void whenRetrieveEventsNotFoundThenThrowConnectionResetException() {
-        Mockito.when(client.getEventsFromId(Mockito.any()))
+        Mockito.when(client.getEventsFromIdAndType(Mockito.any(), Mockito.any()))
                 .thenThrow(EXCEPTION_NOT_FOUND);
 
         assertThrows(PDNDEventException.class,
-                () -> interopService.getAgreementsAndEServices(2L));
+                () -> interopService.getEventsByType(2L, Const.AGREEMENT_EVENT));
     }
 
     /** TEST GET ESERVICE DETAIL **/

@@ -4,7 +4,7 @@ import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.mode
 
 
 public interface InteroperabilityClient {
-    Events getEventsFromId(Long lastEventId);
+    Events getEventsFromIdAndType(Long lastEventId, String type);
     Agreement getAgreement(String agreementId);
     EService getEService(String eserviceId);
     EServiceDescriptor getEServiceDescriptor(String eserviceId, String descriptorId);

@@ -1,7 +1,7 @@
 [
      {
         "httpRequest": {
-            "path": "/1.0/events",
+            "path": "/1.0/events/eservices",
             "method": "GET",
             "queryStringParameters": {
                 "lastEventId": "0",
@@ -19,24 +19,8 @@
             {
                 "events": [
                     {
-                        "eventId": 1,
-                        "eventType": "ADDED",
-                        "objectId": {
-                            "agreementId": "640d9d82-1193-4404-8317-8759fa7e4845"
-                        },
-                        "objectType": "AGREEMENT"
-                    },
-                    {
-                        "eventId": 2,
-                        "eventType": "ADDED",
-                        "objectId": {
-                            "agreementId": "640d9d82-1193-4404-8317-8759fa7e4845"
-                        },
-                        "objectType": "AGREEMENT"
-                    },
-                    {
                         "eventId": 3,
-                        "eventType": "UPDATED",
+                        "eventType": "CREATED",
                         "objectId": {
                             "eServiceId": "515cbcd9-831d-45ca-85e4-802fb2c80112",
                             "descriptorId": "8a631cab-797b-482d-bf7d-615bf1004368"
@@ -51,54 +35,6 @@
                             "descriptorId": "8a631cab-797b-482d-bf7d-615bf1004368"
                         },
                         "objectType": "ESERVICE"
-                    },
-                    {
-                        "eventId": 5,
-                        "eventType": "CREATED",
-                        "objectId": {
-                            "purposeId": "4164d23c-2526-47cf-a680-103df9ddf394"
-                        },
-                        "objectType": "PURPOSE"
-                    },
-                    {
-                        "eventId": 6,
-                        "eventType": "CREATED",
-                        "objectId": {
-                            "purposeId": "4164d23c-2526-47cf-a680-103df9ddf394"
-                        },
-                        "objectType": "PURPOSE"
-                    },
-                    {
-                        "eventId": 7,
-                        "eventType": "UPDATED",
-                        "objectId": {
-                            "purposeId": "4164d23c-2526-47cf-a680-103df9ddf394"
-                        },
-                        "objectType": "PURPOSE"
-                    },
-                    {
-                        "eventId": 8,
-                        "eventType": "UPDATED",
-                        "objectId": {
-                            "purposeId": "4164d23c-2526-47cf-a680-103df9ddf394"
-                        },
-                        "objectType": "PURPOSE"
-                    },
-                    {
-                        "eventId": 9,
-                        "eventType": "UPDATED",
-                        "objectId": {
-                            "purposeId": "f84c2715-af96-4353-8d8d-f17423f1ed15"
-                        },
-                        "objectType": "PURPOSE"
-                    },
-                    {
-                        "eventId": 10,
-                        "eventType": "UPDATED",
-                        "objectId": {
-                            "purposeId": "f84c2715-af96-4353-8d8d-f17423f1ed15"
-                        },
-                        "objectType": "PURPOSE"
                     }
                 ],
                 "lastEventId": 10
@@ -108,7 +44,7 @@
     },
     {
         "httpRequest": {
-            "path": "/1.0/events",
+            "path": "/1.0/events/eservices",
             "method": "GET",
             "queryStringParameters": {
                 "lastEventId": "10",
@@ -131,7 +67,103 @@
     },
     {
         "httpRequest": {
-            "path": "/1.0/events",
+            "path": "/1.0/events/eservices",
+            "method": "GET",
+            "queryStringParameters": {
+                "lastEventId": "-1",
+                "limit": "500"
+            }
+        },
+        "httpResponse": {
+            "statusCode": 400,
+            "headers": {
+                "content-type": [
+                    "application/json"
+                ]
+            },
+            "body":
+            {
+                "type": "string",
+                "status": 400,
+                "title": "Service Unavailable",
+                "correlationId": "53af4f2d-0c87-41ef-a645-b726a821852b",
+                "detail": "Request took too long to complete.",
+                "errors": [
+                    {
+                        "code": "123-4567",
+                        "detail": "Parameter not valid"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "httpRequest": {
+            "path": "/1.0/events/agreements",
+            "method": "GET",
+            "queryStringParameters": {
+                "lastEventId": "0",
+                "limit": "500"
+            }
+        },
+        "httpResponse": {
+            "statusCode": 200,
+            "headers": {
+                "content-type": [
+                    "application/json"
+                ]
+            },
+            "body":
+            {
+                "events": [
+                    {
+                        "eventId": 1,
+                        "eventType": "ADDED",
+                        "objectId": {
+                            "agreementId": "640d9d82-1193-4404-8317-8759fa7e4845"
+                        },
+                        "objectType": "AGREEMENT"
+                    },
+                    {
+                        "eventId": 2,
+                        "eventType": "UPDATED",
+                        "objectId": {
+                            "agreementId": "640d9d82-1193-4404-8317-8759fa7e4845"
+                        },
+                        "objectType": "AGREEMENT"
+                    }
+                ],
+                "lastEventId": 10
+            }
+
+        }
+    },
+    {
+        "httpRequest": {
+            "path": "/1.0/events/agreements",
+            "method": "GET",
+            "queryStringParameters": {
+                "lastEventId": "10",
+                "limit": "500"
+            }
+        },
+        "httpResponse": {
+            "statusCode": 200,
+            "headers": {
+                "content-type": [
+                    "application/json"
+                ]
+            },
+            "body":
+            {
+                "events": [],
+                "lastEventId": 10
+            }
+        }
+    },
+    {
+        "httpRequest": {
+            "path": "/1.0/events/agreements",
             "method": "GET",
             "queryStringParameters": {
                 "lastEventId": "-1",

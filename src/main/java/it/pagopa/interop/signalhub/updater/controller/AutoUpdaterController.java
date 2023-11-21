@@ -27,30 +27,30 @@ public class AutoUpdaterController {
     private final DeadEventService deadEventService;
 
 
-    public void scheduleUpdater() {
-        log.info("ScheduleUpdater Started: {}", dateTimeFormatter.format(LocalDateTime.now()));
-        Long lastEventId = this.tracingBatchService.getLastEventIdByTracingBatch();
-        lastEventId = updateRecursiveFlow(lastEventId);
-        tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, lastEventId);
+    public void scheduleUpdater(String applicationType) {
+        log.info("ScheduleUpdater of {} started at {}", applicationType, dateTimeFormatter.format(LocalDateTime.now()));
+        Long lastEventId = this.tracingBatchService.getLastEventIdByTracingBatchAndType(applicationType);
+        lastEventId = updateRecursiveFlow(lastEventId, applicationType);
+        tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, lastEventId, applicationType);
     }
 
-    private Long updateRecursiveFlow(Long lastEventId) {
+    private Long updateRecursiveFlow(Long lastEventId, String type) {
         try {
-            EventsDto events = this.interopService.getAgreementsAndEServices(lastEventId);
-            updateEvents(events.getEvents());
-            return updateRecursiveFlow(events.getLastEventId());
+            EventsDto events = this.interopService.getEventsByType(lastEventId, type);
+            updateEvents(events.getEvents(), type);
+            return updateRecursiveFlow(events.getLastEventId(), type);
         } catch (PDNDConnectionResetException ex) {
-            tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, ex.getEventId());
+            tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, ex.getEventId(), type);
             throw ex;
         } catch (PDNDNoEventsException ex) {
             return lastEventId;
         } catch (PDNDEventException ex) {
-            tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED_WITH_ERROR, ex.getEventId());
+            tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED_WITH_ERROR, ex.getEventId(), type);
             throw ex;
         }
     }
 
-    private void updateEvents(List<EventDto> events){
+    private void updateEvents(List<EventDto> events, String type){
         for (EventDto event : events) {
             try {
                 if (Predicates.isEServiceEvent().test(event)) {
@@ -60,7 +60,7 @@ public class AutoUpdaterController {
                 }
             }
             catch (PDNDEventException ex) {
-                deadEventService.saveDeadEvent(event);
+                deadEventService.saveDeadEvent(event, type);
                 throw ex;
             }
         }

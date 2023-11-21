@@ -5,6 +5,7 @@ import it.pagopa.interop.signalhub.updater.entity.TracingBatchEntity;
 import it.pagopa.interop.signalhub.updater.mapper.TracingBatchMapper;
 import it.pagopa.interop.signalhub.updater.model.TracingBatchDto;
 import it.pagopa.interop.signalhub.updater.repository.TracingBatchRepository;
+import it.pagopa.interop.signalhub.updater.utility.Const;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,8 +36,8 @@ class TracingBatchServiceImplTest {
     @Test
     void checkAndCreateTracingBatch() {
         //list==empty and return 0L
-        Mockito.when(repository.findByStateAndLastEventIdMax()).thenReturn(new ArrayList<>());
-        assertEquals(tracingBatchService.getLastEventIdByTracingBatch(), 0L);
+        Mockito.when(repository.findByStateAndLastEventIdMaxAndType(Const.ESERVICE_EVENT)).thenReturn(new ArrayList<>());
+        assertEquals(tracingBatchService.getLastEventIdByTracingBatchAndType(Const.ESERVICE_EVENT), 0L);
 
         //state = ENDED
         TracingBatchEntity tracingBatchEntity= new TracingBatchEntity();
@@ -44,37 +45,38 @@ class TracingBatchServiceImplTest {
         tracingBatchEntity.setLastEventId(1L);
         List<TracingBatchEntity> list= new ArrayList<>();
         list.add(tracingBatchEntity);
-        Mockito.when(repository.findByStateAndLastEventIdMax()).thenReturn(list);
-        assertEquals(tracingBatchService.getLastEventIdByTracingBatch(), tracingBatchEntity.getLastEventId());
+        Mockito.when(repository.findByStateAndLastEventIdMaxAndType(Const.ESERVICE_EVENT)).thenReturn(list);
+        assertEquals(tracingBatchService.getLastEventIdByTracingBatchAndType(Const.ESERVICE_EVENT), tracingBatchEntity.getLastEventId());
 
         //lastEventId==tracingBatchEntity.getLastEventId()+1
         tracingBatchEntity.setState("test");
         list= new ArrayList<>();
         list.add(tracingBatchEntity);
-        Mockito.when(repository.findByStateAndLastEventIdMax()).thenReturn(list);
+        Mockito.when(repository.findByStateAndLastEventIdMaxAndType(Const.ESERVICE_EVENT)).thenReturn(list);
         Mockito.when(props.getAttemptEvent()).thenReturn(0);
-        assertEquals(tracingBatchService.getLastEventIdByTracingBatch(), tracingBatchEntity.getLastEventId()+1);
+        assertEquals(tracingBatchService.getLastEventIdByTracingBatchAndType(Const.ESERVICE_EVENT), tracingBatchEntity.getLastEventId()+1);
 
         //lastEventId==tracingBatchEntity.getLastEventId()
         Mockito.when(props.getAttemptEvent()).thenReturn(3);
-        assertEquals(tracingBatchService.getLastEventIdByTracingBatch(), tracingBatchEntity.getLastEventId());
+        assertEquals(tracingBatchService.getLastEventIdByTracingBatchAndType(Const.ESERVICE_EVENT), tracingBatchEntity.getLastEventId());
     }
 
     @Test
     void countBatchInErrorWithLastEventId() {
         //list==null
-        Mockito.when(repository.findAllStateEndedWithErrorAndLastEventId(Mockito.any(), Mockito.any())).thenReturn(null);
-        assertEquals(0, tracingBatchService.countBatchInErrorWithLastEventId(1L));
+        Mockito.when(repository.findAllStateEndedWithErrorAndLastEventIdAndType(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(null);
+        assertEquals(0, tracingBatchService.countBatchInErrorWithLastEventIdAndType(1L, Const.ESERVICE_EVENT));
 
         //list=empty
-        Mockito.when(repository.findAllStateEndedWithErrorAndLastEventId(Mockito.any(), Mockito.any())).thenReturn(new ArrayList<>());
-        assertEquals(0, tracingBatchService.countBatchInErrorWithLastEventId(1L));
+        Mockito.when(repository.findAllStateEndedWithErrorAndLastEventIdAndType(Mockito.any(), Mockito.any(), Mockito.any()))
+                .thenReturn(new ArrayList<>());
+        assertEquals(0, tracingBatchService.countBatchInErrorWithLastEventIdAndType(1L, Const.ESERVICE_EVENT));
 
         List<TracingBatchEntity> tracingBatchEntityList = new ArrayList<>();
         tracingBatchEntityList.add(new TracingBatchEntity());
-        Mockito.when(repository.findAllStateEndedWithErrorAndLastEventId(Mockito.any(), Mockito.any()))
+        Mockito.when(repository.findAllStateEndedWithErrorAndLastEventIdAndType(Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(tracingBatchEntityList);
-        assertEquals(1, tracingBatchService.countBatchInErrorWithLastEventId(1L));
+        assertEquals(1, tracingBatchService.countBatchInErrorWithLastEventIdAndType(1L, Const.ESERVICE_EVENT));
 
     }
 
@@ -82,6 +84,6 @@ class TracingBatchServiceImplTest {
     void terminateTracingBatch() {
         Mockito.when(repository.saveAndFlush(Mockito.any())).thenReturn(new TracingBatchEntity());
         Mockito.when(mapper.toDto(Mockito.any())).thenReturn(new TracingBatchDto());
-        assertNotNull(tracingBatchService.terminateTracingBatch( ENDED, 1L ));
+        assertNotNull(tracingBatchService.terminateTracingBatch( ENDED, 1L, Const.ESERVICE_EVENT));
     }
 }

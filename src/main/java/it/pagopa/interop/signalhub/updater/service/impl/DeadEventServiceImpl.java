@@ -21,8 +21,8 @@ public class DeadEventServiceImpl implements DeadEventService {
 
 
     @Override
-    public DeadEvent saveDeadEvent(EventDto eventDto) {
-        Integer occurrence = tracingBatchService.countBatchInErrorWithLastEventId(eventDto.getEventId()-1);
+    public DeadEvent saveDeadEvent(EventDto eventDto, String type) {
+        Integer occurrence = tracingBatchService.countBatchInErrorWithLastEventIdAndType(eventDto.getEventId()-1, type);
         if((occurrence+1) >= registryUpdaterProps.getAttemptEvent()) {
             deadEventRepository.saveAndFlush(deadEventMapperImpl.toDeadEvent(eventDto));
         }

@@ -19,7 +19,8 @@ public class EServiceEventDto extends EventDto {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof EServiceEventDto other){
-            return this.eServiceId.equals(other.eServiceId);
+            return this.eServiceId.equals(other.eServiceId) && super.getDescriptorId().equals(other.getDescriptorId())
+                    && super.getObjectType().equals(other.getObjectType());
         }
         return false;
     }

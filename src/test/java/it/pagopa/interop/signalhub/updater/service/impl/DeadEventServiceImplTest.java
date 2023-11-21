@@ -7,6 +7,7 @@ import it.pagopa.interop.signalhub.updater.model.EServiceEventDto;
 import it.pagopa.interop.signalhub.updater.model.EventDto;
 import it.pagopa.interop.signalhub.updater.repository.DeadEventRepository;
 import it.pagopa.interop.signalhub.updater.service.TracingBatchService;
+import it.pagopa.interop.signalhub.updater.utility.Const;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,11 +35,11 @@ class DeadEventServiceImplTest {
     void whenOccuranceUnderAttemptPropsThenSaveOnDB() {
         EventDto eventDto= new EServiceEventDto();
         eventDto.setEventId(1L);
-        Mockito.when(tracingBatchService.countBatchInErrorWithLastEventId(Mockito.any()))
+        Mockito.when(tracingBatchService.countBatchInErrorWithLastEventIdAndType(Mockito.any(), Mockito.any()))
                 .thenReturn(1);
         Mockito.when(registryUpdaterProps.getAttemptEvent()).thenReturn(5);
 
-        assertNull(deadEventService.saveDeadEvent(eventDto));
+        assertNull(deadEventService.saveDeadEvent(eventDto, Const.ESERVICE_EVENT));
 
         Mockito.verify(deadEventRepository, Mockito.timeout(1000).times(0))
                 .saveAndFlush(Mockito.any());
@@ -49,7 +50,7 @@ class DeadEventServiceImplTest {
         EventDto eventDto= new EServiceEventDto();
         eventDto.setEventId(1L);
 
-        Mockito.when(tracingBatchService.countBatchInErrorWithLastEventId(Mockito.any()))
+        Mockito.when(tracingBatchService.countBatchInErrorWithLastEventIdAndType(Mockito.any(), Mockito.any()))
                 .thenReturn(4);
 
         Mockito.when(registryUpdaterProps.getAttemptEvent()).thenReturn(2);
@@ -57,7 +58,7 @@ class DeadEventServiceImplTest {
         Mockito.when(deadEventRepository.saveAndFlush(Mockito.any())).thenReturn(new DeadEvent());
         Mockito.when(deadEventMapperImpl.toDeadEvent(Mockito.any())).thenReturn(new DeadEvent());
 
-        assertNull(deadEventService.saveDeadEvent(eventDto));
+        assertNull(deadEventService.saveDeadEvent(eventDto, Const.ESERVICE_EVENT));
 
         Mockito.verify(deadEventRepository, Mockito.timeout(1000).times(1))
                 .saveAndFlush(Mockito.any());

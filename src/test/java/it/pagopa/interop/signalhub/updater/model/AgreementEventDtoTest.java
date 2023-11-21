@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 class AgreementEventDtoTest {
     private String agreementId;
     private Long eventId;
+    private String descriptorId;
     private String eventType;
     private String objectType;
 
@@ -76,6 +77,9 @@ class AgreementEventDtoTest {
     private AgreementEventDto getAgreementEventDto(String agreementId) {
         AgreementEventDto agreementEventDto = new AgreementEventDto();
         agreementEventDto.setAgreementId(agreementId);
+        agreementEventDto.setDescriptorId("1122-33344");
+        agreementEventDto.setObjectType("ESERVICE");
+        agreementEventDto.setEventType("ADDED");
         return agreementEventDto;
     }
 
@@ -84,5 +88,6 @@ class AgreementEventDtoTest {
         this.eventId = 0L;
         this.eventType = "ADDED";
         this.objectType = "AGREEMENT";
+        this.descriptorId ="1122-33344";
     }
 }

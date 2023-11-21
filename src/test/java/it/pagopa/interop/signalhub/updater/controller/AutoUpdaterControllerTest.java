@@ -13,6 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static it.pagopa.interop.signalhub.updater.utility.Const.AGREEMENT_EVENT;
+import static it.pagopa.interop.signalhub.updater.utility.Const.ESERVICE_EVENT;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -49,14 +52,14 @@ class AutoUpdaterControllerTest {
     void scheduleUpdaterWhenEServiceEventIsConsumedTest() {
         TracingBatchDto tracingBatchDto = getTracingBatchDto();
 
-        Mockito.when(tracingBatchService.getLastEventIdByTracingBatch())
+        Mockito.when(tracingBatchService.getLastEventIdByTracingBatchAndType(ESERVICE_EVENT))
                 .thenReturn(this.startEventId);
 
         EventsDto eventsDto1 = getEventsDtoWithEservice();
         EServiceEventDto eServiceEventDto = (EServiceEventDto)eventsDto1.getEvents().get(0);
         Mockito.doReturn(eventsDto1)
                 .when(interopService)
-                .getAgreementsAndEServices(tracingBatchDto.getLastEventId());
+                .getEventsByType(tracingBatchDto.getLastEventId(), ESERVICE_EVENT);
 
         Mockito.when(organizationService.updateOrganizationEService(eServiceEventDto))
                         .thenReturn(new OrganizationEServiceDto());
@@ -67,27 +70,27 @@ class AutoUpdaterControllerTest {
         Mockito.doReturn(eventsDto2)
                 .doThrow(new PDNDNoEventsException("No events from last event id ".concat(tracingBatchDto.toString())))
                 .when(interopService)
-                .getAgreementsAndEServices(tracingBatchDto.getLastEventId());
+                .getEventsByType(tracingBatchDto.getLastEventId(), ESERVICE_EVENT);
 
         tracingBatchDto.setState(TracingBatchStateEnum.ENDED);
-        Mockito.when(tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, tracingBatchDto.getLastEventId()+1))
+        Mockito.when(tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, tracingBatchDto.getLastEventId(), ESERVICE_EVENT))
                 .thenReturn(tracingBatchDto);
 
-        assertDoesNotThrow(() -> autoUpdaterController.scheduleUpdater());
+        assertDoesNotThrow(() -> autoUpdaterController.scheduleUpdater(ESERVICE_EVENT));
     }
 
     @Test
     void scheduleUpdaterWhenAgreementEventIsConsumedTest() {
         TracingBatchDto tracingBatchDto = getTracingBatchDto();
 
-        Mockito.when(tracingBatchService.getLastEventIdByTracingBatch())
+        Mockito.when(tracingBatchService.getLastEventIdByTracingBatchAndType(ESERVICE_EVENT))
                 .thenReturn(this.startEventId);
 
         EventsDto eventsDto1 = getEventsDtoWithAgreement();
         AgreementEventDto agreementEventDto = (AgreementEventDto)eventsDto1.getEvents().get(0);
         Mockito.doReturn(eventsDto1)
                 .when(interopService)
-                .getAgreementsAndEServices(tracingBatchDto.getLastEventId());
+                .getEventsByType(tracingBatchDto.getLastEventId(), ESERVICE_EVENT);
 
         Mockito.when(consumerService.updateConsumer(agreementEventDto))
                 .thenReturn(new ConsumerEServiceDto());
@@ -98,26 +101,26 @@ class AutoUpdaterControllerTest {
         Mockito.doReturn(eventsDto2)
                 .doThrow(new PDNDNoEventsException("No events from last event id ".concat(tracingBatchDto.toString())))
                 .when(interopService)
-                .getAgreementsAndEServices(tracingBatchDto.getLastEventId());
+                .getEventsByType(tracingBatchDto.getLastEventId(), ESERVICE_EVENT);
 
         tracingBatchDto.setState(TracingBatchStateEnum.ENDED);
-        Mockito.when(tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, tracingBatchDto.getLastEventId()+1))
+        Mockito.when(tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, tracingBatchDto.getLastEventId(), ESERVICE_EVENT))
                 .thenReturn(tracingBatchDto);
 
-        assertDoesNotThrow(() -> autoUpdaterController.scheduleUpdater());
+        assertDoesNotThrow(() -> autoUpdaterController.scheduleUpdater(ESERVICE_EVENT));
     }
 
     @Test
     void scheduleUpdaterWhenConnectionResetTest() {
         TracingBatchDto tracingBatchDto = getTracingBatchDto();
 
-        Mockito.when(tracingBatchService.getLastEventIdByTracingBatch())
+        Mockito.when(tracingBatchService.getLastEventIdByTracingBatchAndType(ESERVICE_EVENT))
                 .thenReturn(this.startEventId);
 
         EventsDto eventsDto1 = getEventsDtoWithEservice();
         EServiceEventDto eServiceEventDto = (EServiceEventDto)eventsDto1.getEvents().get(0);
 
-        Mockito.when(interopService.getAgreementsAndEServices(tracingBatchDto.getLastEventId()))
+        Mockito.when(interopService.getEventsByType(tracingBatchDto.getLastEventId(), ESERVICE_EVENT))
                 .thenReturn(eventsDto1);
 
         tracingBatchDto.setLastEventId(this.finalEventId);
@@ -126,13 +129,13 @@ class AutoUpdaterControllerTest {
         Mockito.doReturn(eventsDto2)
                 .doThrow(new PDNDConnectionResetException("Connection token was expired", eServiceEventDto.getEventId()))
                 .when(interopService)
-                .getAgreementsAndEServices(tracingBatchDto.getLastEventId());
+                .getEventsByType(tracingBatchDto.getLastEventId(), ESERVICE_EVENT);
 
         tracingBatchDto.setState(TracingBatchStateEnum.ENDED);
-        Mockito.when(tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, eServiceEventDto.getEventId()))
+        Mockito.when(tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, eServiceEventDto.getEventId(), ESERVICE_EVENT))
                 .thenReturn(tracingBatchDto);
 
-        Exception exception = assertThrows(PDNDConnectionResetException.class, () -> autoUpdaterController.scheduleUpdater());
+        Exception exception = assertThrows(PDNDConnectionResetException.class, () -> autoUpdaterController.scheduleUpdater(ESERVICE_EVENT));
         assertEquals("Connection token was expired", exception.getMessage());
     }
 
@@ -140,26 +143,26 @@ class AutoUpdaterControllerTest {
     void scheduleUpdaterWhenHttpStatusDifferentOf200Test() {
         TracingBatchDto tracingBatchDto = getTracingBatchDto();
 
-        Mockito.when(tracingBatchService.getLastEventIdByTracingBatch())
+        Mockito.when(tracingBatchService.getLastEventIdByTracingBatchAndType(AGREEMENT_EVENT))
                 .thenReturn(this.startEventId);
 
         EventsDto eventsDto = getEventsDtoWithAgreement();
         AgreementEventDto agreementEventDto = (AgreementEventDto)eventsDto.getEvents().get(0);
 
-        Mockito.when(interopService.getAgreementsAndEServices(tracingBatchDto.getLastEventId()))
+        Mockito.when(interopService.getEventsByType(tracingBatchDto.getLastEventId(), AGREEMENT_EVENT))
                 .thenReturn(eventsDto);
 
         Mockito.when(consumerService.updateConsumer(agreementEventDto))
                 .thenThrow(new PDNDEventException("Error with retrieve agreement details", agreementEventDto.getEventId()));
 
-        Mockito.when(deadEventService.saveDeadEvent(agreementEventDto))
+        Mockito.when(deadEventService.saveDeadEvent(agreementEventDto, AGREEMENT_EVENT))
                 .thenReturn(new DeadEvent());
 
         tracingBatchDto.setState(TracingBatchStateEnum.ENDED_WITH_ERROR);
-        Mockito.when(tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED_WITH_ERROR, agreementEventDto.getEventId()))
+        Mockito.when(tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED_WITH_ERROR, agreementEventDto.getEventId(), AGREEMENT_EVENT))
                 .thenReturn(tracingBatchDto);
 
-        Exception exception = assertThrows(PDNDEventException.class, () -> autoUpdaterController.scheduleUpdater());
+        Exception exception = assertThrows(PDNDEventException.class, () -> autoUpdaterController.scheduleUpdater(AGREEMENT_EVENT));
         assertEquals("Error with retrieve agreement details", exception.getMessage());
     }
 

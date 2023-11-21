@@ -20,7 +20,8 @@ public class AgreementEventDto extends EventDto {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AgreementEventDto other){
-            return this.agreementId.equals(other.agreementId);
+            return this.agreementId.equals(other.agreementId)
+                    && super.getObjectType().equals(other.getObjectType());
         }
         return false;
     }

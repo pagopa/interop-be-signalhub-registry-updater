@@ -5,7 +5,7 @@ import it.pagopa.interop.signalhub.updater.model.TracingBatchStateEnum;
 
 
 public interface TracingBatchService {
-    Long getLastEventIdByTracingBatch();
-    TracingBatchDto terminateTracingBatch(TracingBatchStateEnum stateEnum, Long eventId);
-    Integer countBatchInErrorWithLastEventId(Long lastEventId);
+    Long getLastEventIdByTracingBatchAndType(String type);
+    TracingBatchDto terminateTracingBatch(TracingBatchStateEnum stateEnum, Long eventId, String type);
+    Integer countBatchInErrorWithLastEventIdAndType(Long lastEventId, String type);
 }
