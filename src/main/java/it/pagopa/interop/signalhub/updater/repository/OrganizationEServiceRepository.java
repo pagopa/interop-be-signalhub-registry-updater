@@ -12,6 +12,10 @@ import java.util.Optional;
 
 @Repository
 public interface OrganizationEServiceRepository extends JpaRepository<OrganizationEService, OrganizationKey> {
+
+
     @Query("SELECT eservice FROM OrganizationEService eservice WHERE eservice.eserviceId = :eServiceId AND eservice.producerId = :producerId AND eservice.descriptorId = :descriptorId")
     Optional<OrganizationEService> findByEserviceIdAndProducerIdAndDescriptorId(String eServiceId, String producerId, String descriptorId);
+
+
 }

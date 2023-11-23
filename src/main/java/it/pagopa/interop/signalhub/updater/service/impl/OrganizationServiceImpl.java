@@ -34,7 +34,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         log.info("[{} - {} - {}] Detail eservice retrieved with producerID {}", detailEservice.getEventId(), detailEservice.getEserviceId(), detailEservice.getDescriptorId(), detailEservice.getProducerId());
 
-        log.info("[{} - {} - {}] Retrieving state of eservice...", eServiceEventDTO.getEventId(), eServiceEventDTO.getEServiceId(), eServiceEventDTO.getDescriptorId());
+        log.info("[{} - {} - {}] Retrieving state of eservice...", detailEservice.getEventId(), detailEservice.getEserviceId(), detailEservice.getDescriptorId());
         //Only setting eservices state
         detailEservice = this.interopService.getEServiceDescriptor(detailEservice);
 
@@ -44,9 +44,9 @@ public class OrganizationServiceImpl implements OrganizationService {
                 .orElse(getInitialEService(detailEservice));
 
         log.info("[{} - {} - {}] Entity {} exist into DB",
-                detailEservice.getEventId(),
-                detailEservice.getEserviceId(),
-                detailEservice.getDescriptorId(),
+                entity.getEventId(),
+                entity.getEserviceId(),
+                entity.getDescriptorId(),
                 entity.getTmstInsert() ==  null ? "not" : "");
 
         if(!StringUtils.equalsIgnoreCase(entity.getState(), detailEservice.getState())) {
@@ -57,8 +57,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         entity = this.repository.saveAndFlush(entity);
 
         log.info("[{} - {} - {}] Entity saved",
-                eServiceEventDTO.getEventId(),
-                eServiceEventDTO.getEServiceId(), eServiceEventDTO.getDescriptorId());
+                entity.getEventId(), entity.getEserviceId(), entity.getDescriptorId());
 
         return organizationEServiceMapper.toDtoFromEntity(entity);
     }
