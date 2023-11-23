@@ -14,6 +14,7 @@ import java.util.Optional;
 class OrganizationEServiceRepositoryTest extends BaseTest.WithJpa {
     private static final String correctEservice = "1234-eservice-correct";
     private static final String correctProducer = "1234-producer-correct";
+    private static final String correctDescriptorId = "1234-descriptor-correct";
 
     @Autowired
     private OrganizationEServiceRepository organizationEServiceRepository;
@@ -28,7 +29,8 @@ class OrganizationEServiceRepositoryTest extends BaseTest.WithJpa {
         Optional<OrganizationEService> entity =
                 organizationEServiceRepository.findByEserviceIdAndProducerIdAndDescriptorId(
                         correctEservice.replace("-", ""),
-                        correctProducer.replace("-", ""));
+                        correctProducer.replace("-", ""),
+                        correctDescriptorId.replace("-", ""));
 
         Assertions.assertNotNull(entity);
         Assertions.assertFalse(entity.isPresent());
@@ -38,7 +40,7 @@ class OrganizationEServiceRepositoryTest extends BaseTest.WithJpa {
     @Test
     void whenFindOrganizationWithCorrectParamThenReturnEntity(){
         Optional<OrganizationEService> entity =
-                organizationEServiceRepository.findByEserviceIdAndProducerIdAndDescriptorId(correctEservice, correctProducer);
+                organizationEServiceRepository.findByEserviceIdAndProducerIdAndDescriptorId(correctEservice, correctProducer, correctDescriptorId);
 
         Assertions.assertNotNull(entity);
         Assertions.assertTrue(entity.isPresent());
@@ -50,6 +52,7 @@ class OrganizationEServiceRepositoryTest extends BaseTest.WithJpa {
         OrganizationEService entity = new OrganizationEService();
         entity.setEserviceId(correctEservice);
         entity.setProducerId(correctProducer);
+        entity.setDescriptorId(correctDescriptorId);
         entity.setState("ACTIVE");
         entity.setTmstInsert(Timestamp.from(Instant.now()));
         return entity;

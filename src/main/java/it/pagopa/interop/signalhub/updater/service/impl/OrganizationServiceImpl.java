@@ -40,7 +40,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         log.info("[{} - {} - {}] Detail eservice retrieved with state {}", detailEservice.getEventId(), detailEservice.getEserviceId(), detailEservice.getDescriptorId(), detailEservice.getState());
 
-        OrganizationEService entity = this.repository.findByEserviceIdAndProducerIdAndDescriptorId(detailEservice.getEserviceId(), detailEservice.getProducerId())
+        OrganizationEService entity = this.repository.findByEserviceIdAndProducerIdAndDescriptorId(detailEservice.getEserviceId(), detailEservice.getProducerId(), detailEservice.getDescriptorId())
                 .orElse(getInitialEService(detailEservice));
 
         log.info("[{} - {} - {}] Entity {} exist into DB",
@@ -66,7 +66,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationEServiceDto checkAndUpdate(String eserviceId, String producerId, String descriptorId, Long eventId) {
         log.info("[{} - {} - {}] Check and Update organization eservice", eserviceId, producerId, descriptorId);
-        OrganizationEService entity = this.repository.findByEserviceIdAndProducerIdAndDescriptorId(eserviceId, producerId)
+        OrganizationEService entity = this.repository.findByEserviceIdAndProducerIdAndDescriptorId(eserviceId, producerId, descriptorId)
                 .orElse(null);
         if (entity != null) {
             log.info("[{} - {} - {}] Eservice already exist with state {}", eserviceId, producerId, descriptorId, entity.getState());
