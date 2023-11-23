@@ -53,6 +53,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             organizationEServiceCache.updateOrganizationEService(organizationEServiceMapper.toCacheFromEntity(entity));
         }
 
+        entity.setEventId(eServiceEventDTO.getEventId());
         entity.setState(detailEservice.getState());
         entity = this.repository.saveAndFlush(entity);
 
