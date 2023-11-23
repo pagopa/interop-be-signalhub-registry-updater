@@ -148,11 +148,6 @@
             <artifactId>secretsmanager</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>org.mock-server</groupId>
             <artifactId>mockserver-junit-jupiter</artifactId>
             <version>5.15.0</version>
@@ -260,11 +255,11 @@
                 <version>0.8.10</version>
                 <configuration>
                     <excludes>
-                        <exclude>it/pagopa/interop/signalhub/updater/config/**</exclude>
-                        <exclude>it/pagopa/interop/signalhub/updater/generated/**</exclude>
-                        <exclude>it/pagopa/interop/signalhub/updater/cache/model/**</exclude>
-                        <exclude>it/pagopa/interop/signalhub/updater/entity/**</exclude>
-                        <exclude>it/pagopa/interop/signalhub/updater/execution/**</exclude>
+                        <exclude>**/config/**</exclude>
+                        <exclude>**/generated/**</exclude>
+                        <exclude>**/entity/**</exclude>
+                        <exclude>**/execution/**</exclude>
+                        <exclude>**/utility/**</exclude>
                         <exclude>**/UpdaterApplication.class</exclude>
                     </excludes>
                 </configuration>
