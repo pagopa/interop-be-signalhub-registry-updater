@@ -3,6 +3,12 @@ package it.pagopa.interop.signalhub.updater.config;
 import it.pagopa.interop.signalhub.updater.entity.ConsumerEService;
 import it.pagopa.interop.signalhub.updater.generated.openapi.client.interop.model.v1.*;
 import it.pagopa.interop.signalhub.updater.model.*;
+import org.springframework.security.oauth2.client.endpoint.NimbusJwtClientAuthenticationParametersConverter;
+import org.springframework.security.oauth2.client.endpoint.OAuth2ClientCredentialsGrantRequest;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import software.amazon.awssdk.services.kms.model.SignResponse;
+import software.amazon.awssdk.services.kms.model.SigningAlgorithmSpec;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +20,16 @@ import static it.pagopa.interop.signalhub.updater.utility.Const.*;
 
 public class DataBuilder {
     private DataBuilder(){}
+
+    public static ClientRegistration.Builder clientCredentials() {
+        return ClientRegistration.withRegistrationId("client-credentials")
+                .tokenUri("http://test.provider.com")
+                .registrationId("client-credentials")
+                .clientId("client-id")
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS);
+    }
+
+
 
     public static ConsumerEServiceDto getConsumerDto(){
         ConsumerEServiceDto dto = new ConsumerEServiceDto();

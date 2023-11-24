@@ -3,9 +3,7 @@ package it.pagopa.interop.signalhub.updater.security;
 import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.util.Base64;
-import com.nimbusds.jose.util.Base64URL;
 import com.nimbusds.jwt.JWTClaimsSet;
 import it.pagopa.interop.signalhub.updater.config.SecurityProps;
 import lombok.Getter;
@@ -17,7 +15,6 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncodingException;
 import org.springframework.util.*;
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.services.kms.KmsClient;
@@ -25,8 +22,6 @@ import software.amazon.awssdk.services.kms.model.SignRequest;
 import software.amazon.awssdk.services.kms.model.SignResponse;
 import software.amazon.awssdk.services.kms.model.SigningAlgorithmSpec;
 
-import java.net.URI;
-import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
@@ -111,71 +106,15 @@ public final class AwsKmsJwtClientAuthenticationParametersConverter<T extends Ab
 
     private static JWSHeader convert(JwsHeader headers) {
         com.nimbusds.jose.JWSHeader.Builder builder = new com.nimbusds.jose.JWSHeader.Builder(JWSAlgorithm.parse(headers.getAlgorithm().getName()));
-        if (headers.getJwkSetUrl() != null) {
-            builder.jwkURL(convertAsURI("jku", headers.getJwkSetUrl()));
-        }
-
-        Map<String, Object> jwk = headers.getJwk();
-        if (!CollectionUtils.isEmpty(jwk)) {
-            try {
-                builder.jwk(JWK.parse(jwk));
-            } catch (Exception var11) {
-                throw new JwtEncodingException(String.format("An error occurred while attempting to encode the Jwt: %s", "Unable to convert 'jwk' JOSE header"), var11);
-            }
-        }
 
         String keyId = headers.getKeyId();
         if (StringUtils.hasText(keyId)) {
             builder.keyID(keyId);
         }
 
-        if (headers.getX509Url() != null) {
-            builder.x509CertURL(convertAsURI("x5u", headers.getX509Url()));
-        }
-
-        List<String> x509CertificateChain = headers.getX509CertificateChain();
-        if (!CollectionUtils.isEmpty(x509CertificateChain)) {
-            List<Base64> x5cList = new ArrayList<>();
-            x509CertificateChain.forEach(x5c -> x5cList.add(new Base64(x5c)));
-            if (!x5cList.isEmpty()) {
-                builder.x509CertChain(x5cList);
-            }
-        }
-
-        String x509SHA1Thumbprint = headers.getX509SHA1Thumbprint();
-        if (StringUtils.hasText(x509SHA1Thumbprint)) {
-            builder.x509CertThumbprint(new Base64URL(x509SHA1Thumbprint));
-        }
-
-        String x509SHA256Thumbprint = headers.getX509SHA256Thumbprint();
-        if (StringUtils.hasText(x509SHA256Thumbprint)) {
-            builder.x509CertSHA256Thumbprint(new Base64URL(x509SHA256Thumbprint));
-        }
-
         String type = headers.getType();
         if (StringUtils.hasText(type)) {
             builder.type(new JOSEObjectType(type));
-        }
-
-        String contentType = headers.getContentType();
-        if (StringUtils.hasText(contentType)) {
-            builder.contentType(contentType);
-        }
-
-        Set<String> critical = headers.getCritical();
-        if (!CollectionUtils.isEmpty(critical)) {
-            builder.criticalParams(critical);
-        }
-
-        Map<String, Object> customHeaders = new HashMap<>();
-        headers.getHeaders().forEach((name, value) -> {
-            if (!JWSHeader.getRegisteredParameterNames().contains(name)) {
-                customHeaders.put(name, value);
-            }
-
-        });
-        if (!customHeaders.isEmpty()) {
-            builder.customParams(customHeaders);
         }
 
         return builder.build();
@@ -218,28 +157,10 @@ public final class AwsKmsJwtClientAuthenticationParametersConverter<T extends Ab
             builder.jwtID(jwtId);
         }
 
-        Map<String, Object> customClaims = new HashMap<>();
-        claims.getClaims().forEach((name, value) -> {
-            if (!JWTClaimsSet.getRegisteredNames().contains(name)) {
-                customClaims.put(name, value);
-            }
-
-        });
-        if (!customClaims.isEmpty()) {
-            Objects.requireNonNull(builder);
-            customClaims.forEach(builder::claim);
-        }
-
         return builder.build();
     }
 
-    private static URI convertAsURI(String header, URL url) {
-        try {
-            return url.toURI();
-        } catch (Exception var3) {
-            throw new JwtEncodingException(String.format("An error occurred while attempting to encode the Jwt: %s", "Unable to convert '" + header + "' JOSE header to a URI"), var3);
-        }
-    }
+
 
 
 

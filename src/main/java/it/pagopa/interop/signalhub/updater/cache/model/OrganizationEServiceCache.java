@@ -11,7 +11,6 @@ import java.util.Objects;
 
 @Data
 @ToString
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @RedisHash("eservices")
