@@ -8,6 +8,7 @@ import it.pagopa.interop.signalhub.updater.service.*;
 import it.pagopa.interop.signalhub.updater.utility.Predicates;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -53,6 +54,7 @@ public class AutoUpdaterController {
     private void updateEvents(List<EventDto> events, String type){
         for (EventDto event : events) {
             try {
+                MDC.put("traceId", event.getEventId().toString());
                 if (Predicates.isEServiceEvent().test(event)) {
                     organizationService.updateOrganizationEService((EServiceEventDto) event);
                 } else {
@@ -62,6 +64,8 @@ public class AutoUpdaterController {
             catch (PDNDEventException ex) {
                 deadEventService.saveDeadEvent(event, type);
                 throw ex;
+            } finally {
+                MDC.clear();
             }
         }
     }
