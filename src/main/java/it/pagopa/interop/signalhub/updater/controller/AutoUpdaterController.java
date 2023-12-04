@@ -6,15 +6,13 @@ import it.pagopa.interop.signalhub.updater.exception.PDNDNoEventsException;
 import it.pagopa.interop.signalhub.updater.model.*;
 import it.pagopa.interop.signalhub.updater.service.*;
 import it.pagopa.interop.signalhub.updater.utility.Predicates;
+import it.pagopa.interop.signalhub.updater.utility.Utils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -22,7 +20,6 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 public class AutoUpdaterController {
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private final InteropService interopService;
     private final OrganizationService organizationService;
     private final ConsumerService consumerService;
@@ -31,8 +28,7 @@ public class AutoUpdaterController {
 
 
     public void scheduleUpdater(String applicationType) {
-        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
-        log.info("ScheduleUpdater of {} started at {}", applicationType, dateTimeFormatter.format(zonedDateTime));
+        log.info("ScheduleUpdater of {} started at {}", applicationType, Utils.getFormatHour(Instant.now()));
         Long lastEventId = this.tracingBatchService.getLastEventIdByTracingBatchAndType(applicationType);
         lastEventId = updateRecursiveFlow(lastEventId, applicationType);
         tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, lastEventId+1, applicationType);

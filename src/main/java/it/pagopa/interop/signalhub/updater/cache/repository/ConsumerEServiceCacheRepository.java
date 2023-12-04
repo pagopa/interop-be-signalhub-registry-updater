@@ -2,7 +2,7 @@ package it.pagopa.interop.signalhub.updater.cache.repository;
 
 
 import it.pagopa.interop.signalhub.updater.cache.model.ConsumerEServiceCache;
-import it.pagopa.interop.signalhub.updater.utility.CacheUtils;
+import it.pagopa.interop.signalhub.updater.utility.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,12 +21,12 @@ public class ConsumerEServiceCacheRepository {
     public void updateConsumerEService(ConsumerEServiceCache item){
         Long index = this.findByEservice(item);
         if(index != null) {
-            redisTemplate.opsForList().set(CacheUtils.getCacheKey(item.getEserviceId(), item.getConsumerId()), index, item);
+            redisTemplate.opsForList().set(Utils.getCacheKey(item.getEserviceId(), item.getConsumerId()), index, item);
             log.info("Redis update OrganizationEService: {} ", item.getEserviceId());
         }
     }
 
     private Long findByEservice(ConsumerEServiceCache consumerEServiceCache) {
-        return redisTemplate.opsForList().indexOf(CacheUtils.getCacheKey(consumerEServiceCache.getEserviceId(), consumerEServiceCache.getConsumerId()), consumerEServiceCache);
+        return redisTemplate.opsForList().indexOf(Utils.getCacheKey(consumerEServiceCache.getEserviceId(), consumerEServiceCache.getConsumerId()), consumerEServiceCache);
     }
 }
