@@ -23,10 +23,11 @@ public class TracingBatchServiceImpl implements TracingBatchService {
     private final TracingBatchMapper mapper;
     private final RegistryUpdaterProps props;
 
+
     @Override
     public Integer countBatchInErrorWithLastEventIdAndType(Long lastEventId, String type) {
         log.info("Retrieve a number of batch in error with event Id {}", lastEventId);
-        List<TracingBatchEntity> list = repository.findAllStateEndedWithErrorAndLastEventIdAndType(TracingBatchStateEnum.ENDED_WITH_ERROR.name(), lastEventId, type);
+        List<TracingBatchEntity> list = repository.findAllByStateEndedWithErrorAndLastEventIdAndType(lastEventId, type);
         if (list == null || list.isEmpty()) return  0;
         log.info("{} batch in error with event id {}", list.size(), lastEventId);
         return list.size();
@@ -34,7 +35,7 @@ public class TracingBatchServiceImpl implements TracingBatchService {
 
     @Override
     public Long getLastEventIdByTracingBatchAndType(String type) {
-        List<TracingBatchEntity> list =  repository.findByStateAndLastEventIdMaxAndType(type);
+        List<TracingBatchEntity> list =  repository.findLatestByType(type);
         if (list.isEmpty()) return 0L;
         if (list.get(0).getState().equals(TracingBatchStateEnum.ENDED.name())){
             return list.get(0).getLastEventId();
