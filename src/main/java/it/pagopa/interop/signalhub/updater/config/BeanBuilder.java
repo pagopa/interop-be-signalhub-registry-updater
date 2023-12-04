@@ -32,7 +32,6 @@ import software.amazon.awssdk.services.kms.KmsClient;
 @Configuration
 @Profile("!test")
 public class BeanBuilder {
-
     @Bean
     public ReactiveClientRegistrationRepository getRegistration(SecurityProps props) {
         ClientRegistration registration = ClientRegistration
@@ -51,7 +50,6 @@ public class BeanBuilder {
                 .obtainPublicKey();
     }
 
-
     @Bean(name = "interop-webclient")
     public WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations, SecurityProps props, KmsClient kmsClient, RSAKey rsaKey) {
         InMemoryReactiveOAuth2AuthorizedClientService clientService = new InMemoryReactiveOAuth2AuthorizedClientService(clientRegistrations);
@@ -67,7 +65,7 @@ public class BeanBuilder {
         converter.setJwtClientAssertionCustomizer(context -> {
             context.getHeaders().header("typ", "JWT");
             context.getHeaders().header("kid", rsaKey.getKeyID());
-            context.getClaims().claim("aud", "auth.uat.interop.pagopa.it/client-assertion");
+            context.getClaims().claim("aud", props.getAudience());
         });
 
         tokenResponseClient.addParametersConverter(converter);
@@ -81,7 +79,6 @@ public class BeanBuilder {
                 .filter(oauth)
                 .build();
     }
-
 
     @Bean
     public KmsClient kmsClient(AwsPropertiesConfig props) {

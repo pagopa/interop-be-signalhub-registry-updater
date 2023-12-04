@@ -14,4 +14,5 @@ public class SecurityProps {
     private String clientSecret;
     private String tokenUri;
     private String kmsKeyId;
+    private String audience;
 }
