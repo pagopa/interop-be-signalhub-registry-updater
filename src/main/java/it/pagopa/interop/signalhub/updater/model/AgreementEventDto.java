@@ -11,7 +11,6 @@ public class AgreementEventDto extends EventDto {
     private String agreementId;
 
 
-
     @Override
     public int hashCode() {
         return Objects.hashCode(agreementId);
@@ -29,10 +28,10 @@ public class AgreementEventDto extends EventDto {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("class AgreementEventDto {\n");
-        sb.append("    eventId: ").append(getEventId()).append("\n");
-        sb.append("    agreementId: ").append(agreementId).append("\n");
-        sb.append("}");
+        sb.append("class AgreementEventDto { ");
+        sb.append("eventId: ").append(getEventId());
+        sb.append(", agreementId: ").append(agreementId);
+        sb.append(" }");
         return sb.toString();
     }
 }

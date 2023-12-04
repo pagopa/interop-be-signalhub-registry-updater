@@ -28,10 +28,10 @@ public class EServiceEventDto extends EventDto {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("class EServiceEventDto {\n");
-        sb.append("    eventId: ").append(getEventId()).append("\n");
-        sb.append("    eServiceId: ").append(eServiceId).append("\n");
-        sb.append("}");
+        sb.append("class EServiceEventDto { ");
+        sb.append("eventId: ").append(getEventId());
+        sb.append(", eServiceId: ").append(eServiceId);
+        sb.append(" }");
         return sb.toString();
     }
 }
