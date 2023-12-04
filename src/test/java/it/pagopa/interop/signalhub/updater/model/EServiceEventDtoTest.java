@@ -62,13 +62,13 @@ class EServiceEventDtoTest {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("class ");
         stringBuilder.append(eServiceEventDto.getClass().getSimpleName());
-        stringBuilder.append(" {\n");
-        stringBuilder.append("    eventId: ");
+        stringBuilder.append(" { ");
+        stringBuilder.append("eventId: ");
         stringBuilder.append(eServiceEventDto.getEventId());
-        stringBuilder.append("\n");
-        stringBuilder.append("    eServiceId: ");
+        stringBuilder.append(", ");
+        stringBuilder.append("eServiceId: ");
         stringBuilder.append(eServiceEventDto.getEServiceId());
-        stringBuilder.append("\n}");
+        stringBuilder.append(" }");
 
         String toTest = stringBuilder.toString();
         Assertions.assertEquals(toTest, eServiceEventDto.toString());

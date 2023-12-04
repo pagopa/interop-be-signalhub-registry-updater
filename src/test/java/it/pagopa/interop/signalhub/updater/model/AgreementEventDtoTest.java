@@ -62,13 +62,13 @@ class AgreementEventDtoTest {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("class ");
         stringBuilder.append(agreementEventDto.getClass().getSimpleName());
-        stringBuilder.append(" {\n");
-        stringBuilder.append("    eventId: ");
+        stringBuilder.append(" { ");
+        stringBuilder.append("eventId: ");
         stringBuilder.append(agreementEventDto.getEventId());
-        stringBuilder.append("\n");
-        stringBuilder.append("    agreementId: ");
+        stringBuilder.append(", ");
+        stringBuilder.append("agreementId: ");
         stringBuilder.append(agreementEventDto.getAgreementId());
-        stringBuilder.append("\n}");
+        stringBuilder.append(" }");
 
         String toTest = stringBuilder.toString();
         Assertions.assertEquals(toTest, agreementEventDto.toString());
