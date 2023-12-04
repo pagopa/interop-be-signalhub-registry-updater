@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class AutoUpdaterController {
 
 
     public void scheduleUpdater(String applicationType) {
-        log.info("ScheduleUpdater of {} started at {}", applicationType, dateTimeFormatter.format(LocalDateTime.now()));
+        log.info("ScheduleUpdater of {} started at {}", applicationType, dateTimeFormatter.format(Instant.now()));
         Long lastEventId = this.tracingBatchService.getLastEventIdByTracingBatchAndType(applicationType);
         lastEventId = updateRecursiveFlow(lastEventId, applicationType);
         tracingBatchService.terminateTracingBatch(TracingBatchStateEnum.ENDED, lastEventId+1, applicationType);
