@@ -1,6 +1,7 @@
 package it.pagopa.interop.signalhub.updater.entity;
 
 
+import it.pagopa.interop.signalhub.updater.model.TracingBatchStateEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,8 +33,9 @@ public class TracingBatchEntity {
     @Column(name = COLUMN_TYPE)
     private String type;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = COLUMN_STATE)
-    private String state;
+    private TracingBatchStateEnum state;
 
     @Column(name = COLUMN_DATE_CREATED)
     private Timestamp tmstCreated;

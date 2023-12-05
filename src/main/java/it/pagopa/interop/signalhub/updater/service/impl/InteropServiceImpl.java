@@ -54,7 +54,11 @@ public class InteropServiceImpl implements InteropService {
         Set<EventDto> events = response.getEvents()
                                     .parallelStream()
                                     .map(this::toEventDto)
-                                    .filter(event -> StringUtils.isNotBlank(event.getDescriptorId()))
+                                    .filter(event -> {
+                                         if(event instanceof EServiceEventDto)
+                                             return StringUtils.isNotBlank(event.getDescriptorId());
+                                         return true;
+                                    })
                                     .collect(Collectors.toSet());
 
         log.info("Total events filtered {}", events.size());
