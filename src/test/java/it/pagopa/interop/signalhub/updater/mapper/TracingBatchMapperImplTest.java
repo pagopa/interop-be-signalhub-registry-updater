@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TracingBatchMapperImplTest {
     private Long batchId;
     private Long lastEventId;
-    private String state;
+    private TracingBatchStateEnum state;
     private TracingBatchMapperImpl tracingBatchMapper;
 
     @BeforeEach
@@ -26,7 +26,7 @@ class TracingBatchMapperImplTest {
         assertNotNull(tracingBatchDto);
         assertEquals(batchId, tracingBatchDto.getBatchId());
         assertEquals(lastEventId, tracingBatchDto.getLastEventId());
-        assertEquals(state, tracingBatchDto.getState().name());
+        assertEquals(state, tracingBatchDto.getState());
 
         tracingBatchEntity.setState(null);
         tracingBatchDto = tracingBatchMapper.toDto(tracingBatchEntity);
@@ -52,7 +52,7 @@ class TracingBatchMapperImplTest {
     private void setUp() {
         this.batchId = 0L;
         this.lastEventId = 100L;
-        this.state = TracingBatchStateEnum.ENDED.name();
+        this.state = TracingBatchStateEnum.ENDED;
         this.tracingBatchMapper = new TracingBatchMapperImpl();
     }
 }

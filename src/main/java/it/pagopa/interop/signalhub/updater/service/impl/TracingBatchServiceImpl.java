@@ -37,7 +37,7 @@ public class TracingBatchServiceImpl implements TracingBatchService {
     public Long getLastEventIdByTracingBatchAndType(String type) {
         List<TracingBatchEntity> list =  repository.findLatestByType(type);
         if (list.isEmpty()) return 0L;
-        if (list.get(0).getState().equals(TracingBatchStateEnum.ENDED.name())){
+        if (list.get(0).getState() == TracingBatchStateEnum.ENDED){
             return list.get(0).getLastEventId();
         }
         if (list.size() >= props.getAttemptEvent()){
@@ -51,7 +51,7 @@ public class TracingBatchServiceImpl implements TracingBatchService {
         TracingBatchEntity tracingBatchEntity = new TracingBatchEntity();
         tracingBatchEntity.setTmstCreated(Timestamp.from(Instant.now()));
         tracingBatchEntity.setLastEventId(eventId-1);
-        tracingBatchEntity.setState(stateEnum.name());
+        tracingBatchEntity.setState(stateEnum);
         tracingBatchEntity.setType(type);
         tracingBatchEntity = this.repository.saveAndFlush(tracingBatchEntity);
         log.debug("Create a tracing batch entity of type {} {}", type,  tracingBatchEntity);

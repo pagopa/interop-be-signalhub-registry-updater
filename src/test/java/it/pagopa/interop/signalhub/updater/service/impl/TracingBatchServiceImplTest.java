@@ -4,6 +4,7 @@ import it.pagopa.interop.signalhub.updater.config.RegistryUpdaterProps;
 import it.pagopa.interop.signalhub.updater.entity.TracingBatchEntity;
 import it.pagopa.interop.signalhub.updater.mapper.TracingBatchMapper;
 import it.pagopa.interop.signalhub.updater.model.TracingBatchDto;
+import it.pagopa.interop.signalhub.updater.model.TracingBatchStateEnum;
 import it.pagopa.interop.signalhub.updater.repository.TracingBatchRepository;
 import it.pagopa.interop.signalhub.updater.utility.Const;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static it.pagopa.interop.signalhub.updater.model.TracingBatchStateEnum.ENDED;
+import static it.pagopa.interop.signalhub.updater.model.TracingBatchStateEnum.ENDED_WITH_ERROR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -41,7 +43,7 @@ class TracingBatchServiceImplTest {
 
         //state = ENDED
         TracingBatchEntity tracingBatchEntity= new TracingBatchEntity();
-        tracingBatchEntity.setState(ENDED.name());
+        tracingBatchEntity.setState(ENDED);
         tracingBatchEntity.setLastEventId(1L);
         List<TracingBatchEntity> list= new ArrayList<>();
         list.add(tracingBatchEntity);
@@ -49,7 +51,7 @@ class TracingBatchServiceImplTest {
         assertEquals(tracingBatchService.getLastEventIdByTracingBatchAndType(Const.ESERVICE_EVENT), tracingBatchEntity.getLastEventId());
 
         //lastEventId==tracingBatchEntity.getLastEventId()+1
-        tracingBatchEntity.setState("test");
+        tracingBatchEntity.setState(ENDED_WITH_ERROR);
         list= new ArrayList<>();
         list.add(tracingBatchEntity);
         Mockito.when(repository.findLatestByType(Const.ESERVICE_EVENT)).thenReturn(list);
